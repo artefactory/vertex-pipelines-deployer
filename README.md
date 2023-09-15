@@ -2,7 +2,7 @@
 
 Repository for the Vertex Pipelines Deployer. This tool is a wrapper aound `kfp` and `google-cloud-aiplatform` that allows you to deploy Vertex Pipelines to a Vertex AI Pipelines endpoint in a standardized manner.
 
-> **Warning**:
+> **Warning**
 > This is a work in progress and is not ready for production use.
 
 
@@ -29,7 +29,9 @@ You can use the deployer CLI or import [`VertexPipelineDeployer`](deployer/deplo
 
 ### CLI
 
-You must respect the following folder structure:
+You must respect the following folder structure. If you already follow the
+[Vertex Pipelines Starter Kit folder structure](https://github.com/artefactory/vertex-pipeline-starter-kit),
+it should be pretty smooth to use this tool:
 
 ```
 vertex
@@ -84,13 +86,30 @@ vertex-deployer --help
 │  └─ CODEOWNERS
 ├─ .gitignore
 ├─ deployer
-│  └─ __init__.py
+│  ├─ __init__.py
+│  ├─ cli.py
+│  ├─ deployer.py
+│  └─ utils.py
 ├─ tests/
+├─ vertex
+│  ├─ components
+│  │  └─ dummy.py
+│  ├─ configs
+│  │  ├─ broken_pipeline
+│  │  │  └─ config_test.json
+│  │  └─ dummy_pipeline
+│  │     └─ config_test.json
+│  ├─ deployment
+│  ├─ lib
+│  ├─ pipelines
+│  │  ├─ broken_pipeline.py
+│  │  └─ dummy_pipeline.py
 ├─ .pre-commit-config.yaml
 ├─ LICENSE
 ├─ Makefile
 ├─ pyproject.toml
 ├─ README.md
+```
 
 
 
