@@ -6,10 +6,13 @@ authors = ["julesbertrand <julesbertrand13@gmail.com>"]
 readme = "README.md"
 packages = [{include = "deployer"}]
 
+[tool.poetry.scripts]
+vertex-deployer = "deployer.cli:cli"
+
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11.0"
 python-dotenv = "^1.0.0"
-kfp = "^2.0.1"
+kfp = ">=2.0.1, <2.1.0"
 google-cloud-aiplatform = "^1.26.1"
 requests = "^2.31.0"
 

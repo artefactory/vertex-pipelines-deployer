@@ -4,7 +4,7 @@ from pathlib import Path
 
 from dotenv import find_dotenv, load_dotenv
 
-from deployer.deployer.deployer import VertexPipelineDeployer
+from deployer.deployer import VertexPipelineDeployer
 from deployer.utils import (
     import_pipeline_from_dir,
     load_config,
@@ -176,7 +176,7 @@ def main(  # noqa: D103
         )
 
 
-if __name__ == "__main__":
+def cli():  # noqa: D103
     import logging
 
     logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
