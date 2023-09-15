@@ -6,12 +6,13 @@ from dotenv import find_dotenv, load_dotenv
 
 from deployer.deployer import VertexPipelineDeployer
 from deployer.utils import (
+    get_project_root,
     import_pipeline_from_dir,
     load_config,
     make_pipeline_names_enum_from_dir,
 )
 
-PIPELINE_ROOT_PATH = Path(__file__).parent.parent / "pipelines"
+PIPELINE_ROOT_PATH = Path(get_project_root()) / "vertex" / "pipelines"
 
 PipelineNames = make_pipeline_names_enum_from_dir(PIPELINE_ROOT_PATH)
 

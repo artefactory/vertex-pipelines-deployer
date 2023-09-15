@@ -6,8 +6,6 @@ from pathlib import Path
 
 from kfp.components import graph_component
 
-ROOT_PATH = Path(__file__).resolve().parent.parent.parent
-
 
 def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
     """Create an Enum of pipeline names from a directory of pipelines."""
@@ -21,7 +19,7 @@ def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
 
 def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_component.GraphComponent:
     """Import a pipeline from a directory."""
-    dirpath_clean = Path(dirpath).resolve().relative_to(ROOT_PATH)
+    dirpath_clean = Path(dirpath).resolve().relative_to(get_project_root())
     parent_module = ".".join(dirpath_clean.parts)
     module_path = f"{parent_module}.{pipeline_name}"
 
@@ -49,7 +47,7 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
 
 def get_project_root() -> str:
     """Get the project root."""
-    project_root = str(Path(__file__).parent.parent.parent.resolve())
+    project_root = str(Path(__file__).parent.parent.resolve())
     return project_root
 
 
