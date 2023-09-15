@@ -1,13 +1,47 @@
 # vertex-pipelines-deployer
 
-Repository for the Vertex Pipelines Deployer. This is a tool is a wrapper aound `kfp` and `google-cloud-aiplatform` that allows you to deploy Vertex Pipelines to a Vertex AI Pipelines endpoint in a standardized manner.
+Repository for the Vertex Pipelines Deployer. This tool is a wrapper aound `kfp` and `google-cloud-aiplatform` that allows you to deploy Vertex Pipelines to a Vertex AI Pipelines endpoint in a standardized manner.
+
+> **Warning**:
+> This is a work in progress and is not ready for production use.
 
 
 ## Installation
 
+```bash
+pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@develop
+```
+
+This project uses [Poetry](https://python-poetry.org/) for dependency management. To install the project dependencies, run the following command:
+
+```bash
+poetry install
+```
+
+Or use the make command:
+```bash
+make install
+```
+
 ## Usage
 
 ## Repository Structure
+
+```
+├─ .github
+│  ├─ workflows
+│  │  └─ ci.yaml
+│  └─ CODEOWNERS
+├─ .gitignore
+├─ deployer
+│  └─ __init__.py
+├─ tests/
+├─ .pre-commit-config.yaml
+├─ LICENSE
+├─ Makefile
+├─ pyproject.toml
+├─ README.md
+
 
 
 # TODO
