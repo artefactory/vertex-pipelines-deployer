@@ -11,15 +11,16 @@ python = ">=3.10,<3.11.0"
 python-dotenv = "^1.0.0"
 kfp = "^2.0.1"
 google-cloud-aiplatform = "^1.26.1"
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
 isort = "^5.12.0"
-flake8 = "^6.1.0"
 pytest = "^7.4.0"
 pre-commit = "^3.3.3"
 ipykernel = "6.9.1"
 nbstripout = "^0.6.1"
+ruff = "^0.0.289"
 
 [build-system]
 requires = ["poetry-core"]
