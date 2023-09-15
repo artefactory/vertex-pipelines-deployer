@@ -1,0 +1,64 @@
+# secrets and credentials
+secrets/
+credentials/
+*.env
+
+# exclude data from source control by default
+/data/
+
+# Jupyter NB Checkpoints
+.ipynb_checkpoints/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.pytest_cache/
+
+# Mypy cache
+.mypy_cache/
+
+# Ruff cache
+.ruff_cache/
+
+# Sphinx documentation
+docs/_build/
+
+# VS Code
+.vscode/
+
+# Mac OS-specific storage files
+.DS_Store
+
+# ZenML
+.zen
+zenml_stack_recipes/
+
+# MLflow
+mlruns/
