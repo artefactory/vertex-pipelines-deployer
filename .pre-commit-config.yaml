@@ -39,10 +39,3 @@ repos:
       files: (.ipynb)$
       language: system
       stages: [commit, push]
-    - id: pytest
-      name: Tests (pytest)
-      entry: poetry run pytest tests/
-      types: [python]
-      language: system
-      stages: [push]
-      pass_filenames: false
