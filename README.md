@@ -25,6 +25,56 @@ make install
 
 ## Usage
 
+You can use the deployer CLI or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code.
+
+### CLI
+
+You must respect the following folder structure:
+
+```
+vertex
+├─ config/
+│  └─ {pipeline_name}
+│     └─ {config_name}.json
+└─ pipelines/
+   └─ {pipeline_name}.py
+```
+
+You file `{pipeline_name}.py` must contain a function called `pipeline` decorated using `kfp.dsl.pipeline`.
+
+You will also need the following ENV variables, either exported or in a `.env` file (see example in `example.env`):
+
+```bash
+PROJECT_ID=YOUR_PROJECT_ID  # GCP Project ID
+GCP_REGION=europe-west1  # GCP Region
+
+GAR_LOCATION=europe-west1  # Google Artifact Registry Location
+GAR_REPO_ID=YOUR_GAR_REPO_ID  # Google Artifact Registry Repo ID
+
+VERTEX_STAGING_BUCKET_NAME=YOUR_VERTEX_STAGING_BUCKET_NAME  # GCS Bucket for Vertex Pipelines staging
+VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service Account
+```
+
+Let's say you have a pipeline named `dummy_pipeline` and config file named `config_test.json`. You can deploy your pipeline using the following command:
+
+```bash
+vertex-deployer dummy-pipeline \
+    --compile \  # compile pipeline locally
+    --upload \  # upload pipeline to Google Artifact Registry
+    --run \  # run pipeline
+    --config-name config_test \  # config file to use at runtime (without extension) to fill parameter_values
+    --env-file example.env \  # env file to use
+    --tags my-tag \ # tags to add to the pipeline run
+    --experiment-name my-experiment \ # experiment name to use. Will default to {pipeline_name}-experiment if not provided
+    --enable-caching \ # enable caching for the pipeline run
+```
+
+To see all available options, run:
+
+```bash
+vertex-deployer --help
+```
+
 ## Repository Structure
 
 ```
@@ -44,7 +94,7 @@ make install
 
 
 
-# TODO
+## Backlog
 1. Features
     1. handle multiple config files formats (toml, json, yaml)
     2. allow for multiple config files as inputs
