@@ -6,6 +6,8 @@ from pathlib import Path
 
 from kfp.components import graph_component
 
+from deployer.constants import CONFIG_ROOT_PATH
+
 
 def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
     """Create an Enum of pipeline names from a directory of pipelines."""
@@ -53,11 +55,10 @@ def get_project_root() -> str:
 
 def load_config(config_name: str, pipeline_name: str | None = None) -> dict:
     """Load a config file."""
-    base_config_path = Path(get_project_root()) / "vertex" / "configs"
     if pipeline_name:
-        config_filepath = base_config_path / pipeline_name / f"{config_name}.json"
+        config_filepath = CONFIG_ROOT_PATH / pipeline_name / f"{config_name}.json"
     else:
-        config_filepath = base_config_path / f"{config_name}.json"
+        config_filepath = CONFIG_ROOT_PATH / f"{config_name}.json"
     with open(config_filepath) as f:
         config = json.load(f)
     return config

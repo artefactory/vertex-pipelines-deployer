@@ -8,6 +8,8 @@ from kfp import compiler
 from kfp.registry import RegistryClient
 from requests import HTTPError
 
+from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIMEZONE
+
 
 class VertexPipelineDeployer:
     """Deployer for Vertex Pipelines"""
@@ -22,7 +24,7 @@ class VertexPipelineDeployer:
         pipeline_func: Callable,
         gar_location: str | None = None,
         gar_repo_id: str | None = None,
-        local_package_path: Path = Path("."),
+        local_package_path: Path = DEFAULT_LOCAL_PACKAGE_PATH,
     ) -> None:
         """I don't want to write a dostring here but ruff wants me to"""
         self.project_id = project_id
@@ -259,7 +261,7 @@ class VertexPipelineDeployer:
         )
         # TZ must be a valid string from IANA time zone database
         pipeline_job_schedule.create(
-            cron=f"TZ=Europe/Paris {cron}",
+            cron=f"TZ={DEFAULT_SCHEDULER_TIMEZONE} {cron}",
             service_account=self.service_account,
         )
 
