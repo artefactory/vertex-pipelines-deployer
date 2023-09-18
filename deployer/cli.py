@@ -1,10 +1,16 @@
-import argparse
+import logging
 import os
 from pathlib import Path
 
+import typer
 from dotenv import find_dotenv, load_dotenv
+from typing_extensions import Annotated
 
-from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, PIPELINE_ROOT_PATH
+from deployer.constants import (
+    DEFAULT_LOCAL_PACKAGE_PATH,
+    DEFAULT_TAGS,
+    PIPELINE_ROOT_PATH,
+)
 from deployer.deployer import VertexPipelineDeployer
 from deployer.utils import (
     import_pipeline_from_dir,
@@ -12,111 +18,84 @@ from deployer.utils import (
     make_pipeline_names_enum_from_dir,
 )
 
-PipelineNames = make_pipeline_names_enum_from_dir(PIPELINE_ROOT_PATH)
+logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
+
+app = typer.Typer(no_args_is_help=True, rich_help_panel="rich")
+
+PipelineName = make_pipeline_names_enum_from_dir(PIPELINE_ROOT_PATH)
 
 
-def get_args():  # noqa: D103
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "pipeline_name",
-        type=str,
-        choices=[e.value for e in PipelineNames],
-        help="The name of the pipeline to run.",
-    )
-    parser.add_argument(
-        "--env-file",
-        "-e",
-        type=str,
-        default=argparse.SUPPRESS,
-        help="The environment to run the pipeline in.",
-    )
-    parser.add_argument(
-        "--compile",
-        "-c",
-        action="store_true",
-        help="Whether to compile the pipeline.",
-    )
-    parser.add_argument(
-        "--upload",
-        "-u",
-        action="store_true",
-        help="Whether to upload the pipeline to the registry.",
-    )
-    parser.add_argument(
-        "--run",
-        "-r",
-        action="store_true",
-        help="Whether to run the pipeline.",
-    )
-    parser.add_argument(
-        "--schedule",
-        "-s",
-        action="store_true",
-        help="Whether to create a schedule for the pipeline.",
-    )
-    parser.add_argument(
-        "--cron",
-        type=str,
-        default=argparse.SUPPRESS,
-        help="Cron expression for scheduling the pipeline.",
-    )
-    parser.add_argument(
-        "--delete-last-schedule",
-        "-dls",
-        action="store_true",
-        help="Whether to delete the previous schedule before creating a new one.",
-    )
-    parser.add_argument(
-        "--tags",
-        type=str,
-        nargs="*",
-        help="The tags to use when uploading the pipeline.",
-    )
-    parser.add_argument(
-        "--config-name",
-        "-cn",
-        type=str,
-        default=argparse.SUPPRESS,
-        help="The name of the configuration file to use when running the pipeline.",
-    )
-    parser.add_argument(
-        "--enable-caching",
-        "-ec",
-        action="store_true",
-        help="Whether to enable caching when running the pipeline.",
-    )
-    parser.add_argument(
-        "--experiment-name",
-        "-exp",
-        type=str,
-        default=argparse.SUPPRESS,
-        help="The name of the experiment to run the pipeline in.",
-    )
-    parser.add_argument(
-        "--local-package-path",
-        "-lpp",
-        type=Path,
-        default=argparse.SUPPRESS,
-        help="The path to the local package to upload.",
-    )
-    return parser.parse_args()
-
-
-def main(  # noqa: D103
-    pipeline_name: PipelineNames,
-    env_file: str | None = None,
-    compile: bool = True,
-    upload: bool = False,
-    run: bool = True,
-    schedule: bool = False,
-    cron: str | None = None,
-    delete_last_schedule: bool = False,
-    tags: list = ["latest"],  # noqa: B006
-    config_name: str | None = None,
-    enable_caching: bool = False,
-    experiment_name: str | None = None,
-    local_package_path: Path = DEFAULT_LOCAL_PACKAGE_PATH,
-) -> None:
+@app.command(no_args_is_help=True)
+def deploy(
+    pipeline_name: Annotated[
+        PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
+    ],
+    env_file: Annotated[
+        Path,
+        typer.Option(
+            help="The environment file to use.",
+            exists=True,
+            dir_okay=False,
+            file_okay=True,
+            resolve_path=True,
+        ),
+    ] = None,
+    compile: Annotated[
+        bool,
+        typer.Option("--compile/--no-compile", "-c/-nc", help="Whether to compile the pipeline."),
+    ] = True,
+    upload: Annotated[
+        bool,
+        typer.Option(
+            "--upload/--no-upload",
+            "-u/-nu",
+            help="Whether to upload the pipeline to Google Artifact Registry.",
+        ),
+    ] = False,
+    run: Annotated[
+        bool, typer.Option("--run/--no-run", "-r/-nr", help="Whether to run the pipeline.")
+    ] = False,
+    schedule: Annotated[
+        bool,
+        typer.Option(
+            "--schedule/--no-schedule",
+            "-s/-ns",
+            help="Whether to create a schedule for the pipeline.",
+        ),
+    ] = False,
+    cron: Annotated[str, typer.Option(help="Cron expression for scheduling the pipeline.")] = None,
+    delete_last_schedule: Annotated[
+        bool,
+        typer.Option(help="Whether to delete the previous schedule before creating a new one."),
+    ] = False,
+    tags: Annotated[
+        list[str], typer.Option(help="The tags to use when uploading the pipeline.")
+    ] = DEFAULT_TAGS,
+    config_name: Annotated[
+        str,
+        typer.Option(help="The name of the configuration file to use when running the pipeline."),
+    ] = None,
+    enable_caching: Annotated[
+        bool, typer.Option(help="Whether to enable caching when running the pipeline.")
+    ] = False,
+    experiment_name: Annotated[
+        str,
+        typer.Option(
+            help="The name of the experiment to run the pipeline in."
+            "Defaults to '{pipeline_name}-experiment'."
+        ),
+    ] = None,
+    local_package_path: Annotated[
+        Path,
+        typer.Option(
+            help="The path to the local package to upload.",
+            dir_okay=True,
+            file_okay=False,
+            resolve_path=True,
+        ),
+    ] = DEFAULT_LOCAL_PACKAGE_PATH,
+):
+    """Deploy and manage Vertex AI Pipelines."""
     if env_file is not None:
         find_dotenv(env_file, raise_error_if_not_found=True)
         load_dotenv(env_file)
@@ -172,14 +151,5 @@ def main(  # noqa: D103
             enable_caching=enable_caching,
             parameter_values=SELECTED_CONFIGURATION,
             tag=tags[0] if tags else None,
+            delete_last_schedule=delete_last_schedule,
         )
-
-
-def cli():  # noqa: D103
-    import logging
-
-    logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
-
-    args = get_args()
-
-    main(**vars(args))

@@ -116,13 +116,14 @@ vertex-deployer --help
 ## Backlog
 1. Features
     1. handle multiple config files formats (toml, json, yaml)
-    2. allow for multiple config files as inputs
+    2. allow for multiple config files as inputs -> give a connector to generate json ?
     3. CLI to typer to have multiple commands (check, deploy, init, etc)
     4. Possibility to store env variables in a env class stored somewhere
     5. Dynamic config checks using pydantic
-    6. Scheduling with cloud function instead of cloud scheduler
+    6. Scheduling with cloud function instead of Vertex scheduler API
     7. versioning of config files on a gcs bucket
+    8. compile with parameters option
 2. Add more documentation
 3. Add review flow
 4. Add PR and Issue templates
-5. publish on Pypi
+5. publish on Pypi (temp fix: .tar.gz file on gcs?)

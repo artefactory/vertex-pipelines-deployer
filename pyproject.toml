@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "deployer"}]
 
 [tool.poetry.scripts]
-vertex-deployer = "deployer.cli:cli"
+vertex-deployer = "deployer.cli:app"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11.0"
@@ -15,6 +15,8 @@ python-dotenv = "^1.0.0"
 kfp = ">=2.0.1, <2.1.0"
 google-cloud-aiplatform = "^1.26.1"
 requests = "^2.31.0"
+typer = "^0.9.0"
+rich = {version = "^13.5.3", optional = true}
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
@@ -24,6 +26,9 @@ pre-commit = "^3.3.3"
 ipykernel = "6.9.1"
 nbstripout = "^0.6.1"
 ruff = "^0.0.289"
+
+[tool.poetry.extras]
+rich = ["rich"]
 
 [build-system]
 requires = ["poetry-core"]
@@ -50,7 +55,7 @@ select = ["B", "C", "D", "E", "F", "W"]
 convention = "google"
 
 [tool.ruff.per-file-ignores]
-"*run.py" = ["D"]
+"*cli.py" = ["D", "B008"]
 "*__init__.py" = [
     "F401",
     "D100",
