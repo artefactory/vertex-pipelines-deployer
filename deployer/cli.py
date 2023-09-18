@@ -4,15 +4,13 @@ from pathlib import Path
 
 from dotenv import find_dotenv, load_dotenv
 
+from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, PIPELINE_ROOT_PATH
 from deployer.deployer import VertexPipelineDeployer
 from deployer.utils import (
-    get_project_root,
     import_pipeline_from_dir,
     load_config,
     make_pipeline_names_enum_from_dir,
 )
-
-PIPELINE_ROOT_PATH = Path(get_project_root()) / "vertex" / "pipelines"
 
 PipelineNames = make_pipeline_names_enum_from_dir(PIPELINE_ROOT_PATH)
 
@@ -117,7 +115,7 @@ def main(  # noqa: D103
     config_name: str | None = None,
     enable_caching: bool = False,
     experiment_name: str | None = None,
-    local_package_path: Path = Path("."),
+    local_package_path: Path = DEFAULT_LOCAL_PACKAGE_PATH,
 ) -> None:
     if env_file is not None:
         find_dotenv(env_file, raise_error_if_not_found=True)
