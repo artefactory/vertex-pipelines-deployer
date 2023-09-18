@@ -66,28 +66,43 @@ def deploy(
     cron: Annotated[str, typer.Option(help="Cron expression for scheduling the pipeline.")] = None,
     delete_last_schedule: Annotated[
         bool,
-        typer.Option(help="Whether to delete the previous schedule before creating a new one."),
+        typer.Option(
+            "--delete-last-schedule",
+            "-dls",
+            help="Whether to delete the previous schedule before creating a new one.",
+        ),
     ] = False,
     tags: Annotated[
         list[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
     config_name: Annotated[
         str,
-        typer.Option(help="The name of the configuration file to use when running the pipeline."),
+        typer.Option(
+            "--config-name",
+            "-cn",
+            help="The name of the configuration file to use when running the pipeline.",
+        ),
     ] = None,
     enable_caching: Annotated[
-        bool, typer.Option(help="Whether to enable caching when running the pipeline.")
+        bool,
+        typer.Option(
+            "--enable-caching", "-ec", help="Whether to enable caching when running the pipeline."
+        ),
     ] = False,
     experiment_name: Annotated[
         str,
         typer.Option(
+            "--experiment-name",
+            "-en",
             help="The name of the experiment to run the pipeline in."
-            "Defaults to '{pipeline_name}-experiment'."
+            "Defaults to '{pipeline_name}-experiment'.",
         ),
     ] = None,
     local_package_path: Annotated[
         Path,
         typer.Option(
+            "--local-package-path",
+            "-lpp",
             help="The path to the local package to upload.",
             dir_okay=True,
             file_okay=False,
@@ -104,7 +119,9 @@ def deploy(
     region = os.environ["GCP_REGION"]
     staging_bucket_name = os.environ["VERTEX_STAGING_BUCKET_NAME"]
     service_account = os.environ["VERTEX_SERVICE_ACCOUNT"]
-    pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.replace("-", "_"))
+    pipeline_func = import_pipeline_from_dir(
+        PIPELINE_ROOT_PATH, pipeline_name.value.replace("-", "_")
+    )
     gar_location = os.environ["GAR_LOCATION"] if (upload or schedule) else None
     gar_repo_id = f"{os.environ['GAR_REPO_ID']}-kfp" if (upload or schedule) else None
 
@@ -113,7 +130,7 @@ def deploy(
         region=region,
         staging_bucket_name=staging_bucket_name,
         service_account=service_account,
-        pipeline_name=pipeline_name,
+        pipeline_name=pipeline_name.value,
         pipeline_func=pipeline_func,
         gar_location=gar_location,
         gar_repo_id=gar_repo_id,
