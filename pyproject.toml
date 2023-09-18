@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["julesbertrand <julesbertrand13@gmail.com>"]
 readme = "README.md"
-packages = [{include = "vertex_deployer"}]
+packages = [{include = "deployer"}]
 
 [tool.poetry.scripts]
 vertex-deployer = "deployer.cli:cli"
