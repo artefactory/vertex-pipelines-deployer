@@ -12,9 +12,7 @@ from deployer.constants import CONFIG_ROOT_PATH
 def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
     """Create an Enum of pipeline names from a directory of pipelines."""
     pipeline_names = Path(dir_path).glob("*.py")
-    pipeline_enum_dict = {
-        x.stem: x.stem.replace("_", "-") for x in pipeline_names if x.stem != "__init__"
-    }
+    pipeline_enum_dict = {x.stem: x.stem for x in pipeline_names if x.stem != "__init__"}
     PipelineNames = Enum("PipelineNames", pipeline_enum_dict)
     return PipelineNames
 

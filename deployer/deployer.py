@@ -32,7 +32,7 @@ class VertexPipelineDeployer:
         self.staging_bucket_name = staging_bucket_name
         self.service_account = service_account
 
-        self.pipeline_name = pipeline_name.replace("_", "-")
+        self.pipeline_name = pipeline_name
         self.pipeline_func = pipeline_func
 
         self.gar_location = gar_location

@@ -119,9 +119,7 @@ def deploy(
     region = os.environ["GCP_REGION"]
     staging_bucket_name = os.environ["VERTEX_STAGING_BUCKET_NAME"]
     service_account = os.environ["VERTEX_SERVICE_ACCOUNT"]
-    pipeline_func = import_pipeline_from_dir(
-        PIPELINE_ROOT_PATH, pipeline_name.value.replace("-", "_")
-    )
+    pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
     gar_location = os.environ["GAR_LOCATION"] if (upload or schedule) else None
     gar_repo_id = f"{os.environ['GAR_REPO_ID']}-kfp" if (upload or schedule) else None
 
@@ -142,9 +140,7 @@ def deploy(
             raise ValueError(
                 "`config_name` must be specified when running or scheduling the pipeline"
             )
-        SELECTED_CONFIGURATION = load_config(
-            config_name=config_name, pipeline_name=pipeline_name.replace("-", "_")
-        )
+        SELECTED_CONFIGURATION = load_config(config_name=config_name, pipeline_name=pipeline_name)
 
     if compile:
         deployer.compile()
