@@ -60,7 +60,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 Let's say you have a pipeline named `dummy_pipeline` and config file named `config_test.json`. You can deploy your pipeline using the following command:
 
 ```bash
-vertex-deployer dummy-pipeline \
+vertex-deployer dummy_pipeline \
     --compile \  # compile pipeline locally
     --upload \  # upload pipeline to Google Artifact Registry
     --run \  # run pipeline
