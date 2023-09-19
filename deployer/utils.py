@@ -1,10 +1,10 @@
 import importlib
 import json
-import logging
 from enum import Enum
 from pathlib import Path
 
 from kfp.components import graph_component
+from loguru import logger
 
 from deployer.constants import CONFIG_ROOT_PATH
 
@@ -40,7 +40,7 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
             "Please check that the pipeline is correctly defined and named."
         ) from e
 
-    logging.debug(f"Pipeline {module_path} imported successfully.")
+    logger.debug(f"Pipeline {module_path} imported successfully.")
 
     return pipeline
 

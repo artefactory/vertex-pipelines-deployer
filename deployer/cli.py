@@ -1,4 +1,3 @@
-import logging
 import os
 from pathlib import Path
 
@@ -17,8 +16,6 @@ from deployer.utils import (
     load_config,
     make_pipeline_names_enum_from_dir,
 )
-
-logging.basicConfig(level=logging.INFO, handlers=[logging.StreamHandler()])
 
 app = typer.Typer(no_args_is_help=True, rich_help_panel="rich")
 
