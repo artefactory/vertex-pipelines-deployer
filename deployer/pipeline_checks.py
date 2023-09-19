@@ -1,19 +1,9 @@
 import logging
 
-import kfp.components.graph_component
-
 from deployer.constants import PIPELINE_ROOT_PATH
 from deployer.models import create_model_from_pipeline
 from deployer.pipelines_deployer import VertexPipelineDeployer
 from deployer.utils import import_pipeline_from_dir, load_config
-
-
-def validate_config_against_pipeline(
-    pipeline: kfp.components.graph_component.GraphComponent, config: dict
-) -> None:
-    """Validate a config file against a pipeline."""
-    PipelineDynamicConfig = create_model_from_pipeline(pipeline)
-    PipelineDynamicConfig.model_validate(config)
 
 
 def check_pipeline(pipeline_name: str, config_names: list[str]) -> bool:
@@ -28,9 +18,10 @@ def check_pipeline(pipeline_name: str, config_names: list[str]) -> bool:
     ).compile()
     logging.debug(f"Pipeline {pipeline_name} - compilation successfull")
 
+    PipelineDynamicConfig = create_model_from_pipeline(pipeline_func)
     for config_name in config_names:
         config = load_config(config_name=config_name, pipeline_name=pipeline_name)
-        validate_config_against_pipeline(pipeline_func, config)
+        PipelineDynamicConfig.model_validate(config)
         logging.debug(
             f"Pipeline {pipeline_name} | Config {config_name} - config validation successfull"
         )
