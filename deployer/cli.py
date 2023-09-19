@@ -1,8 +1,10 @@
 import os
+import sys
 from pathlib import Path
 
 import typer
 from dotenv import find_dotenv, load_dotenv
+from loguru import logger
 from typing_extensions import Annotated
 
 from deployer.constants import (
@@ -12,12 +14,21 @@ from deployer.constants import (
 )
 from deployer.pipelines_deployer import VertexPipelineDeployer
 from deployer.utils import (
+    LoguruLevel,
     import_pipeline_from_dir,
     load_config,
     make_pipeline_names_enum_from_dir,
 )
 
 app = typer.Typer(no_args_is_help=True, rich_help_panel="rich")
+
+
+@app.callback(name="set_logger")
+def cli_set_logger(
+    log_level: Annotated[LoguruLevel, typer.Option("--log-level", "-log")] = LoguruLevel.INFO
+):
+    logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
+
 
 PipelineName = make_pipeline_names_enum_from_dir(PIPELINE_ROOT_PATH)
 

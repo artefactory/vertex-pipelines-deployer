@@ -9,6 +9,16 @@ from loguru import logger
 from deployer.constants import CONFIG_ROOT_PATH
 
 
+class LoguruLevel(str, Enum):  # noqa: D101
+    TRACE = "TRACE"
+    DEBUG = "DEBUG"
+    INFO = "INFO"
+    SUCCESS = "SUCCESS"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    CRITICAL = "CRITICAL"
+
+
 def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
     """Create an Enum of pipeline names from a directory of pipelines."""
     pipeline_names = Path(dir_path).glob("*.py")
