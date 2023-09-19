@@ -11,7 +11,7 @@ from deployer.constants import (
     DEFAULT_TAGS,
     PIPELINE_ROOT_PATH,
 )
-from deployer.deployer import VertexPipelineDeployer
+from deployer.pipelines_deployer import VertexPipelineDeployer
 from deployer.utils import (
     import_pipeline_from_dir,
     load_config,
