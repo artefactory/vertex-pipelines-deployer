@@ -16,12 +16,12 @@ class VertexPipelineDeployer:
 
     def __init__(
         self,
-        project_id: str,
-        region: str,
-        staging_bucket_name: str,
-        service_account: str,
         pipeline_name: str,
         pipeline_func: Callable,
+        project_id: str | None = None,
+        region: str | None = None,
+        staging_bucket_name: str | None = None,
+        service_account: str | None = None,
         gar_location: str | None = None,
         gar_repo_id: str | None = None,
         local_package_path: Path = DEFAULT_LOCAL_PACKAGE_PATH,
