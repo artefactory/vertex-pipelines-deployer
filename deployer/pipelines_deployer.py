@@ -144,7 +144,7 @@ class VertexPipelineDeployer:
             tag (str, optional): Tag of the pipeline template. Defaults to None.
         """
         if experiment_name is None:
-            experiment_name = f"{self.pipeline_name}-experiment"
+            experiment_name = f"{self.pipeline_name}-experiment".replace("_", "-")
             logger.info(f"Experiment name not provided, using {experiment_name}")
 
         template_path = self._get_template_path(tag)

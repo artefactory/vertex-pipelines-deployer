@@ -89,9 +89,9 @@ def load_vertex_settings(env_file: Path | None = None) -> VertexPipelinesSetting
 def load_config(config_name: str, pipeline_name: str | None = None) -> dict:
     """Load a config file."""
     if pipeline_name:
-        config_filepath = CONFIG_ROOT_PATH / pipeline_name / f"{config_name}.json"
+        config_filepath = Path(CONFIG_ROOT_PATH) / pipeline_name / f"{config_name}.json"
     else:
-        config_filepath = CONFIG_ROOT_PATH / f"{config_name}.json"
+        config_filepath = Path(CONFIG_ROOT_PATH) / f"{config_name}.json"
     with open(config_filepath) as f:
         config = json.load(f)
     return config

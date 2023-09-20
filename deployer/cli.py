@@ -140,7 +140,9 @@ def deploy(
             raise ValueError(
                 "`config_name` must be specified when running or scheduling the pipeline"
             )
-        SELECTED_CONFIGURATION = load_config(config_name=config_name, pipeline_name=pipeline_name)
+        SELECTED_CONFIGURATION = load_config(
+            config_name=config_name, pipeline_name=pipeline_name.value
+        )
 
     if compile:
         deployer.compile()

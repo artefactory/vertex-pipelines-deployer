@@ -51,7 +51,7 @@ PROJECT_ID=YOUR_PROJECT_ID  # GCP Project ID
 GCP_REGION=europe-west1  # GCP Region
 
 GAR_LOCATION=europe-west1  # Google Artifact Registry Location
-GAR_REPO_ID=YOUR_GAR_REPO_ID  # Google Artifact Registry Repo ID
+GAR_PIPELINES_REPO_ID=YOUR_GAR_KFP_REPO_ID  # Google Artifact Registry Repo ID (KFP flavor)
 
 VERTEX_STAGING_BUCKET_NAME=YOUR_VERTEX_STAGING_BUCKET_NAME  # GCS Bucket for Vertex Pipelines staging
 VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service Account
@@ -108,7 +108,7 @@ vertex-deployer --help
 ├─ LICENSE
 ├─ Makefile
 ├─ pyproject.toml
-├─ README.md
+└─ README.md
 ```
 
 
