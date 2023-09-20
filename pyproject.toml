@@ -18,6 +18,8 @@ requests = "^2.31.0"
 typer = "^0.9.0"
 rich = {version = "^13.5.3", optional = true}
 loguru = "^0.7.2"
+pydantic-settings = "^2.0.3"
+pydantic = "^2.3.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
