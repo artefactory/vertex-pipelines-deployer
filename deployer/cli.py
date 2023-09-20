@@ -88,7 +88,18 @@ def deploy(
         typer.Option(
             "--parameter-values-filepath",
             "-pv",
-            help="Path to the json configuration file to use when running the pipeline.",
+            help="Path to the json file with parameter values to use when running the pipeline.",
+            exists=True,
+            dir_okay=False,
+            file_okay=True,
+        ),
+    ] = None,
+    input_artifacts_filepath: Annotated[
+        Path,
+        typer.Option(
+            "--input-artifacts-filepath",
+            "-iar",
+            help="Path to the json file with input artifacts to use when running the pipeline.",
             exists=True,
             dir_okay=False,
             file_okay=True,
@@ -139,12 +150,19 @@ def deploy(
     )
 
     if run or schedule:
-        if parameter_values_filepath is None:
-            raise ValueError(
-                "`parameter_values_filepath` must be specified"
-                " when running or scheduling the pipeline"
+        if parameter_values_filepath is not None:
+            parameter_values = load_config(parameter_values_filepath)
+        else:
+            logger.warning(
+                "`parameter_values_filepath` not specified"
+                " whereas you are running or scheduling the pipeline."
             )
-        parameter_values = load_config(parameter_values_filepath)
+            parameter_values = None
+
+        if input_artifacts_filepath is not None:
+            input_artifacts = load_config(input_artifacts_filepath)
+        else:
+            input_artifacts = None
 
     if compile:
         deployer.compile()
@@ -157,6 +175,7 @@ def deploy(
             enable_caching=enable_caching,
             parameter_values=parameter_values,
             experiment_name=experiment_name,
+            input_artifacts=input_artifacts,
             tag=tags[0] if tags else None,
         )
 
