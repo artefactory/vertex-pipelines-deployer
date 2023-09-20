@@ -113,7 +113,7 @@ def deploy(
         typer.Option(
             "--local-package-path",
             "-lpp",
-            help="The path to the local package to upload.",
+            help="Local dir path where pipelines will be compiled.",
             dir_okay=True,
             file_okay=False,
             resolve_path=True,

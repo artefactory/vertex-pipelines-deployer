@@ -61,6 +61,13 @@ Commands:
 pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@develop
 ```
 
+If you want to test this package on examples from this repo:
+```bash
+git clone git@github.com:artefactory/vertex-pipelines-deployer.git
+poetry install
+cd example
+```
+
 ## Usage
 
 ### Setup
@@ -161,6 +168,7 @@ vertex-deployer deploy dummy_pipeline \
     --upload \
     --run \
     --env-file example.env \
+    --local-package-path . \
     --tags my-tag \
     --parameter-values-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
