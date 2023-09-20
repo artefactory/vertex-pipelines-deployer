@@ -191,29 +191,34 @@ vertex-deployer --log-level DEBUG deploy ...
 
 ```
 ├─ .github
+│  ├─ ISSUE_TEMPLATE/
 │  ├─ workflows
 │  │  └─ ci.yaml
-│  └─ CODEOWNERS
-├─ .gitignore
+│  ├─ CODEOWNERS
+│  └─ PULL_REQUEST_TEMPLATE.md
 ├─ deployer
 │  ├─ __init__.py
 │  ├─ cli.py
+│  ├─ constants.py
 │  ├─ deployer.py
 │  └─ utils.py
 ├─ tests/
-├─ vertex
-│  ├─ components
-│  │  └─ dummy.py
-│  ├─ configs
-│  │  ├─ broken_pipeline
-│  │  │  └─ config_test.json
-│  │  └─ dummy_pipeline
-│  │     └─ config_test.json
-│  ├─ deployment
-│  ├─ lib
-│  ├─ pipelines
-│  │  ├─ broken_pipeline.py
-│  │  └─ dummy_pipeline.py
+├─ example
+|   ├─ example.env
+│   └─ vertex
+│      ├─ components
+│      │  └─ dummy.py
+│      ├─ configs
+│      │  ├─ broken_pipeline
+│      │  │  └─ config_test.json
+│      │  └─ dummy_pipeline
+│      │     └─ config_test.json
+│      ├─ deployment
+│      ├─ lib
+│      └─ pipelines
+│         ├─ broken_pipeline.py
+│         └─ dummy_pipeline.py
+├─ .gitignore
 ├─ .pre-commit-config.yaml
 ├─ LICENSE
 ├─ Makefile
