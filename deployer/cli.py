@@ -82,12 +82,15 @@ def deploy(
     tags: Annotated[
         list[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
-    config_name: Annotated[
-        str,
+    parameter_values_filepath: Annotated[
+        Path,
         typer.Option(
-            "--config-name",
-            "-cn",
-            help="The name of the configuration file to use when running the pipeline.",
+            "--parameter-values-filepath",
+            "-pv",
+            help="Path to the json configuration file to use when running the pipeline.",
+            exists=True,
+            dir_okay=False,
+            file_okay=True,
         ),
     ] = None,
     enable_caching: Annotated[
@@ -136,13 +139,12 @@ def deploy(
     )
 
     if run or schedule:
-        if config_name is None:
+        if parameter_values_filepath is None:
             raise ValueError(
-                "`config_name` must be specified when running or scheduling the pipeline"
+                "`parameter_values_filepath` must be specified"
+                " when running or scheduling the pipeline"
             )
-        SELECTED_CONFIGURATION = load_config(
-            config_name=config_name, pipeline_name=pipeline_name.value
-        )
+        parameter_values = load_config(parameter_values_filepath)
 
     if compile:
         deployer.compile()
@@ -153,7 +155,7 @@ def deploy(
     if run:
         deployer.run(
             enable_caching=enable_caching,
-            parameter_values=SELECTED_CONFIGURATION,
+            parameter_values=parameter_values,
             experiment_name=experiment_name,
         )
 
@@ -164,7 +166,7 @@ def deploy(
         deployer.create_pipeline_schedule(
             cron=cron,
             enable_caching=enable_caching,
-            parameter_values=SELECTED_CONFIGURATION,
+            parameter_values=parameter_values,
             tag=tags[0] if tags else None,
             delete_last_schedule=delete_last_schedule,
         )

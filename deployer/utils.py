@@ -9,8 +9,6 @@ from loguru import logger
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from deployer.constants import CONFIG_ROOT_PATH
-
 
 class LoguruLevel(str, Enum):  # noqa: D101
     TRACE = "TRACE"
@@ -86,27 +84,8 @@ def load_vertex_settings(env_file: Path | None = None) -> VertexPipelinesSetting
     return settings
 
 
-def load_config(config_name: str, pipeline_name: str | None = None) -> dict:
+def load_config(config_filepath: Path) -> dict:
     """Load a config file."""
-    if pipeline_name:
-        config_filepath = Path(CONFIG_ROOT_PATH) / pipeline_name / f"{config_name}.json"
-    else:
-        config_filepath = Path(CONFIG_ROOT_PATH) / f"{config_name}.json"
     with open(config_filepath) as f:
         config = json.load(f)
     return config
-
-
-# def import_pipelines_from_dir(dir_path: Path) -> None:
-#     pipeline_names = Path(dir_path).glob("*.py")
-#     pipelines_mapping = {}
-#     for p in pipeline_names:
-#         if p.stem != "__init__":
-#             setattr(
-#                 sys.modules[__name__],
-#                 p.stem,
-#                 importlib.import_module(f"vertex.pipelines.{p.stem}"),
-#             )
-#             pipelines_mapping[p.stem] = getattr(sys.modules[__name__], p.stem).pipeline
-
-#     return pipelines_mapping

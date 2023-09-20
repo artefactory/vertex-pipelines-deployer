@@ -160,9 +160,9 @@ vertex-deployer deploy dummy_pipeline \
     --compile \
     --upload \
     --run \
-    --config-name config_test \
     --env-file example.env \
     --tags my-tag \
+    --parameter-values-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
     --enable-caching
 ```
