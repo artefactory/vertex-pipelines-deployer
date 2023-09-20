@@ -1,9 +1,7 @@
-import os
 import sys
 from pathlib import Path
 
 import typer
-from dotenv import find_dotenv, load_dotenv
 from loguru import logger
 from typing_extensions import Annotated
 
@@ -17,6 +15,7 @@ from deployer.utils import (
     LoguruLevel,
     import_pipeline_from_dir,
     load_config,
+    load_vertex_settings,
     make_pipeline_names_enum_from_dir,
 )
 
@@ -120,26 +119,19 @@ def deploy(
 ):
     """Deploy and manage Vertex AI Pipelines."""
     if env_file is not None:
-        find_dotenv(env_file, raise_error_if_not_found=True)
-        load_dotenv(env_file)
+        vertex_settings = load_vertex_settings(env_file=env_file)
 
-    project_id = os.environ["PROJECT_ID"]
-    region = os.environ["GCP_REGION"]
-    staging_bucket_name = os.environ["VERTEX_STAGING_BUCKET_NAME"]
-    service_account = os.environ["VERTEX_SERVICE_ACCOUNT"]
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
-    gar_location = os.environ["GAR_LOCATION"] if (upload or schedule) else None
-    gar_repo_id = f"{os.environ['GAR_REPO_ID']}-kfp" if (upload or schedule) else None
 
     deployer = VertexPipelineDeployer(
-        project_id=project_id,
-        region=region,
-        staging_bucket_name=staging_bucket_name,
-        service_account=service_account,
+        project_id=vertex_settings.PROJECT_ID,
+        region=vertex_settings.GCP_REGION,
+        staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
+        service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
         pipeline_name=pipeline_name.value,
         pipeline_func=pipeline_func,
-        gar_location=gar_location,
-        gar_repo_id=gar_repo_id,
+        gar_location=vertex_settings.GAR_LOCATION,
+        gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
         local_package_path=local_package_path,
     )
 

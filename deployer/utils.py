@@ -3,8 +3,11 @@ import json
 from enum import Enum
 from pathlib import Path
 
+from dotenv import find_dotenv
 from kfp.components import graph_component
 from loguru import logger
+from pydantic import ValidationError
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from deployer.constants import CONFIG_ROOT_PATH
 
@@ -59,6 +62,28 @@ def get_project_root() -> str:
     """Get the project root."""
     project_root = str(Path(__file__).parent.parent.resolve())
     return project_root
+
+
+class VertexPipelinesSettings(BaseSettings):  # noqa: D101
+    model_config = SettingsConfigDict(extra="ignore", case_sensitive=True)
+
+    PROJECT_ID: str
+    GCP_REGION: str
+    GAR_LOCATION: str
+    GAR_PIPELINES_REPO_ID: str
+    VERTEX_STAGING_BUCKET_NAME: str
+    VERTEX_SERVICE_ACCOUNT: str
+
+
+def load_vertex_settings(env_file: Path | None = None) -> VertexPipelinesSettings:
+    """Load the settings from the environment."""
+    if env_file is not None:
+        find_dotenv(env_file, raise_error_if_not_found=True)
+    try:
+        settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
+    except ValidationError as e:
+        raise ValueError(f"Validation failed for env file {env_file}: {e}") from e
+    return settings
 
 
 def load_config(config_name: str, pipeline_name: str | None = None) -> dict:
