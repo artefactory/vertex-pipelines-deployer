@@ -1,10 +1,59 @@
-# vertex-pipelines-deployer
+<br />
+<div align="center">
+    <h1 align="center">Vertex Pipelines Deployer</h1>
+    <h3 align="center">Deploy Vertex Pipelines within minutes</h3>
+        <p align="center">
+        This tool is a wrapper aound <a href="https://www.kubeflow.org/docs/components/pipelines/v2/hello-world/">kfp</a> and <a href="https://cloud.google.com/python/docs/reference/aiplatform/latest">google-cloud-aiplatform</a> that allows you to check, compile, upload, run and schedule Vertex Pipelines to a Vertex AI Pipelines endpoint in a standardized manner.
+        </p>
+</div>
+</br>
 
-Repository for the Vertex Pipelines Deployer. This tool is a wrapper aound `kfp` and `google-cloud-aiplatform` that allows you to deploy Vertex Pipelines to a Vertex AI Pipelines endpoint in a standardized manner.
+<!-- PROJECT SHIELDS -->
+<div align="center">
+
+[![Python Version](https://img.shields.io/badge/Python-3.10-informational.svg)](#supported-python-versions)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+[![Linting: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-informational?logo=pre-commit&logoColor=white)](https://github.com/ornikar/vertex-eduscore/blob/develop/.pre-commit-config.yaml)
+<!-- [![License](https://img.shields.io/github/license/artefactory/vertex-pipelines-deployer)](https://github.com/artefactory/vertex-pipelines-deployer/blob/develop/LICENSE) -->
+
+[![CI](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?branch%3Adevelop&event%3Apush)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?query=branch%3Adevelop)
+
+</div>
+
 
 > **Warning**
 > This is a work in progress and is not ready for production use.
 
+
+## Table of Contents
+- [Why this tool?](##why-this-tool)
+- [Prerequisites](##prerequisites)
+- [Installation](##installation)
+- [Usage](##usage)
+  - [Setup](###setup)
+  - [Folder Structure](###folder-structure)
+  - [Deploying a Pipeline](###deploying-a-pipeline)
+
+
+## Why this tool?
+
+Two uses cases:
+- quickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
+- deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
+- check pipeline validity in your CI.
+
+Commands:
+- `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
+- `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
+
+## Prerequisites
+
+- Unix-like environment (Linux, macOS, WSL, etc...)
+- Python 3.10
+- Google Cloud SDK
+- A GCP project with Vertex Pipelines enabled
 
 ## Installation
 
@@ -12,26 +61,75 @@ Repository for the Vertex Pipelines Deployer. This tool is a wrapper aound `kfp`
 pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@develop
 ```
 
-This project uses [Poetry](https://python-poetry.org/) for dependency management. To install the project dependencies, run the following command:
-
+If you want to test this package on examples from this repo:
 ```bash
+git clone git@github.com:artefactory/vertex-pipelines-deployer.git
 poetry install
-```
-
-Or use the make command:
-```bash
-make install
+cd example
 ```
 
 ## Usage
 
-You can use the deployer CLI or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code.
+### Setup
 
-### CLI
+1. Setup your GCP environment:
+
+```bash
+export PROJECT_ID=<gcp_project_id>
+gcloud config set project $PROJECT_ID
+gcloud auth login
+gcloud auth application-default login
+```
+2. You need the following APIs to be enabled:
+    - Cloud Build API
+    - Artifact Registry API
+    - Cloud Storage API
+    - Vertex AI API
+
+```bash
+gcloud services enable \
+    cloudbuild.googleapis.com \
+    artifactregistry.googleapis.com \
+    storage.googleapis.com \
+    aiplatform.googleapis.com
+```
+3. Create an artifact registry repository for your base images (Docker format):
+```bash
+export GAR_DOCKER_REPO_ID=<your_gar_repo_id_for_images>
+export GAR_LOCATION=<your_gar_location>
+gcloud artifacts repositories create ${GAR_DOCKER_REPO_ID} \
+    --location=${GAR_LOCATION} \
+    --repository-format=docker
+```
+4. Build and upload your base images to the repository. To do so, please follow Google Cloud Build documentation.
+5. Create an artifact registry repository for your pipelines (KFP format):
+```bash
+export GAR_PIPELINES_REPO_ID=<your_gar_repo_id_for_pipelines>
+gcloud artifacts repositories create ${GAR_PIPELINES_REPO_ID} \
+    --location=${GAR_LOCATION} \
+    --repository-format=kfp
+```
+6. Create a GCS bucket for Vertex Pipelines staging:
+```bash
+export GCP_REGION=<your_gcp_region>
+export VERTEX_STAGING_BUCKET_NAME=<your_bucket_name>
+gcloud storage buckets create gs://${VERTEX_STAGING_BUCKET_NAME} --location=${GCP_REGION}
+```
+7. Create a service account for Vertex Pipelines: # TODO: complete iam bindings
+```bash
+export VERTEX_SERVICE_ACCOUNT=<foobar@PROJECT_ID.iam.gserviceaccount.com>
+gcloud iam service-accounts create ${VERTEX_SERVICE_ACCOUNT}
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+    --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
+    --role="roles/aiplatform.user"
+```
+
+You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code (try it yourself).
+
+### Folder Structure
 
 You must respect the following folder structure. If you already follow the
-[Vertex Pipelines Starter Kit folder structure](https://github.com/artefactory/vertex-pipeline-starter-kit),
-it should be pretty smooth to use this tool:
+[Vertex Pipelines Starter Kit folder structure](https://github.com/artefactory/vertex-pipeline-starter-kit), it should be pretty smooth to use this tool:
 
 ```
 vertex
@@ -51,79 +149,79 @@ PROJECT_ID=YOUR_PROJECT_ID  # GCP Project ID
 GCP_REGION=europe-west1  # GCP Region
 
 GAR_LOCATION=europe-west1  # Google Artifact Registry Location
-GAR_REPO_ID=YOUR_GAR_REPO_ID  # Google Artifact Registry Repo ID
+GAR_PIPELINES_REPO_ID=YOUR_GAR_KFP_REPO_ID  # Google Artifact Registry Repo ID (KFP format)
 
 VERTEX_STAGING_BUCKET_NAME=YOUR_VERTEX_STAGING_BUCKET_NAME  # GCS Bucket for Vertex Pipelines staging
 VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service Account
 ```
 
-Let's say you have a pipeline named `dummy_pipeline` and config file named `config_test.json`. You can deploy your pipeline using the following command:
+> **Note**
+> We're using env files and dotenv to load the environment variables.
+> No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
+> An [`example.env`](example/example.env) file is provided in this repo.
+> This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
 
+### Deploying a Pipeline
+
+Let's say you defines a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
 ```bash
-vertex-deployer dummy_pipeline \
-    --compile \  # compile pipeline locally
-    --upload \  # upload pipeline to Google Artifact Registry
-    --run \  # run pipeline
-    --config-name config_test \  # config file to use at runtime (without extension) to fill parameter_values
-    --env-file example.env \  # env file to use
-    --tags my-tag \ # tags to add to the pipeline run
-    --experiment-name my-experiment \ # experiment name to use. Will default to {pipeline_name}-experiment if not provided
-    --enable-caching \ # enable caching for the pipeline run
+vertex-deployer deploy dummy_pipeline \
+    --compile \
+    --upload \
+    --run \
+    --env-file example.env \
+    --local-package-path . \
+    --tags my-tag \
+    --parameter-values-filepath vertex/configs/dummy_pipeline/config_test.json \
+    --experiment-name my-experiment \
+    --enable-caching
 ```
 
 To see all available options, run:
-
 ```bash
 vertex-deployer --help
+```
+
+To adapt log level, use the `--log-level` option. Default is `INFO`.
+```bash
+vertex-deployer --log-level DEBUG deploy ...
 ```
 
 ## Repository Structure
 
 ```
 ├─ .github
+│  ├─ ISSUE_TEMPLATE/
 │  ├─ workflows
 │  │  └─ ci.yaml
-│  └─ CODEOWNERS
-├─ .gitignore
+│  ├─ CODEOWNERS
+│  └─ PULL_REQUEST_TEMPLATE.md
 ├─ deployer
 │  ├─ __init__.py
 │  ├─ cli.py
+│  ├─ constants.py
 │  ├─ deployer.py
 │  └─ utils.py
 ├─ tests/
-├─ vertex
-│  ├─ components
-│  │  └─ dummy.py
-│  ├─ configs
-│  │  ├─ broken_pipeline
-│  │  │  └─ config_test.json
-│  │  └─ dummy_pipeline
-│  │     └─ config_test.json
-│  ├─ deployment
-│  ├─ lib
-│  ├─ pipelines
-│  │  ├─ broken_pipeline.py
-│  │  └─ dummy_pipeline.py
+├─ example
+|   ├─ example.env
+│   └─ vertex
+│      ├─ components
+│      │  └─ dummy.py
+│      ├─ configs
+│      │  ├─ broken_pipeline
+│      │  │  └─ config_test.json
+│      │  └─ dummy_pipeline
+│      │     └─ config_test.json
+│      ├─ deployment
+│      ├─ lib
+│      └─ pipelines
+│         ├─ broken_pipeline.py
+│         └─ dummy_pipeline.py
+├─ .gitignore
 ├─ .pre-commit-config.yaml
 ├─ LICENSE
 ├─ Makefile
 ├─ pyproject.toml
-├─ README.md
+└─ README.md
 ```
-
-
-
-## Backlog
-1. Features
-    1. handle multiple config files formats (toml, json, yaml)
-    2. allow for multiple config files as inputs -> give a connector to generate json ?
-    3. CLI to typer to have multiple commands (check, deploy, init, etc)
-    4. Possibility to store env variables in a env class stored somewhere
-    5. Dynamic config checks using pydantic
-    6. Scheduling with cloud function instead of Vertex scheduler API
-    7. versioning of config files on a gcs bucket
-    8. compile with parameters option
-2. Add more documentation
-3. Add review flow
-4. Add PR and Issue templates
-5. publish on Pypi (temp fix: .tar.gz file on gcs?)
