@@ -27,6 +27,17 @@
 > This is a work in progress and is not ready for production use.
 
 
+## Why this tool?
+
+Two uses cases:
+- quickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
+- deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
+- check pipeline validity in your CI.
+
+Commands:
+- `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
+- `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
+
 ## Prerequisites
 
 - Unix-like environment (Linux, macOS, WSL, etc...)
@@ -96,7 +107,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --role="roles/aiplatform.user"
 ```
 
-You can use the deployer CLI or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code.
+You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code (try it yourself).
 
 ### Folder Structure
 
