@@ -156,8 +156,10 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 ```
 
 > **Note**
-> We're using env files and dotenv to load the environment variables. No default env file is provided to ensure that you don't accidentally deploy to the wrong project.
-> This also allows you to work with multiple environments thanks to env files (`test.env``, `dev.env`, `prod.env`, etc)
+> We're using env files and dotenv to load the environment variables.
+> No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
+> An [`example.env`](example/example.env) file is provided in this repo.
+> This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
 
 ### Deploying a Pipeline
 
