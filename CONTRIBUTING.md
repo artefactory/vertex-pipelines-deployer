@@ -9,6 +9,8 @@ Issues and Pull requests templates are mandatory.
 
 At least one code review is needed to merge. Please merge your feature branches on `develop`.
 
+We try to rebase as much as possible and use squash and merge to keep a linear and condensed git history.
+
 ### Getting started
 
 This project uses [Poetry](https://python-poetry.org/) for dependency management. Poetry's doc is really good, so you should check it out if you have any questions.
@@ -29,6 +31,9 @@ To develop, you will need dev requirements too. Run:
 ```bash
 make install-dev-requirements
 ```
+
+> **Note**
+> `poetry.lock` is not committed deliberately, as recommended by Poetry's doc. You can read more about it [here](https://python-poetry.org/docs/basic-usage/#as-a-library-developer).
 
 ### Codestyle
 
