@@ -27,6 +27,16 @@
 > This is a work in progress and is not ready for production use.
 
 
+## Table of Contents
+- [Why this tool?](##why-this-tool)
+- [Prerequisites](##prerequisites)
+- [Installation](##installation)
+- [Usage](##usage)
+  - [Setup](###setup)
+  - [Folder Structure](###folder-structure)
+  - [Deploying a Pipeline](###deploying-a-pipeline)
+
+
 ## Why this tool?
 
 Two uses cases:
