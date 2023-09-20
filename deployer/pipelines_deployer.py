@@ -1,4 +1,3 @@
-import logging
 from pathlib import Path
 from typing import Callable
 
@@ -6,6 +5,7 @@ from google.cloud import aiplatform
 from google.cloud.aiplatform import PipelineJobSchedule
 from kfp import compiler
 from kfp.registry import RegistryClient
+from loguru import logger
 from requests import HTTPError
 
 from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIMEZONE
@@ -53,7 +53,7 @@ class VertexPipelineDeployer:
         """Return the Artifact Registry host if the location and repo ID are provided"""
         if self.gar_location is not None and self.gar_repo_id is not None:
             return f"https://{self.gar_location}-kfp.pkg.dev/{self.project_id}/{self.gar_repo_id}"
-        logging.debug(
+        logger.debug(
             "No Artifact Registry location or repo ID provided: not using Artifact Registry"
         )
         return None
@@ -101,7 +101,7 @@ class VertexPipelineDeployer:
             pipeline_func=self.pipeline_func,
             package_path=str(pipeline_filepath),
         )
-        logging.info(f"Pipeline {self.pipeline_name} compiled to {pipeline_filepath}")
+        logger.info(f"Pipeline {self.pipeline_name} compiled to {pipeline_filepath}")
 
         return self
 
@@ -118,7 +118,7 @@ class VertexPipelineDeployer:
             file_name=f"{self.pipeline_name}.yaml",
             tags=tags,
         )
-        logging.info(f"Pipeline {self.pipeline_name} uploaded to {self.gar_host} with tags {tags}")
+        logger.info(f"Pipeline {self.pipeline_name} uploaded to {self.gar_host} with tags {tags}")
         self.template_name = template_name
         self.version_name = version_name
         return self
@@ -145,7 +145,7 @@ class VertexPipelineDeployer:
         """
         if experiment_name is None:
             experiment_name = f"{self.pipeline_name}-experiment"
-            logging.info(f"Experiment name not provided, using {experiment_name}")
+            logger.info(f"Experiment name not provided, using {experiment_name}")
 
         template_path = self._get_template_path(tag)
 
@@ -214,11 +214,11 @@ class VertexPipelineDeployer:
             location=self.region,
         )
 
-        logging.info(
+        logger.info(
             f"There are {len(schedules_list)} schedules defined for pipeline {self.pipeline_name}"
         )
         if len(schedules_list) > 0 and delete_last_schedule:
-            logging.info(
+            logger.info(
                 f"Deleting schedule {schedules_list[0].display_name}"
                 f" for pipeline {self.pipeline_name} at {schedules_list[0].cron}"
             )
@@ -242,7 +242,7 @@ class VertexPipelineDeployer:
         else:
             template_path = self._get_template_path()
 
-        logging.info(
+        logger.info(
             f"Creating schedule for pipeline {self.pipeline_name} at {cron}"
             f" with template {template_path}"
         )
