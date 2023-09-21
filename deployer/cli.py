@@ -188,12 +188,25 @@ def check(
     ] = None,
 ):
     """Check that all pipelines are valid."""
-    Pipelines.model_validate(
-        {
-            "pipelines": {
-                p.value: {"pipeline_name": p.value}
-                for p in PipelineName.__members__.values()
-                if (pipeline_name is None or p == pipeline_name)
-            }
-        }
+    if len(PipelineName.__members__) == 0:
+        raise ValueError(
+            "No pipeline found. Please check that the pipeline root path is correct"
+            f" ('{PIPELINE_ROOT_PATH}')"
+        )
+
+    pipelines_to_check = [
+        p
+        for p in PipelineName.__members__.values()
+        if (pipeline_name is None or p == pipeline_name)
+    ]
+
+    pipelines = Pipelines.model_validate(
+        {"pipelines": {p.value: {"pipeline_name": p.value} for p in pipelines_to_check}}
     )
+
+    log_message = "Checked pipelines and config paths:\n"
+    for pipeline in pipelines.pipelines.values():
+        log_message += f"- {pipeline.pipeline_name.value}:\n"
+        for config_path in pipeline.config_paths:
+            log_message += f"  - {config_path}\n"
+    logger.success(log_message)
