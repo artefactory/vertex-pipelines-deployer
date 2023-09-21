@@ -10,6 +10,7 @@ from loguru import logger
 from requests import HTTPError
 
 from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIMEZONE
+from deployer.exceptions import TagNotFoundError
 
 
 class VertexPipelineDeployer:
@@ -234,7 +235,7 @@ class VertexPipelineDeployer:
             except HTTPError as e:
                 tags_list = client.list_tags(self.pipeline_name)
                 tags_list_parsed = [x["name"].split("/")[-1] for x in tags_list]
-                raise ValueError(
+                raise TagNotFoundError(
                     f"Tag {tag} not found for package {self.gar_host}/{self.pipeline_name}.\
                         Available tags: {tags_list_parsed}"
                 ) from e
