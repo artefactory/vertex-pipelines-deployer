@@ -3,7 +3,6 @@ import json
 from enum import Enum
 from pathlib import Path
 
-from dotenv import find_dotenv
 from kfp.components import graph_component
 from loguru import logger
 from pydantic import ValidationError
@@ -75,12 +74,16 @@ class VertexPipelinesSettings(BaseSettings):  # noqa: D101
 
 def load_vertex_settings(env_file: Path | None = None) -> VertexPipelinesSettings:
     """Load the settings from the environment."""
-    if env_file is not None:
-        find_dotenv(env_file, raise_error_if_not_found=True)
     try:
         settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
     except ValidationError as e:
-        raise ValueError(f"Validation failed for env file {env_file}: {e}") from e
+        msg = "Validation failed for VertexPipelinesSettings. "
+        if env_file is not None:
+            msg += f"Please check your `.env` file: `{env_file}`"
+        else:
+            msg += "No `.env` file provided. Please check your environment variables"
+        msg += f"\n{e}"
+        raise ValueError(msg) from e
     return settings
 
 

@@ -122,8 +122,7 @@ def deploy(
     ] = DEFAULT_LOCAL_PACKAGE_PATH,
 ):
     """Deploy and manage Vertex AI Pipelines."""
-    if env_file is not None:
-        vertex_settings = load_vertex_settings(env_file=env_file)
+    vertex_settings = load_vertex_settings(env_file=env_file)
 
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
 

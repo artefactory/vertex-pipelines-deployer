@@ -11,7 +11,6 @@ vertex-deployer = "deployer.cli:app"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11.0"
-python-dotenv = "^1.0.0"
 kfp = ">=2.0.1, <2.1.0"
 google-cloud-aiplatform = "^1.26.1"
 requests = "^2.31.0"
