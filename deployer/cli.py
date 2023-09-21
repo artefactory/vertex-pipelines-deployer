@@ -173,20 +173,15 @@ def deploy(
         )
 
 
-@app.command()
+@app.command(no_args_is_help=True)
 def check(
     pipeline_name: Annotated[
         PipelineName,
-        typer.Argument(..., help="The name of the pipeline to run. If None, check all."),
+        typer.Argument(..., help="The name of the pipeline to run."),
     ] = None,
-    config_name: Annotated[
-        str,
-        typer.Option(
-            "--config-name",
-            "-cn",
-            help="The name of the configuration file to use when running the pipeline.",
-        ),
-    ] = None,
+    all: Annotated[
+        bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
+    ] = False,
 ):
     """Check that all pipelines are valid.
 
@@ -210,11 +205,14 @@ def check(
             f" ('{PIPELINE_ROOT_PATH}')"
         )
 
-    pipelines_to_check = [
-        p
-        for p in PipelineName.__members__.values()
-        if (pipeline_name is None or p == pipeline_name)
-    ]
+    if all:
+        logger.info("Checking all pipelines")
+        pipelines_to_check = PipelineName.__members__.values()
+    elif pipeline_name is not None:
+        logger.info(f"Checking pipeline {pipeline_name}")
+        pipelines_to_check = [pipeline_name]
+    else:
+        raise ValueError("Please specify either --all or a pipeline name")
 
     pipelines = Pipelines.model_validate(
         {"pipelines": {p.value: {"pipeline_name": p.value} for p in pipelines_to_check}}
