@@ -21,12 +21,14 @@ class LoguruLevel(str, Enum):  # noqa: D101
     CRITICAL = "CRITICAL"
 
 
-def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
-    """Create an Enum of pipeline names from a directory of pipelines."""
-    pipeline_names = Path(dir_path).glob("*.py")
-    pipeline_enum_dict = {x.stem: x.stem for x in pipeline_names if x.stem != "__init__"}
-    PipelineNames = Enum("PipelineNames", pipeline_enum_dict)
-    return PipelineNames
+def make_enum_from_python_package_dir(dir_path: Path) -> Enum:
+    """Create an Enum of file names without extention from a directory of python modules."""
+    if not (dir_path_ := Path(dir_path)).exists():
+        raise FileNotFoundError(f"Directory {dir_path_} not found.")
+    file_paths = dir_path_.glob("*.py")
+    enum_dict = {x.stem: x.stem for x in file_paths if x.stem != "__init__"}
+    FileNamesEnum = Enum("PipelineNames", enum_dict)
+    return FileNamesEnum
 
 
 def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_component.GraphComponent:

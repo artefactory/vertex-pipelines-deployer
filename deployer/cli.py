@@ -17,7 +17,7 @@ from deployer.utils import (
     import_pipeline_from_dir,
     load_config,
     load_vertex_settings,
-    make_pipeline_names_enum_from_dir,
+    make_enum_from_python_package_dir,
 )
 
 app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode="markdown")
@@ -30,7 +30,7 @@ def cli_set_logger(
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
 
 
-PipelineName = make_pipeline_names_enum_from_dir(PIPELINE_ROOT_PATH)
+PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 
 
 @app.command(no_args_is_help=True)
