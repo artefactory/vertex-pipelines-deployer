@@ -46,6 +46,15 @@ class Pipeline(CustomBaseModel):
         return [load_config(config_path) for config_path in self.config_paths]
 
     @model_validator(mode="after")
+    def import_pipeline(self):
+        """Validate that the pipeline can be imported by calling pipeline computed field"""
+        try:
+            _ = self.pipeline
+        except Exception as e:
+            raise ValueError(f"Pipeline import failed: {e.__repr__()}")  # noqa: B904
+        return self
+
+    @model_validator(mode="after")
     def compile_pipeline(self):
         """Validate that the pipeline can be compiled"""
         logger.debug(f"Compiling pipeline {self.pipeline_name.value}")
