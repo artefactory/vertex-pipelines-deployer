@@ -7,7 +7,7 @@ from pydantic import Field, computed_field, model_validator
 from deployer.constants import CONFIG_ROOT_PATH, PIPELINE_ROOT_PATH
 from deployer.models import CustomBaseModel, PipelineName, create_model_from_pipeline
 from deployer.pipelines_deployer import VertexPipelineDeployer
-from deployer.utils import import_pipeline_from_dir, load_config
+from deployer.utils import disable_logger, import_pipeline_from_dir, load_config
 
 PipelineConfigT = TypeVar("PipelineConfigT")
 
@@ -37,8 +37,8 @@ class Pipeline(CustomBaseModel):
     @computed_field
     def pipeline(self) -> Any:
         """Import pipeline"""
-        logger.debug(f"Importing pipeline {self.pipeline_name.value}")
-        return import_pipeline_from_dir(PIPELINE_ROOT_PATH, self.pipeline_name.value)
+        with disable_logger("deployer.utils"):
+            return import_pipeline_from_dir(PIPELINE_ROOT_PATH, self.pipeline_name.value)
 
     @computed_field()
     def configs(self) -> Any:
@@ -48,6 +48,7 @@ class Pipeline(CustomBaseModel):
     @model_validator(mode="after")
     def import_pipeline(self):
         """Validate that the pipeline can be imported by calling pipeline computed field"""
+        logger.debug(f"Importing pipeline {self.pipeline_name.value}")
         try:
             _ = self.pipeline
         except Exception as e:
@@ -59,11 +60,12 @@ class Pipeline(CustomBaseModel):
         """Validate that the pipeline can be compiled"""
         logger.debug(f"Compiling pipeline {self.pipeline_name.value}")
         try:
-            VertexPipelineDeployer(
-                pipeline_name=self.pipeline_name.value,
-                pipeline_func=self.pipeline,
-                local_package_path="./temp",
-            ).compile()
+            with disable_logger("deployer.pipelines_deployer"):
+                VertexPipelineDeployer(
+                    pipeline_name=self.pipeline_name.value,
+                    pipeline_func=self.pipeline,
+                    local_package_path="./temp",
+                ).compile()
         except Exception as e:
             raise ValueError(f"Pipeline compilation failed: {e.__repr__()}")  # noqa: B904
         return self
