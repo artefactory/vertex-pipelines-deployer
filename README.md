@@ -28,15 +28,15 @@
 
 
 ## Table of Contents
-- [Why this tool?](##why-this-tool)
-- [Prerequisites](##prerequisites)
-- [Installation](##installation)
-- [Usage](##usage)
-  - [Setup](###setup)
-  - [Folder Structure](###folder-structure)
-  - [CLI: Deploying a Pipeline](###cli-deploying-a-pipeline)
-  - [CLI: Checking Pipelines are valid](###cli-checking-pipelines-are-valid)
-  - [CLI Options](###cli-options)
+- [Why this tool?](#why-this-tool)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Setup](#setup)
+  - [Folder Structure](#folder-structure)
+  - [CLI: Deploying a Pipeline](#cli-deploying-a-pipeline)
+  - [CLI: Checking Pipelines are valid](#cli-checking-pipelines-are-valid)
+  - [CLI Options](#cli-options)
 
 
 ## Why this tool?
