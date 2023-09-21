@@ -20,7 +20,7 @@ from deployer.utils import (
     make_pipeline_names_enum_from_dir,
 )
 
-app = typer.Typer(no_args_is_help=True, rich_help_panel="rich")
+app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode="markdown")
 
 
 @app.callback(name="set_logger")
@@ -176,7 +176,8 @@ def deploy(
 @app.command()
 def check(
     pipeline_name: Annotated[
-        PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
+        PipelineName,
+        typer.Argument(..., help="The name of the pipeline to run. If None, check all."),
     ] = None,
     config_name: Annotated[
         str,
@@ -187,7 +188,22 @@ def check(
         ),
     ] = None,
 ):
-    """Check that all pipelines are valid."""
+    """Check that all pipelines are valid.
+
+    Checking that a pipeline is valid includes:
+
+    * Checking that the pipeline can be imported. It must be a valid python module with a
+    `pipeline` function decorated with `@kfp.dsl.pipeline`.
+
+    * Checking that the pipeline can be compiled using `kfp.compiler.Compiler`.
+
+    * Checking that config files in `{CONFIG_ROOT_PATH}/{pipeline_name}` are corresponding to the
+    pipeline parameters definition, using Pydantic.
+
+    ---
+
+    **This command can be used to check pipelines in a Continuous Integration workflow.**
+    """
     if len(PipelineName.__members__) == 0:
         raise ValueError(
             "No pipeline found. Please check that the pipeline root path is correct"
