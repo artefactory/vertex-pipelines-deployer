@@ -37,6 +37,15 @@
   - [Deploying a Pipeline](###deploying-a-pipeline)
 
 
+```console
+>>> vertex-deployer check broken_pipeline
+2023-09-21 10:18:23.662 | INFO     | deployer.cli:check:212 - Checking pipeline PipelineNames.broken_pipeline
+2023-09-21 09:59:55.770 | INFO     | deployer.pipelines_deployer:compile:104 - Pipeline broken_pipeline compiled to temp/broken_pipeline.yaml
+2023-09-21 09:59:55.796 | SUCCESS  | deployer.cli:check:228 - Checked pipelines and config paths:
+- broken_pipeline:
+  - vertex/configs/broken_pipeline/config_test.json
+```
+
 ## Why this tool?
 
 Two uses cases:
