@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Callable
+from urllib.parse import urljoin
 
 from google.cloud import aiplatform
 from google.cloud.aiplatform import PipelineJobSchedule
@@ -52,7 +53,9 @@ class VertexPipelineDeployer:
     def _get_artifact_registry_host(self) -> str | None:
         """Return the Artifact Registry host if the location and repo ID are provided"""
         if self.gar_location is not None and self.gar_repo_id is not None:
-            return f"https://{self.gar_location}-kfp.pkg.dev/{self.project_id}/{self.gar_repo_id}"
+            return urljoin(
+                f"https://{self.gar_location}-kfp.pkg.dev", self.project_id, self.gar_repo_id
+            )
         logger.debug(
             "No Artifact Registry location or repo ID provided: not using Artifact Registry"
         )
