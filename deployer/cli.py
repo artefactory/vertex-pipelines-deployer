@@ -6,12 +6,11 @@ from loguru import logger
 from typing_extensions import Annotated
 
 from deployer.constants import (
-    CONFIG_ROOT_PATH,
     DEFAULT_LOCAL_PACKAGE_PATH,
     DEFAULT_TAGS,
     PIPELINE_ROOT_PATH,
 )
-from deployer.pipeline_checks import check_pipeline
+from deployer.pipeline_checks import Pipelines
 from deployer.pipelines_deployer import VertexPipelineDeployer
 from deployer.utils import (
     LoguruLevel,
@@ -175,7 +174,7 @@ def deploy(
 
 
 @app.command()
-def check_pipelines(
+def check(
     pipeline_name: Annotated[
         PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
     ] = None,
@@ -189,16 +188,12 @@ def check_pipelines(
     ] = None,
 ):
     """Check that all pipelines are valid."""
-    if pipeline_name is not None:
-        pipelines_to_check = [pipeline_name.value]
-    else:
-        pipelines_to_check = [p.value for p in PipelineName]
-    for pipeline_name in pipelines_to_check:
-        if config_name is not None:
-            config_names = [config_name]
-        else:
-            config_names = [
-                x.stem for x in (Path(CONFIG_ROOT_PATH) / pipeline_name).glob("*.json")
-            ]
-
-        check_pipeline(pipeline_name, config_names=config_names)
+    Pipelines.model_validate(
+        {
+            "pipelines": {
+                p.value: {"pipeline_name": p.value}
+                for p in PipelineName.__members__.values()
+                if (pipeline_name is None or p == pipeline_name)
+            }
+        }
+    )

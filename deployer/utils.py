@@ -47,7 +47,7 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
         pipeline: graph_component.GraphComponent | None = pipeline_module.pipeline
     except AttributeError as e:
         raise ImportError(
-            f"Pipeline {module_path}.pipeline not found. "
+            f"Pipeline {module_path}:pipeline not found. "
             "Please check that the pipeline is correctly defined and named."
         ) from e
 
