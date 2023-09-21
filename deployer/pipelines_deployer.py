@@ -13,6 +13,17 @@ from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIM
 from deployer.exceptions import TagNotFoundError
 
 
+def check_gar_host(func):
+    """Decorator to check that the Artifact Registry host is provided"""
+
+    def wrapper(self, *args, **kwargs):
+        if self.gar_host is None:
+            raise ValueError("Artifact Registry host not provided.")
+        return func(self, *args, **kwargs)
+
+    return wrapper
+
+
 class VertexPipelineDeployer:
     """Deployer for Vertex Pipelines"""
 
@@ -109,14 +120,12 @@ class VertexPipelineDeployer:
 
         return self
 
+    @check_gar_host
     def upload_to_registry(
         self,
         tags: list[str] = ["latest"],  # noqa: B006
     ) -> "VertexPipelineDeployer":
         """Upload pipeline to Artifact Registry"""
-        if self.gar_host is None:
-            raise ValueError("Artifact Registry host not provided. Cannot upload pipeline.")
-
         client = RegistryClient(host=self.gar_host)
         template_name, version_name = client.upload_pipeline(
             file_name=f"{self.pipeline_name}.yaml",
@@ -185,6 +194,7 @@ class VertexPipelineDeployer:
         )
         return self
 
+    @check_gar_host
     def create_pipeline_schedule(
         self,
         cron: str,
@@ -206,11 +216,6 @@ class VertexPipelineDeployer:
             delete_last_schedule (bool, optional): Whether to delete previous schedule.
                 Defaults to False.
         """
-        if self.gar_host is None:
-            raise ValueError(
-                "Artifact Registry host not provided. Cannot create pipeline schedule."
-            )
-
         schedule_display_name = f"schedule-{self.pipeline_name}"
         schedules_list = PipelineJobSchedule.list(
             filter=f'display_name="{schedule_display_name}"',
