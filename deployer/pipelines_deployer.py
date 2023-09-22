@@ -10,7 +10,7 @@ from loguru import logger
 from requests import HTTPError
 
 from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIMEZONE
-from deployer.exceptions import TagNotFoundError
+from deployer.exceptions import MissingGoogleArtifactRegistryHostError, TagNotFoundError
 
 
 class VertexPipelineDeployer:
@@ -82,7 +82,10 @@ class VertexPipelineDeployer:
 
     def _check_gar_host(self) -> None:
         if self.gar_host is None:
-            raise ValueError("Artifact Registry host not provided.")
+            raise MissingGoogleArtifactRegistryHostError(
+                "Google Artifact Registry host is missing. "
+                "Please provide gar_location and gar_repo_id."
+            )
 
     def _check_experiment_name(self, experiment_name: str | None = None) -> str:
         if experiment_name is None:
