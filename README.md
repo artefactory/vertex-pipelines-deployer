@@ -28,13 +28,15 @@
 
 
 ## Table of Contents
-- [Why this tool?](##why-this-tool)
-- [Prerequisites](##prerequisites)
-- [Installation](##installation)
-- [Usage](##usage)
-  - [Setup](###setup)
-  - [Folder Structure](###folder-structure)
-  - [Deploying a Pipeline](###deploying-a-pipeline)
+- [Why this tool?](#why-this-tool)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Setup](#setup)
+  - [Folder Structure](#folder-structure)
+  - [CLI: Deploying a Pipeline](#cli-deploying-a-pipeline)
+  - [CLI: Checking Pipelines are valid](#cli-checking-pipelines-are-valid)
+  - [CLI Options](#cli-options)
 
 
 ## Why this tool?
@@ -161,7 +163,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 > An [`example.env`](example/example.env) file is provided in this repo.
 > This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
 
-### Deploying a Pipeline
+### CLI: Deploying a Pipeline
 
 Let's say you defines a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
 ```bash
@@ -177,7 +179,25 @@ vertex-deployer deploy dummy_pipeline \
     --enable-caching
 ```
 
-To see all available options, run:
+### CLI: Checking Pipelines are valid
+
+To check that your pipelines are valid, you can use the `check` command. It uses a pydantic model to:
+- check that your pipeline imports and definition are valid
+- check that your pipeline can be compiled
+- generate a pydantic model from the pipeline parameters definition and check that all configs related to the pipeline are valid
+
+To validate one specific pipeline:
+```bash
+vertex-deployer check dummy_pipeline
+```
+
+To validate all pipelines in the `vertex/pipelines` folder:
+```bash
+vertex-deployer check --all
+```
+
+### CLI Options
+
 ```bash
 vertex-deployer --help
 ```
@@ -200,7 +220,9 @@ vertex-deployer --log-level DEBUG deploy ...
 │  ├─ __init__.py
 │  ├─ cli.py
 │  ├─ constants.py
-│  ├─ deployer.py
+│  ├─ models.py
+│  ├─ pipeline_checks.py
+│  ├─ pipeline_deployer.py
 │  └─ utils.py
 ├─ tests/
 ├─ example

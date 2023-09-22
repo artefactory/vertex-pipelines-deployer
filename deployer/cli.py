@@ -10,6 +10,7 @@ from deployer.constants import (
     DEFAULT_TAGS,
     PIPELINE_ROOT_PATH,
 )
+from deployer.pipeline_checks import Pipelines
 from deployer.pipelines_deployer import VertexPipelineDeployer
 from deployer.utils import (
     LoguruLevel,
@@ -19,7 +20,7 @@ from deployer.utils import (
     make_pipeline_names_enum_from_dir,
 )
 
-app = typer.Typer(no_args_is_help=True, rich_help_panel="rich")
+app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode="markdown")
 
 
 @app.callback(name="set_logger")
@@ -170,3 +171,56 @@ def deploy(
             tag=tags[0] if tags else None,
             delete_last_schedule=delete_last_schedule,
         )
+
+
+@app.command(no_args_is_help=True)
+def check(
+    pipeline_name: Annotated[
+        PipelineName,
+        typer.Argument(..., help="The name of the pipeline to run."),
+    ] = None,
+    all: Annotated[
+        bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
+    ] = False,
+):
+    """Check that all pipelines are valid.
+
+    Checking that a pipeline is valid includes:
+
+    * Checking that the pipeline can be imported. It must be a valid python module with a
+    `pipeline` function decorated with `@kfp.dsl.pipeline`.
+
+    * Checking that the pipeline can be compiled using `kfp.compiler.Compiler`.
+
+    * Checking that config files in `{CONFIG_ROOT_PATH}/{pipeline_name}` are corresponding to the
+    pipeline parameters definition, using Pydantic.
+
+    ---
+
+    **This command can be used to check pipelines in a Continuous Integration workflow.**
+    """
+    if len(PipelineName.__members__) == 0:
+        raise ValueError(
+            "No pipeline found. Please check that the pipeline root path is correct"
+            f" ('{PIPELINE_ROOT_PATH}')"
+        )
+
+    if all:
+        logger.info("Checking all pipelines")
+        pipelines_to_check = PipelineName.__members__.values()
+    elif pipeline_name is not None:
+        logger.info(f"Checking pipeline {pipeline_name}")
+        pipelines_to_check = [pipeline_name]
+    else:
+        raise ValueError("Please specify either --all or a pipeline name")
+
+    pipelines = Pipelines.model_validate(
+        {"pipelines": {p.value: {"pipeline_name": p.value} for p in pipelines_to_check}}
+    )
+
+    log_message = "Checked pipelines and config paths:\n"
+    for pipeline in pipelines.pipelines.values():
+        log_message += f"- {pipeline.pipeline_name.value}:\n"
+        for config_path in pipeline.config_paths:
+            log_message += f"  - {config_path}\n"
+    logger.success(log_message)
