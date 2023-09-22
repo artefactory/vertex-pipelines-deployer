@@ -3,7 +3,6 @@ import json
 from enum import Enum
 from pathlib import Path
 
-from dotenv import find_dotenv
 from kfp.components import graph_component
 from loguru import logger
 from pydantic import ValidationError
@@ -30,8 +29,9 @@ def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
 
 def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_component.GraphComponent:
     """Import a pipeline from a directory."""
-    dirpath_clean = Path(dirpath).resolve().relative_to(get_project_root())
-    parent_module = ".".join(dirpath_clean.parts)
+    if dirpath.startswith("."):
+        dirpath = dirpath[1:]
+    parent_module = ".".join(Path(dirpath).parts)
     module_path = f"{parent_module}.{pipeline_name}"
 
     try:
@@ -56,12 +56,6 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
     return pipeline
 
 
-def get_project_root() -> str:
-    """Get the project root."""
-    project_root = str(Path(__file__).parent.parent.resolve())
-    return project_root
-
-
 class VertexPipelinesSettings(BaseSettings):  # noqa: D101
     model_config = SettingsConfigDict(extra="ignore", case_sensitive=True)
 
@@ -75,12 +69,16 @@ class VertexPipelinesSettings(BaseSettings):  # noqa: D101
 
 def load_vertex_settings(env_file: Path | None = None) -> VertexPipelinesSettings:
     """Load the settings from the environment."""
-    if env_file is not None:
-        find_dotenv(env_file, raise_error_if_not_found=True)
     try:
         settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
     except ValidationError as e:
-        raise ValueError(f"Validation failed for env file {env_file}: {e}") from e
+        msg = "Validation failed for VertexPipelinesSettings. "
+        if env_file is not None:
+            msg += f"Please check your `.env` file: `{env_file}`"
+        else:
+            msg += "No `.env` file provided. Please check your environment variables"
+        msg += f"\n{e}"
+        raise ValueError(msg) from e
     return settings
 
 

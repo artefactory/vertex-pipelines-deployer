@@ -10,7 +10,9 @@ from deployer.utils import make_pipeline_names_enum_from_dir
 class CustomBaseModel(BaseModel):
     """Base model for all pipeline dynamic configs."""
 
-    model_config = ConfigDict(extra="forbid")
+    # FIXME: arbitrary_types_allowed is a workaround to allow to pass
+    #        Vertex Pipelines Artifacts as parameters to a pipeline.
+    model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
 
 
 def create_model_from_pipeline(

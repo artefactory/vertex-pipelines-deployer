@@ -122,8 +122,7 @@ def deploy(
     ] = DEFAULT_LOCAL_PACKAGE_PATH,
 ):
     """Deploy and manage Vertex AI Pipelines."""
-    if env_file is not None:
-        vertex_settings = load_vertex_settings(env_file=env_file)
+    vertex_settings = load_vertex_settings(env_file=env_file)
 
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
 
@@ -164,7 +163,7 @@ def deploy(
         if cron is None:
             raise ValueError("`cron` must be specified when scheduling the pipeline")
         cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
-        deployer.create_pipeline_schedule(
+        deployer.schedule(
             cron=cron,
             enable_caching=enable_caching,
             parameter_values=parameter_values,
@@ -221,6 +220,8 @@ def check(
     log_message = "Checked pipelines and config paths:\n"
     for pipeline in pipelines.pipelines.values():
         log_message += f"- {pipeline.pipeline_name.value}:\n"
+        if len(pipeline.config_paths) == 0:
+            log_message += "  <yellow>- No config path found</yellow>\n"
         for config_path in pipeline.config_paths:
             log_message += f"  - {config_path}\n"
-    logger.success(log_message)
+    logger.opt(ansi=True).success(log_message)

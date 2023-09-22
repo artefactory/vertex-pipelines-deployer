@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Callable
+from urllib.parse import urljoin
 
 from google.cloud import aiplatform
 from google.cloud.aiplatform import PipelineJobSchedule
@@ -9,6 +10,7 @@ from loguru import logger
 from requests import HTTPError
 
 from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIMEZONE
+from deployer.exceptions import MissingGoogleArtifactRegistryHostError, TagNotFoundError
 
 
 class VertexPipelineDeployer:
@@ -52,7 +54,9 @@ class VertexPipelineDeployer:
     def _get_artifact_registry_host(self) -> str | None:
         """Return the Artifact Registry host if the location and repo ID are provided"""
         if self.gar_location is not None and self.gar_repo_id is not None:
-            return f"https://{self.gar_location}-kfp.pkg.dev/{self.project_id}/{self.gar_repo_id}"
+            return urljoin(
+                f"https://{self.gar_location}-kfp.pkg.dev", self.project_id, self.gar_repo_id
+            )
         logger.debug(
             "No Artifact Registry location or repo ID provided: not using Artifact Registry"
         )
@@ -75,6 +79,22 @@ class VertexPipelineDeployer:
             raise ValueError("tag or template_name and version_name must be provided")
 
         return str(self.local_package_path / f"{self.pipeline_name}.yaml")
+
+    def _check_gar_host(self) -> None:
+        if self.gar_host is None:
+            raise MissingGoogleArtifactRegistryHostError(
+                "Google Artifact Registry host is missing. "
+                "Please provide gar_location and gar_repo_id."
+            )
+
+    def _check_experiment_name(self, experiment_name: str | None = None) -> str:
+        if experiment_name is None:
+            experiment_name = f"{self.pipeline_name}-experiment"
+            logger.info(f"Experiment name not provided, using {experiment_name}")
+
+        experiment_name = experiment_name.replace("_", "-")
+
+        return experiment_name
 
     def _create_pipeline_job(
         self,
@@ -110,12 +130,10 @@ class VertexPipelineDeployer:
         tags: list[str] = ["latest"],  # noqa: B006
     ) -> "VertexPipelineDeployer":
         """Upload pipeline to Artifact Registry"""
-        if self.gar_host is None:
-            raise ValueError("Artifact Registry host not provided. Cannot upload pipeline.")
-
+        self._check_gar_host()
         client = RegistryClient(host=self.gar_host)
         template_name, version_name = client.upload_pipeline(
-            file_name=f"{self.pipeline_name}.yaml",
+            file_name=self.local_package_path / f"{self.pipeline_name}.yaml",
             tags=tags,
         )
         logger.info(f"Pipeline {self.pipeline_name} uploaded to {self.gar_host} with tags {tags}")
@@ -143,9 +161,7 @@ class VertexPipelineDeployer:
             experiment_name (str, optional): Experiment name. Defaults to None.
             tag (str, optional): Tag of the pipeline template. Defaults to None.
         """
-        if experiment_name is None:
-            experiment_name = f"{self.pipeline_name}-experiment".replace("_", "-")
-            logger.info(f"Experiment name not provided, using {experiment_name}")
+        experiment_name = self._check_experiment_name(experiment_name)
 
         template_path = self._get_template_path(tag)
 
@@ -161,7 +177,7 @@ class VertexPipelineDeployer:
         )
         return self
 
-    def deploy_and_run(
+    def compile_upload_run(
         self,
         enable_caching: bool = False,
         parameter_values: dict | None = None,
@@ -181,7 +197,7 @@ class VertexPipelineDeployer:
         )
         return self
 
-    def create_pipeline_schedule(
+    def schedule(
         self,
         cron: str,
         enable_caching: bool = False,
@@ -202,10 +218,7 @@ class VertexPipelineDeployer:
             delete_last_schedule (bool, optional): Whether to delete previous schedule.
                 Defaults to False.
         """
-        if self.gar_host is None:
-            raise ValueError(
-                "Artifact Registry host not provided. Cannot create pipeline schedule."
-            )
+        self._check_gar_host()
 
         schedule_display_name = f"schedule-{self.pipeline_name}"
         schedules_list = PipelineJobSchedule.list(
@@ -231,7 +244,7 @@ class VertexPipelineDeployer:
             except HTTPError as e:
                 tags_list = client.list_tags(self.pipeline_name)
                 tags_list_parsed = [x["name"].split("/")[-1] for x in tags_list]
-                raise ValueError(
+                raise TagNotFoundError(
                     f"Tag {tag} not found for package {self.gar_host}/{self.pipeline_name}.\
                         Available tags: {tags_list_parsed}"
                 ) from e
