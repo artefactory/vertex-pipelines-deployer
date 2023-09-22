@@ -83,23 +83,13 @@ def deploy(
     tags: Annotated[
         list[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
-    parameter_values_filepath: Annotated[
+    config_filepath: Annotated[
         Path,
         typer.Option(
-            "--parameter-values-filepath",
-            "-pv",
-            help="Path to the json file with parameter values to use when running the pipeline.",
-            exists=True,
-            dir_okay=False,
-            file_okay=True,
-        ),
-    ] = None,
-    input_artifacts_filepath: Annotated[
-        Path,
-        typer.Option(
-            "--input-artifacts-filepath",
-            "-iar",
-            help="Path to the json file with input artifacts to use when running the pipeline.",
+            "--config-filepath",
+            "-cfp",
+            help="Path to the json/py file with parameter values and input artifacts"
+            "to use when running the pipeline.",
             exists=True,
             dir_okay=False,
             file_okay=True,
@@ -150,19 +140,7 @@ def deploy(
     )
 
     if run or schedule:
-        if parameter_values_filepath is not None:
-            parameter_values = load_config(parameter_values_filepath)
-        else:
-            logger.warning(
-                "`parameter_values_filepath` not specified"
-                " whereas you are running or scheduling the pipeline."
-            )
-            parameter_values = None
-
-        if input_artifacts_filepath is not None:
-            input_artifacts = load_config(input_artifacts_filepath)
-        else:
-            input_artifacts = None
+        parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
         deployer.compile()

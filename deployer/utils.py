@@ -8,6 +8,8 @@ from loguru import logger
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from deployer.exceptions import UnsupportedConfigFileError
+
 
 class LoguruLevel(str, Enum):  # noqa: D101
     TRACE = "TRACE"
@@ -82,11 +84,46 @@ def load_vertex_settings(env_file: Path | None = None) -> VertexPipelinesSetting
     return settings
 
 
-def load_config(config_filepath: Path) -> dict:
-    """Load a config file."""
-    with open(config_filepath) as f:
-        config = json.load(f)
-    return config
+def load_config(config_filepath: Path) -> tuple[dict | None, dict | None]:
+    """Load the parameter values and input artifacts from a config file.
+
+    Config file can be a JSON or Python file.
+        - If JSON, it should be a dict of parameter values.
+        - If Python, it should contain a `parameter_values` dict
+        and / or an `input_artifacts` dict.
+
+    Args:
+        config_filepath (Path): A `Path` object representing the path to the config file.
+
+    Returns:
+        tuple[dict | None, dict | None]: A tuple containing the loaded parameter values
+            and input artifacts (or `None` if not available).
+
+    Raises:
+        UnsupportedConfigFileError: If the file has an unsupported extension.
+    """
+    config_filepath = Path(config_filepath)
+
+    if config_filepath.suffix == ".json":
+        with open(config_filepath, "r") as f:
+            parameter_values = json.load(f)
+
+        return parameter_values, None
+
+    if config_filepath.suffix == ".py":
+        spec = importlib.util.spec_from_file_location("module.name", config_filepath)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+
+        parameter_values = getattr(module, "parameter_values", None)
+        input_artifacts = getattr(module, "input_artifacts", None)
+
+        return parameter_values, input_artifacts
+
+    raise UnsupportedConfigFileError(
+        f"{config_filepath}: Config file type {config_filepath.suffix} is not supported."
+        " Please use a JSON or Python file."
+    )
 
 
 class disable_logger(object):
