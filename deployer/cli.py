@@ -163,7 +163,7 @@ def deploy(
         if cron is None:
             raise ValueError("`cron` must be specified when scheduling the pipeline")
         cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
-        deployer.create_pipeline_schedule(
+        deployer.schedule(
             cron=cron,
             enable_caching=enable_caching,
             parameter_values=parameter_values,

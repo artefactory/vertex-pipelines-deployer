@@ -13,17 +13,6 @@ from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIM
 from deployer.exceptions import TagNotFoundError
 
 
-def check_gar_host(func):
-    """Decorator to check that the Artifact Registry host is provided"""
-
-    def wrapper(self, *args, **kwargs):
-        if self.gar_host is None:
-            raise ValueError("Artifact Registry host not provided.")
-        return func(self, *args, **kwargs)
-
-    return wrapper
-
-
 class VertexPipelineDeployer:
     """Deployer for Vertex Pipelines"""
 
@@ -91,6 +80,19 @@ class VertexPipelineDeployer:
 
         return str(self.local_package_path / f"{self.pipeline_name}.yaml")
 
+    def _check_gar_host(self) -> None:
+        if self.gar_host is None:
+            raise ValueError("Artifact Registry host not provided.")
+
+    def _check_experiment_name(self, experiment_name: str | None = None) -> str:
+        if experiment_name is None:
+            experiment_name = f"{self.pipeline_name}-experiment"
+            logger.info(f"Experiment name not provided, using {experiment_name}")
+
+        experiment_name = experiment_name.replace("_", "-")
+
+        return experiment_name
+
     def _create_pipeline_job(
         self,
         template_path: str,
@@ -120,12 +122,12 @@ class VertexPipelineDeployer:
 
         return self
 
-    @check_gar_host
     def upload_to_registry(
         self,
         tags: list[str] = ["latest"],  # noqa: B006
     ) -> "VertexPipelineDeployer":
         """Upload pipeline to Artifact Registry"""
+        self._check_gar_host()
         client = RegistryClient(host=self.gar_host)
         template_name, version_name = client.upload_pipeline(
             file_name=f"{self.pipeline_name}.yaml",
@@ -156,9 +158,7 @@ class VertexPipelineDeployer:
             experiment_name (str, optional): Experiment name. Defaults to None.
             tag (str, optional): Tag of the pipeline template. Defaults to None.
         """
-        if experiment_name is None:
-            experiment_name = f"{self.pipeline_name}-experiment".replace("_", "-")
-            logger.info(f"Experiment name not provided, using {experiment_name}")
+        experiment_name = self._check_experiment_name(experiment_name)
 
         template_path = self._get_template_path(tag)
 
@@ -174,7 +174,7 @@ class VertexPipelineDeployer:
         )
         return self
 
-    def deploy_and_run(
+    def compile_upload_run(
         self,
         enable_caching: bool = False,
         parameter_values: dict | None = None,
@@ -194,8 +194,7 @@ class VertexPipelineDeployer:
         )
         return self
 
-    @check_gar_host
-    def create_pipeline_schedule(
+    def schedule(
         self,
         cron: str,
         enable_caching: bool = False,
@@ -216,6 +215,8 @@ class VertexPipelineDeployer:
             delete_last_schedule (bool, optional): Whether to delete previous schedule.
                 Defaults to False.
         """
+        self._check_gar_host()
+
         schedule_display_name = f"schedule-{self.pipeline_name}"
         schedules_list = PipelineJobSchedule.list(
             filter=f'display_name="{schedule_display_name}"',
