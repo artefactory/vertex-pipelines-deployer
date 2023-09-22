@@ -133,7 +133,7 @@ class VertexPipelineDeployer:
         self._check_gar_host()
         client = RegistryClient(host=self.gar_host)
         template_name, version_name = client.upload_pipeline(
-            file_name=f"{self.pipeline_name}.yaml",
+            file_name=self.local_package_path / f"{self.pipeline_name}.yaml",
             tags=tags,
         )
         logger.info(f"Pipeline {self.pipeline_name} uploaded to {self.gar_host} with tags {tags}")
