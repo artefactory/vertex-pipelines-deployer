@@ -29,8 +29,9 @@ def make_pipeline_names_enum_from_dir(dir_path: Path) -> Enum:
 
 def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_component.GraphComponent:
     """Import a pipeline from a directory."""
-    dirpath_clean = Path(dirpath).resolve().relative_to(get_project_root())
-    parent_module = ".".join(dirpath_clean.parts)
+    if dirpath.startswith("."):
+        dirpath = dirpath[1:]
+    parent_module = ".".join(Path(dirpath).parts)
     module_path = f"{parent_module}.{pipeline_name}"
 
     try:
@@ -53,12 +54,6 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
     logger.debug(f"Pipeline {module_path} imported successfully.")
 
     return pipeline
-
-
-def get_project_root() -> str:
-    """Get the project root."""
-    project_root = str(Path(__file__).parent.parent.resolve())
-    return project_root
 
 
 class VertexPipelinesSettings(BaseSettings):  # noqa: D101
