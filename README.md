@@ -154,7 +154,33 @@ vertex
    └─ {pipeline_name}.py
 ```
 
+#### Pipelines
+
 You file `{pipeline_name}.py` must contain a function called `pipeline` decorated using `kfp.dsl.pipeline`.
+
+
+#### Configs
+
+Config file can be either `.py` files or `.json` files.
+They must be located in the `config/{pipeline_name}` folder.
+
+**Why two formats?**
+
+`.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` files are useful to define simple configs (e.g. a string).
+
+**How to format them?**
+- `.json` files must be valid json files containing only one dict of key: value.
+- `.py` files must be valid python files with two important elements:
+    - `parameter_values` to pass arguments to your pipeline
+    - `input_artifacts` if you want to retrieve and create input artifacts to your pipeline.
+        See [Vertex Documentation](https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob) for more information.
+
+**How to name them?**
+
+`{config_name}.json` or `{config_name}.py`. config_name is free but must be unique for a given pipeline.
+
+
+#### Settings
 
 You will also need the following ENV variables, either exported or in a `.env` file (see example in `example.env`):
 
