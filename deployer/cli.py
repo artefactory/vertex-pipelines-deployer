@@ -83,7 +83,7 @@ def deploy(
     tags: Annotated[
         list[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
-    config_path: Annotated[
+    config_filepath: Annotated[
         Path,
         typer.Option(
             "--config-filepath",
@@ -140,7 +140,7 @@ def deploy(
     )
 
     if run or schedule:
-        parameter_values, input_artifacts = load_config(config_path)
+        parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
         deployer.compile()
@@ -179,7 +179,7 @@ def check(
     all: Annotated[
         bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
     ] = False,
-    config_path: Annotated[
+    config_filepath: Annotated[
         Path,
         typer.Option(
             "--config-filepath",
@@ -223,11 +223,11 @@ def check(
     else:
         raise ValueError("Please specify either --all or a pipeline name")
 
-    config_paths = [config_path] if config_path is not None else None
+    config_filepaths = [config_filepath] if config_filepath is not None else None
     pipelines = Pipelines.model_validate(
         {
             "pipelines": {
-                p.value: {"pipeline_name": p.value, "config_paths": config_paths}
+                p.value: {"pipeline_name": p.value, "config_paths": config_filepaths}
                 for p in pipelines_to_check
             }
         }
@@ -238,6 +238,6 @@ def check(
         log_message += f"- {pipeline.pipeline_name.value}:\n"
         if len(pipeline.config_paths) == 0:
             log_message += "  <yellow>- No config path found</yellow>\n"
-        for config_path in pipeline.config_paths:
-            log_message += f"  - {config_path.name}\n"
+        for config_filepath in pipeline.config_paths:
+            log_message += f"  - {config_filepath.name}\n"
     logger.opt(ansi=True).success(log_message)
