@@ -107,23 +107,56 @@ def load_config(config_filepath: Path) -> tuple[dict | None, dict | None]:
     if config_filepath.suffix == ".json":
         with open(config_filepath, "r") as f:
             parameter_values = json.load(f)
-
         return parameter_values, None
 
     if config_filepath.suffix == ".py":
-        spec = importlib.util.spec_from_file_location("module.name", config_filepath)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-
-        parameter_values = getattr(module, "parameter_values", None)
-        input_artifacts = getattr(module, "input_artifacts", None)
-
+        parameter_values, input_artifacts = _load_config_python(config_filepath)
         return parameter_values, input_artifacts
 
     raise UnsupportedConfigFileError(
         f"{config_filepath}: Config file type {config_filepath.suffix} is not supported."
         " Please use a JSON or Python file."
     )
+
+
+def _load_config_python(config_filepath: Path) -> tuple[dict | None, dict | None]:
+    """Load the parameter values and input artifacts from a Python config file.
+
+    Args:
+        config_filepath (Path): A `Path` object representing the path to the config file.
+
+    Returns:
+        tuple[dict | None, dict | None]: A tuple containing the loaded parameter values
+            (or `None` if not available) and input artifacts (or `None` if not available).
+
+    Raises:
+        ValueError: If the config file does not contain a `parameter_values` and/or
+            `input_artifacts` dict.
+        ValueError: If the config file contains common keys in `parameter_values` and
+            `input_artifacts` dict.
+    """
+    spec = importlib.util.spec_from_file_location("module.name", config_filepath)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    parameter_values = getattr(module, "parameter_values", None)
+    input_artifacts = getattr(module, "input_artifacts", None)
+
+    if parameter_values is None and input_artifacts is None:
+        raise ValueError(
+            f"{config_filepath}: Python config file must contain a `parameter_values` "
+            "and/or `input_artifacts` dict."
+        )
+
+    if parameter_values is not None and input_artifacts is not None:
+        common_keys = set(parameter_values.keys()).intersection(set(input_artifacts.keys()))
+        if common_keys:
+            raise ValueError(
+                f"{config_filepath}: Python config file must not contain common keys in "
+                "`parameter_values` and `input_artifacts` dict. Common keys: {common_keys}"
+            )
+
+    return parameter_values, input_artifacts
 
 
 class disable_logger(object):

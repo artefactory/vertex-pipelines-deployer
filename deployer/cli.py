@@ -221,5 +221,5 @@ def check(
         if len(pipeline.config_paths) == 0:
             log_message += "  <yellow>- No config path found</yellow>\n"
         for config_path in pipeline.config_paths:
-            log_message += f"  - {config_path}\n"
+            log_message += f"  - {config_path.name}\n"
     logger.opt(ansi=True).success(log_message)

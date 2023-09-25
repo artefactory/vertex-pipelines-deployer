@@ -29,9 +29,10 @@ class Pipeline(CustomBaseModel):
     def populate_config_names(cls, data: Any) -> Any:
         """Populate config names before validation"""
         if data.get("config_paths") is None:
-            data["config_paths"] = list(
-                (Path(CONFIG_ROOT_PATH) / data["pipeline_name"]).glob("*.json")
-            )
+            configs_dirpath = Path(CONFIG_ROOT_PATH) / data["pipeline_name"]
+            data["config_paths"] = []
+            for config_type in ["py", "json"]:
+                data["config_paths"] += list(configs_dirpath.glob(f"*.{config_type}"))
         return data
 
     @computed_field
@@ -43,7 +44,9 @@ class Pipeline(CustomBaseModel):
     @computed_field()
     def configs(self) -> Any:
         """Load configs"""
-        return [load_config(config_path) for config_path in self.config_paths]
+        configs = [load_config(config_path) for config_path in self.config_paths]
+        configs = [{**(pv or {}), **(ia or {})} for pv, ia in configs]
+        return configs
 
     @model_validator(mode="after")
     def import_pipeline(self):
