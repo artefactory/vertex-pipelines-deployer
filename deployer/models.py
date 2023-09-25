@@ -16,11 +16,11 @@ class CustomBaseModel(BaseModel):
     model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
 
 
-def artifact_type_to_str(annotation: type) -> type:
-    """Converts an kfp.dsl.Artifact type to a string.
+def convert_artifact_type_to_str(annotation: type) -> type:
+    """Convert a kfp.dsl.Artifact type to a string.
 
     This is mandatory for type checking, as kfp.dsl.Artifact types should be passed as strings
-    to Vertex. See https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob
+    to VertexAI. See https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob
     for details.
     """  # noqa: E501
     if isinstance(annotation, _AnnotatedAlias):
@@ -35,7 +35,8 @@ def create_model_from_pipeline(
     """Create a Pydantic model from pipeline parameters."""
     pipeline_signature = signature(pipeline.pipeline_func)
     pipeline_typing = {
-        p.name: artifact_type_to_str(p.annotation) for p in pipeline_signature.parameters.values()
+        p.name: convert_artifact_type_to_str(p.annotation)
+        for p in pipeline_signature.parameters.values()
     }
 
     pipeline_model = create_model(
