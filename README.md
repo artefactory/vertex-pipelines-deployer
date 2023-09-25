@@ -128,7 +128,7 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
     --role="roles/aiplatform.user"
 
-gcloud storage buckets add-iam-policy-binding ${VERTEX_STAGING_BUCKET_NAME} \
+gcloud storage buckets add-iam-policy-binding gs://${VERTEX_STAGING_BUCKET_NAME} \
     --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
     --role="roles/storage.objectUser"
 
