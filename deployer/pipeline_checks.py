@@ -1,10 +1,15 @@
+import shutil
 from pathlib import Path
 from typing import Annotated, Any, Generic, TypeVar
 
 from loguru import logger
 from pydantic import Field, computed_field, model_validator
 
-from deployer.constants import CONFIG_ROOT_PATH, PIPELINE_ROOT_PATH
+from deployer.constants import (
+    CONFIG_ROOT_PATH,
+    PIPELINE_ROOT_PATH,
+    TEMP_LOCAL_PACKAGE_PATH,
+)
 from deployer.models import CustomBaseModel, PipelineName, create_model_from_pipeline
 from deployer.pipelines_deployer import VertexPipelineDeployer
 from deployer.utils import disable_logger, import_pipeline_from_dir, load_config
@@ -67,7 +72,7 @@ class Pipeline(CustomBaseModel):
                 VertexPipelineDeployer(
                     pipeline_name=self.pipeline_name.value,
                     pipeline_func=self.pipeline,
-                    local_package_path="./temp",
+                    local_package_path=TEMP_LOCAL_PACKAGE_PATH,
                 ).compile()
         except Exception as e:
             raise ValueError(f"Pipeline compilation failed: {e.__repr__()}")  # noqa: B904
@@ -89,3 +94,16 @@ class Pipelines(CustomBaseModel):
     """Model to validate multiple pipelines at once"""
 
     pipelines: dict[str, Pipeline]
+
+    @model_validator(mode="before")
+    @classmethod
+    def _init_temp_directory(cls, data: Any) -> Any:
+        """Create temporary directory"""
+        Path(TEMP_LOCAL_PACKAGE_PATH).mkdir(exist_ok=True)
+        return data
+
+    @model_validator(mode="after")
+    def _remove_temp_directory(self) -> None:
+        """Remove temporary directory"""
+        shutil.rmtree(TEMP_LOCAL_PACKAGE_PATH)
+        return self
