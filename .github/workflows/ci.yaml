@@ -41,3 +41,58 @@ jobs:
 
       - name: Run tests
         run: make run-tests
+
+  CLI-Integration-Tests:
+    name: Launching CLI Integration Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10']
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install poetry
+        run: make download-poetry
+
+      - name: Set up pip cache
+        uses: actions/cache@v3.2.4
+        with:
+          path: ~/.cache/pypoetry/virtualenvs
+          key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
+
+      - name: Set Poetry Path
+        run: |
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+
+      - name: Install requirements
+        run: |
+          poetry run pip install --upgrade pip
+          poetry install
+
+      - name: Test list command
+        run: |
+          cd example
+          poetry run vertex-deployer list --with-configs
+
+      - name: Test check command
+        run: |
+          cd example
+          poetry run vertex-deployer -log DEBUG check --all
+
+      - name: Test deploy command
+      # Cannot check more than compile action here, need GCP environment for upload, run, schedule
+        run: |
+          cd example
+          poetry run vertex-deployer -log DEBUG deploy dummy_pipeline --compile --env-file example.env
+
+      - name: Test create command
+        run: |
+          cd example
+          poetry run vertex-deployer create test_pipeline --config-type py
+          [ -e vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0
