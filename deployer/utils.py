@@ -21,9 +21,10 @@ class LoguruLevel(str, Enum):  # noqa: D101
     CRITICAL = "CRITICAL"
 
 
-def make_enum_from_python_package_dir(dir_path: Path) -> Enum:
+def make_enum_from_python_package_dir(dir_path: Path, raise_if_not_found: bool = False) -> Enum:
     """Create an Enum of file names without extention from a directory of python modules."""
-    if not (dir_path_ := Path(dir_path)).exists():
+    dir_path_ = Path(dir_path)
+    if raise_if_not_found and not dir_path_.exists():
         raise FileNotFoundError(f"Directory {dir_path_} not found.")
     file_paths = dir_path_.glob("*.py")
     enum_dict = {x.stem: x.stem for x in file_paths if x.stem != "__init__"}

@@ -6,6 +6,7 @@ from loguru import logger
 from typing_extensions import Annotated
 
 from deployer.constants import (
+    CONFIG_ROOT_PATH,
     DEFAULT_LOCAL_PACKAGE_PATH,
     DEFAULT_TAGS,
     PIPELINE_ROOT_PATH,
@@ -122,7 +123,7 @@ def deploy(
         ),
     ] = DEFAULT_LOCAL_PACKAGE_PATH,
 ):
-    """Deploy and manage Vertex AI Pipelines."""
+    """Compile, upload, run and schedule pipelines."""
     vertex_settings = load_vertex_settings(env_file=env_file)
 
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
@@ -192,7 +193,7 @@ def check(
         ),
     ] = None,
 ):
-    """Check that all pipelines are valid.
+    """Check that pipelines are valid.
 
     Checking that a pipeline is valid includes:
 
@@ -241,3 +242,38 @@ def check(
         for config_filepath in pipeline.config_paths:
             log_message += f"  - {config_filepath.name}\n"
     logger.opt(ansi=True).success(log_message)
+
+
+@app.command()
+def list(
+    with_configs: Annotated[
+        bool,
+        typer.Option(
+            "--with-configs / --no-configs", "-wc / -nc ", help="Whether to list config files."
+        ),
+    ] = False
+):
+    """List all pipelines."""
+    log_msg = "Available pipelines:\n"
+    if len(PipelineName.__members__) == 0:
+        log_msg += (
+            "<yellow>No pipeline found. Please check that the pipeline root path is"
+            f" correct ('{PIPELINE_ROOT_PATH}')</yellow>"
+        )
+    else:
+        for pipeline_name in PipelineName.__members__.values():
+            log_msg += f"- {pipeline_name.value}\n"
+
+            if with_configs:
+                configs_dirpath = Path(CONFIG_ROOT_PATH) / pipeline_name.value
+
+                config_filepaths = []
+                for config_type in ["py", "json"]:
+                    print(configs_dirpath.glob(f"*.{config_type}"))
+                    config_filepaths += [x for x in configs_dirpath.glob(f"*.{config_type}")]
+
+                if len(config_filepaths) == 0:
+                    log_msg += "  <yellow>- No config file found</yellow>\n"
+                for config_filepath in config_filepaths:
+                    log_msg += f"  - {config_filepath.name}\n"
+    logger.opt(ansi=True).info(log_msg)
