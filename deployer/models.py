@@ -4,9 +4,6 @@ from typing import _AnnotatedAlias
 import kfp.components.graph_component
 from pydantic import BaseModel, ConfigDict, create_model
 
-from deployer.constants import PIPELINE_ROOT_PATH
-from deployer.utils import make_pipeline_names_enum_from_dir
-
 
 class CustomBaseModel(BaseModel):
     """Base model for all pipeline dynamic configs."""
@@ -46,6 +43,3 @@ def create_model_from_pipeline(
     )
 
     return pipeline_model
-
-
-PipelineName = make_pipeline_names_enum_from_dir(PIPELINE_ROOT_PATH)

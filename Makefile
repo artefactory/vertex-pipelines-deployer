@@ -49,10 +49,10 @@ format-code:
 	@poetry run pre-commit run -a
 
 
-.PHONY: run-test
+.PHONY: run-tests
 ## Run unit tests
-run-test:
-	@poetry run pytest
+run-tests:
+	@poetry run pytest tests --cov=deployer --cov-report=term-missing -s -vv -W ignore:::pkg_resources
 
 
 #################################################################################
