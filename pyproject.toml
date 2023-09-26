@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vertex-deployer"
-version = "0.1.0"
+version = "0.0.1"
 description = ""
 authors = ["julesbertrand <julesbertrand13@gmail.com>"]
 readme = "README.md"
@@ -29,6 +29,7 @@ ipykernel = "6.9.1"
 nbstripout = "^0.6.1"
 ruff = "^0.0.289"
 pytest-cov = "^4.1.0"
+python-semantic-release = "^8.1.1"
 
 [tool.poetry.extras]
 rich = ["rich"]
@@ -36,6 +37,20 @@ rich = ["rich"]
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.semantic_release]
+version_variables = [
+    "deployer/__init__.py:__version__",
+    "pyproject.toml:version"
+]
+branch = "test"
+upload_to_pypi = false
+upload_to_release = true
+build_command = "pip install poetry && poetry build"
+
+[tool.semantic_release.branches.test]
+match = "^chore*"
+prerelease = false
 
 [tool.black]
 python_version = "3.10"
