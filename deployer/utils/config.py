@@ -40,6 +40,25 @@ class ConfigType(str, Enum):  # noqa: D101
     py = "py"
 
 
+def list_config_filepaths(config_root_path: Path | str, pipeline_name: str) -> list[Path]:
+    """List the config filepaths for a pipeline.
+
+    Args:
+        config_root_path (Path): A `Path` object representing the root path of the configs.
+        pipeline_name (str): The name of the pipeline.
+
+    Returns:
+        list[Path]: A list of `Path` objects representing the config filepaths.
+    """
+    configs_dirpath = Path(config_root_path) / pipeline_name
+    config_filepaths = [
+        x
+        for config_type in ConfigType.__members__.values()
+        for x in configs_dirpath.glob(f"*.{config_type}")
+    ]
+    return config_filepaths
+
+
 def load_config(config_filepath: Path) -> tuple[dict | None, dict | None]:
     """Load the parameter values and input artifacts from a config file.
 

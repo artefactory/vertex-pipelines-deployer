@@ -15,7 +15,12 @@ from deployer.constants import (
 )
 from deployer.pipeline_checks import Pipelines
 from deployer.pipeline_deployer import VertexPipelineDeployer
-from deployer.utils.config import ConfigType, load_config, load_vertex_settings
+from deployer.utils.config import (
+    ConfigType,
+    list_config_filepaths,
+    load_config,
+    load_vertex_settings,
+)
 from deployer.utils.logging import LoguruLevel
 from deployer.utils.utils import (
     import_pipeline_from_dir,
@@ -266,17 +271,12 @@ def list(
             log_msg += f"- {pipeline_name.value}\n"
 
             if with_configs:
-                configs_dirpath = Path(CONFIG_ROOT_PATH) / pipeline_name.value
-
-                config_filepaths = []
-                for config_type in ["py", "json"]:
-                    print(configs_dirpath.glob(f"*.{config_type}"))
-                    config_filepaths += [x for x in configs_dirpath.glob(f"*.{config_type}")]
-
+                config_filepaths = list_config_filepaths(CONFIG_ROOT_PATH, pipeline_name.value)
                 if len(config_filepaths) == 0:
                     log_msg += "  <yellow>- No config file found</yellow>\n"
                 for config_filepath in config_filepaths:
                     log_msg += f"  - {config_filepath.name}\n"
+
     logger.opt(ansi=True).info(log_msg)
 
 
@@ -296,8 +296,7 @@ def create(
 
     pipeline_filepath = Path(PIPELINE_ROOT_PATH) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
-    with open(pipeline_filepath, "w") as f:
-        f.write(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
+    pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
 
     config_dirpath = Path(CONFIG_ROOT_PATH) / pipeline_name
     config_dirpath.mkdir(exist_ok=False)
@@ -305,7 +304,6 @@ def create(
         config_filepath = config_dirpath / f"{config_name}.{config_type}"
         config_filepath.touch(exist_ok=False)
         if config_type == ConfigType.py:
-            with open(config_filepath, "w") as f:
-                f.write(PYTHON_CONFIG_TEMPLATE)
+            config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
 
-    logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+    logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
