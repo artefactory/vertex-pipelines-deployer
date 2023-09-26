@@ -16,7 +16,7 @@ class TestMakeEnumFromPythonPackageDir:
         dir_path = Path("path/to/directory")
 
         # When
-        enum = make_enum_from_python_package_dir(dir_path)
+        enum = make_enum_from_python_package_dir(dir_path, raise_if_not_found=True)
 
         # Then
         assert len(enum) == 2
@@ -30,7 +30,7 @@ class TestMakeEnumFromPythonPackageDir:
         dir_path = Path("path/to/directory")
 
         # When
-        enum = make_enum_from_python_package_dir(dir_path)
+        enum = make_enum_from_python_package_dir(dir_path, raise_if_not_found=True)
 
         # Then
         assert len(enum) == 0
@@ -44,7 +44,7 @@ class TestMakeEnumFromPythonPackageDir:
         dir_path = Path("path/to/directory")
 
         # When
-        enum = make_enum_from_python_package_dir(dir_path)
+        enum = make_enum_from_python_package_dir(dir_path, raise_if_not_found=True)
 
         # Then
         assert enum.file1.value == "file1"
@@ -60,6 +60,6 @@ class TestMakeEnumFromPythonPackageDir:
         # When
         dir_path = Path("nonexistent/directory")
         with pytest.raises(FileNotFoundError):
-            make_enum_from_python_package_dir(dir_path)
+            make_enum_from_python_package_dir(dir_path, raise_if_not_found=True)
 
         mock_glob.assert_not_called()
