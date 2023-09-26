@@ -107,6 +107,7 @@ class VertexPipelineDeployer:
         template_path: str,
         enable_caching: bool = False,
         parameter_values: dict | None = None,
+        input_artifacts: dict | None = None,
     ) -> aiplatform.PipelineJob:
         job = aiplatform.PipelineJob(
             display_name=self.pipeline_name,
@@ -115,6 +116,7 @@ class VertexPipelineDeployer:
             location=self.region,
             enable_caching=enable_caching,
             parameter_values=parameter_values,
+            input_artifacts=input_artifacts,
         )
         return job
 
@@ -151,6 +153,7 @@ class VertexPipelineDeployer:
         self,
         enable_caching: bool = False,
         parameter_values: dict | None = None,
+        input_artifacts: dict | None = None,
         experiment_name: str | None = None,
         tag: str | None = None,
     ) -> "VertexPipelineDeployer":
@@ -164,6 +167,7 @@ class VertexPipelineDeployer:
         Args:
             enable_caching (bool, optional): Whether to enable caching. Defaults to False.
             parameter_values (dict, optional): Pipeline parameter values. Defaults to None.
+            input_artifacts (dict, optional): Pipeline input artifacts. Defaults to None.
             experiment_name (str, optional): Experiment name. Defaults to None.
             tag (str, optional): Tag of the pipeline template. Defaults to None.
         """
@@ -175,6 +179,7 @@ class VertexPipelineDeployer:
             template_path=template_path,
             enable_caching=enable_caching,
             parameter_values=parameter_values,
+            input_artifacts=input_artifacts,
         )
 
         job.submit(

@@ -83,12 +83,13 @@ def deploy(
     tags: Annotated[
         list[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
-    parameter_values_filepath: Annotated[
+    config_filepath: Annotated[
         Path,
         typer.Option(
-            "--parameter-values-filepath",
-            "-pv",
-            help="Path to the json configuration file to use when running the pipeline.",
+            "--config-filepath",
+            "-cfp",
+            help="Path to the json/py file with parameter values and input artifacts"
+            "to use when running the pipeline.",
             exists=True,
             dir_okay=False,
             file_okay=True,
@@ -139,12 +140,7 @@ def deploy(
     )
 
     if run or schedule:
-        if parameter_values_filepath is None:
-            raise ValueError(
-                "`parameter_values_filepath` must be specified"
-                " when running or scheduling the pipeline"
-            )
-        parameter_values = load_config(parameter_values_filepath)
+        parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
         deployer.compile()
@@ -157,6 +153,7 @@ def deploy(
             enable_caching=enable_caching,
             parameter_values=parameter_values,
             experiment_name=experiment_name,
+            input_artifacts=input_artifacts,
             tag=tags[0] if tags else None,
         )
 
@@ -182,6 +179,18 @@ def check(
     all: Annotated[
         bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
     ] = False,
+    config_filepath: Annotated[
+        Path,
+        typer.Option(
+            "--config-filepath",
+            "-cfp",
+            help="Path to the json/py file with parameter values and input artifacts"
+            "to check. If not specified, all config files in the pipeline dir will be checked.",
+            exists=True,
+            dir_okay=False,
+            file_okay=True,
+        ),
+    ] = None,
 ):
     """Check that all pipelines are valid.
 
@@ -214,8 +223,14 @@ def check(
     else:
         raise ValueError("Please specify either --all or a pipeline name")
 
+    config_filepaths = [config_filepath] if config_filepath is not None else None
     pipelines = Pipelines.model_validate(
-        {"pipelines": {p.value: {"pipeline_name": p.value} for p in pipelines_to_check}}
+        {
+            "pipelines": {
+                p.value: {"pipeline_name": p.value, "config_paths": config_filepaths}
+                for p in pipelines_to_check
+            }
+        }
     )
 
     log_message = "Checked pipelines and config paths:\n"
@@ -223,6 +238,6 @@ def check(
         log_message += f"- {pipeline.pipeline_name.value}:\n"
         if len(pipeline.config_paths) == 0:
             log_message += "  <yellow>- No config path found</yellow>\n"
-        for config_path in pipeline.config_paths:
-            log_message += f"  - {config_path}\n"
+        for config_filepath in pipeline.config_paths:
+            log_message += f"  - {config_filepath.name}\n"
     logger.opt(ansi=True).success(log_message)
