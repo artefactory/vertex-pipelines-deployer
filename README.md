@@ -119,11 +119,23 @@ gcloud storage buckets create gs://${VERTEX_STAGING_BUCKET_NAME} --location=${GC
 ```
 7. Create a service account for Vertex Pipelines: # TODO: complete iam bindings
 ```bash
-export VERTEX_SERVICE_ACCOUNT=<foobar@PROJECT_ID.iam.gserviceaccount.com>
-gcloud iam service-accounts create ${VERTEX_SERVICE_ACCOUNT}
+export VERTEX_SERVICE_ACCOUNT_NAME=foobar
+export VERTEX_SERVICE_ACCOUNT="${VERTEX_SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
+gcloud iam service-accounts create ${VERTEX_SERVICE_ACCOUNT_NAME}
+
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
     --role="roles/aiplatform.user"
+
+gcloud storage buckets add-iam-policy-binding gs://${VERTEX_STAGING_BUCKET_NAME} \
+    --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
+    --role="roles/storage.objectUser"
+
+gcloud artifacts repositories add-iam-policy-binding ${GAR_PIPELINES_REPO_ID} \
+   --location=${GAR_LOCATION} \
+   --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
+   --role="roles/artifactregistry.admin"
 ```
 
 You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code (try it yourself).

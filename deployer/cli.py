@@ -157,6 +157,7 @@ def deploy(
             enable_caching=enable_caching,
             parameter_values=parameter_values,
             experiment_name=experiment_name,
+            tag=tags[0] if tags else None,
         )
 
     if schedule:

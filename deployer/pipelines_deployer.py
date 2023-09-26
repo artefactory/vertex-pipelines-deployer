@@ -1,6 +1,6 @@
+import os
 from pathlib import Path
 from typing import Callable
-from urllib.parse import urljoin
 
 from google.cloud import aiplatform
 from google.cloud.aiplatform import PipelineJobSchedule
@@ -41,8 +41,6 @@ class VertexPipelineDeployer:
         self.gar_repo_id = gar_repo_id
         self.local_package_path = Path(local_package_path)
 
-        self.gar_host = self._get_artifact_registry_host()
-
         self.template_name = None
         self.version_name = None
 
@@ -51,16 +49,21 @@ class VertexPipelineDeployer:
             staging_bucket=f"gs://{self.staging_bucket_name}",
         )
 
-    def _get_artifact_registry_host(self) -> str | None:
+    @property
+    def gar_host(self) -> str | None:
         """Return the Artifact Registry host if the location and repo ID are provided"""
         if self.gar_location is not None and self.gar_repo_id is not None:
-            return urljoin(
+            return os.path.join(
                 f"https://{self.gar_location}-kfp.pkg.dev", self.project_id, self.gar_repo_id
             )
         logger.debug(
             "No Artifact Registry location or repo ID provided: not using Artifact Registry"
         )
         return None
+
+    @property
+    def staging_bucket_uri(self) -> str:  # noqa: D102
+        return f"gs://{self.staging_bucket_name}/root"
 
     def _get_template_path(self, tag: str | None = None) -> str:
         """Return the path to the pipeline template
@@ -71,12 +74,15 @@ class VertexPipelineDeployer:
         """
         if self.gar_host is not None:
             if tag:
-                return f"{self.gar_host}/{self.pipeline_name}/{tag}"
+                return f"{self.gar_host}/{self.pipeline_name.replace('_', '-')}/{tag}"
 
             if self.template_name is not None and self.version_name is not None:
                 return f"{self.gar_host}/{self.template_name}/{self.version_name}"
 
-            raise ValueError("tag or template_name and version_name must be provided")
+            logger.warning(
+                "tag or template_name and version_name not provided."
+                " Falling back to local package."
+            )
 
         return str(self.local_package_path / f"{self.pipeline_name}.yaml")
 
@@ -105,7 +111,7 @@ class VertexPipelineDeployer:
         job = aiplatform.PipelineJob(
             display_name=self.pipeline_name,
             template_path=template_path,
-            pipeline_root=f"gs://{self.staging_bucket_name}/root",
+            pipeline_root=self.staging_bucket_uri,
             location=self.region,
             enable_caching=enable_caching,
             parameter_values=parameter_values,
@@ -194,6 +200,7 @@ class VertexPipelineDeployer:
             enable_caching=enable_caching,
             parameter_values=parameter_values,
             experiment_name=experiment_name,
+            tag=tags[0] if tags else None,
         )
         return self
 
