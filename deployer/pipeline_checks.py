@@ -10,12 +10,12 @@ from deployer.constants import (
     PIPELINE_ROOT_PATH,
     TEMP_LOCAL_PACKAGE_PATH,
 )
-from deployer.models import CustomBaseModel, create_model_from_pipeline
-from deployer.pipelines_deployer import VertexPipelineDeployer
-from deployer.utils import (
-    disable_logger,
+from deployer.pipeline_deployer import VertexPipelineDeployer
+from deployer.utils.config import list_config_filepaths, load_config
+from deployer.utils.logging import disable_logger
+from deployer.utils.models import CustomBaseModel, create_model_from_pipeline
+from deployer.utils.utils import (
     import_pipeline_from_dir,
-    load_config,
     make_enum_from_python_package_dir,
 )
 
@@ -41,10 +41,7 @@ class Pipeline(CustomBaseModel):
     def populate_config_names(cls, data: Any) -> Any:
         """Populate config names before validation"""
         if data.get("config_paths") is None:
-            configs_dirpath = Path(CONFIG_ROOT_PATH) / data["pipeline_name"]
-            data["config_paths"] = []
-            for config_type in ["py", "json"]:
-                data["config_paths"] += list(configs_dirpath.glob(f"*.{config_type}"))
+            data["config_paths"] = list_config_filepaths(CONFIG_ROOT_PATH, data["pipeline_name"])
         return data
 
     @computed_field

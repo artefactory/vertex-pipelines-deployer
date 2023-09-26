@@ -6,17 +6,24 @@ from loguru import logger
 from typing_extensions import Annotated
 
 from deployer.constants import (
+    CONFIG_ROOT_PATH,
     DEFAULT_LOCAL_PACKAGE_PATH,
     DEFAULT_TAGS,
+    PIPELINE_MINIMAL_TEMPLATE,
     PIPELINE_ROOT_PATH,
+    PYTHON_CONFIG_TEMPLATE,
 )
 from deployer.pipeline_checks import Pipelines
-from deployer.pipelines_deployer import VertexPipelineDeployer
-from deployer.utils import (
-    LoguruLevel,
-    import_pipeline_from_dir,
+from deployer.pipeline_deployer import VertexPipelineDeployer
+from deployer.utils.config import (
+    ConfigType,
+    list_config_filepaths,
     load_config,
     load_vertex_settings,
+)
+from deployer.utils.logging import LoguruLevel
+from deployer.utils.utils import (
+    import_pipeline_from_dir,
     make_enum_from_python_package_dir,
 )
 
@@ -122,7 +129,7 @@ def deploy(
         ),
     ] = DEFAULT_LOCAL_PACKAGE_PATH,
 ):
-    """Deploy and manage Vertex AI Pipelines."""
+    """Compile, upload, run and schedule pipelines."""
     vertex_settings = load_vertex_settings(env_file=env_file)
 
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
@@ -192,7 +199,7 @@ def check(
         ),
     ] = None,
 ):
-    """Check that all pipelines are valid.
+    """Check that pipelines are valid.
 
     Checking that a pipeline is valid includes:
 
@@ -241,3 +248,62 @@ def check(
         for config_filepath in pipeline.config_paths:
             log_message += f"  - {config_filepath.name}\n"
     logger.opt(ansi=True).success(log_message)
+
+
+@app.command()
+def list(
+    with_configs: Annotated[
+        bool,
+        typer.Option(
+            "--with-configs / --no-configs", "-wc / -nc ", help="Whether to list config files."
+        ),
+    ] = False
+):
+    """List all pipelines."""
+    log_msg = "Available pipelines:\n"
+    if len(PipelineName.__members__) == 0:
+        log_msg += (
+            "<yellow>No pipeline found. Please check that the pipeline root path is"
+            f" correct ('{PIPELINE_ROOT_PATH}')</yellow>"
+        )
+    else:
+        for pipeline_name in PipelineName.__members__.values():
+            log_msg += f"- {pipeline_name.value}\n"
+
+            if with_configs:
+                config_filepaths = list_config_filepaths(CONFIG_ROOT_PATH, pipeline_name.value)
+                if len(config_filepaths) == 0:
+                    log_msg += "  <yellow>- No config file found</yellow>\n"
+                for config_filepath in config_filepaths:
+                    log_msg += f"  - {config_filepath.name}\n"
+
+    logger.opt(ansi=True).info(log_msg)
+
+
+@app.command(no_args_is_help=True)
+def create(
+    pipeline_name: Annotated[
+        str,
+        typer.Argument(..., help="The name of the pipeline to create."),
+    ],
+    config_type: Annotated[
+        ConfigType,
+        typer.Option("--config-type", "-ct", help="The type of the config to create."),
+    ] = ConfigType.json,
+):
+    """Create files structure for a new pipeline."""
+    logger.info(f"Creating pipeline {pipeline_name}")
+
+    pipeline_filepath = Path(PIPELINE_ROOT_PATH) / f"{pipeline_name}.py"
+    pipeline_filepath.touch(exist_ok=False)
+    pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
+
+    config_dirpath = Path(CONFIG_ROOT_PATH) / pipeline_name
+    config_dirpath.mkdir(exist_ok=False)
+    for config_name in ["test", "dev", "prod"]:
+        config_filepath = config_dirpath / f"{config_name}.{config_type}"
+        config_filepath.touch(exist_ok=False)
+        if config_type == ConfigType.py:
+            config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+
+    logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")

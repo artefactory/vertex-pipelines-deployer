@@ -36,7 +36,10 @@
   - [Folder Structure](#folder-structure)
   - [CLI: Deploying a Pipeline](#cli-deploying-a-pipeline)
   - [CLI: Checking Pipelines are valid](#cli-checking-pipelines-are-valid)
-  - [CLI Options](#cli-options)
+  - [CLI: Other commands](#cli-other-commands)
+    - [`create`](#create)
+    - [`list`](#list)
+  - [CLI: Options](#cli-options)
 
 
 ## Why this tool?
@@ -234,7 +237,26 @@ To validate all pipelines in the `vertex/pipelines` folder:
 vertex-deployer check --all
 ```
 
-### CLI Options
+
+### CLI: Other commands
+
+#### `create`
+
+You can create all files needed for a pipeline using the `create` command:
+```bash
+vertex-deployer create my_new_pipeline --config-type py
+```
+
+This will create a `my_new_pipeline.py` file in the `vertex/pipelines` folder and a `vertex/config/my_new_pipeline/` folder with mutliple config files in it.
+
+#### `list`
+
+You can list all pipelines in the `vertex/pipelines` folder using the `list` command:
+```bash
+vertex-deployer list --with-configs
+```
+
+### CLI: Options
 
 ```bash
 vertex-deployer --help
@@ -258,10 +280,14 @@ vertex-deployer --log-level DEBUG deploy ...
 │  ├─ __init__.py
 │  ├─ cli.py
 │  ├─ constants.py
-│  ├─ models.py
 │  ├─ pipeline_checks.py
 │  ├─ pipeline_deployer.py
-│  └─ utils.py
+│  └─ utils
+│     ├─ config.py
+│     ├─ exceptions.py
+│     ├─ logging.py
+│     ├─ models.py
+│     └─ utils.py
 ├─ tests/
 ├─ example
 |   ├─ example.env

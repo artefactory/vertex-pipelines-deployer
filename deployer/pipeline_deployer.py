@@ -10,7 +10,10 @@ from loguru import logger
 from requests import HTTPError
 
 from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIMEZONE
-from deployer.exceptions import MissingGoogleArtifactRegistryHostError, TagNotFoundError
+from deployer.utils.exceptions import (
+    MissingGoogleArtifactRegistryHostError,
+    TagNotFoundError,
+)
 
 
 class VertexPipelineDeployer:
