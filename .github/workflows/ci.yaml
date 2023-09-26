@@ -75,24 +75,24 @@ jobs:
           poetry run pip install --upgrade pip
           poetry install
 
-      - name: cd example
-        run: |
-          cd example
-
       - name: Test list command
         run: |
+          cd example
           poetry run vertex-deployer list --with-configs
 
       - name: Test check command
         run: |
+          cd example
           poetry run vertex-deployer -log DEBUG check --all
 
       - name: Test deploy command
       # Cannot check more than compile action here, need GCP environment for upload, run, schedule
         run: |
+          cd example
           poetry run vertex-deployer -log DEBUG deploy dummy_pipeline --compile --env-file example.env
 
       - name: Test create command
         run: |
+          cd example
           poetry run vertex-deployer create test_pipeline --config-type py
           [ -e vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0
