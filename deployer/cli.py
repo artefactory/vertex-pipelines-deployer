@@ -14,7 +14,7 @@ from deployer.constants import (
     PYTHON_CONFIG_TEMPLATE,
 )
 from deployer.pipeline_checks import Pipelines
-from deployer.pipelines_deployer import VertexPipelineDeployer
+from deployer.pipeline_deployer import VertexPipelineDeployer
 from deployer.utils.config import ConfigType, load_config, load_vertex_settings
 from deployer.utils.logging import LoguruLevel
 from deployer.utils.utils import (

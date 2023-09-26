@@ -10,7 +10,7 @@ from deployer.constants import (
     PIPELINE_ROOT_PATH,
     TEMP_LOCAL_PACKAGE_PATH,
 )
-from deployer.pipelines_deployer import VertexPipelineDeployer
+from deployer.pipeline_deployer import VertexPipelineDeployer
 from deployer.utils.config import load_config
 from deployer.utils.logging import disable_logger
 from deployer.utils.models import CustomBaseModel, create_model_from_pipeline
