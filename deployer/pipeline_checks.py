@@ -10,11 +10,18 @@ from deployer.constants import (
     PIPELINE_ROOT_PATH,
     TEMP_LOCAL_PACKAGE_PATH,
 )
-from deployer.models import CustomBaseModel, PipelineName, create_model_from_pipeline
+from deployer.models import CustomBaseModel, create_model_from_pipeline
 from deployer.pipelines_deployer import VertexPipelineDeployer
-from deployer.utils import disable_logger, import_pipeline_from_dir, load_config
+from deployer.utils import (
+    disable_logger,
+    import_pipeline_from_dir,
+    load_config,
+    make_enum_from_python_package_dir,
+)
 
 PipelineConfigT = TypeVar("PipelineConfigT")
+
+PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 
 
 class DynamicConfigsModel(CustomBaseModel, Generic[PipelineConfigT]):
