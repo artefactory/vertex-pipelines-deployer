@@ -52,7 +52,7 @@ format-code:
 .PHONY: run-test
 ## Run unit tests
 run-test:
-	@poetry run pytest
+	@poetry run pytest tests --cov=deployer --cov-report=term-missing -s -vv -W ignore:::pkg_resources
 
 
 #################################################################################

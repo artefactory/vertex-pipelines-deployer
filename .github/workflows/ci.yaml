@@ -37,7 +37,7 @@ jobs:
           poetry install
 
       - name: Run Pre commit hooks
-        run: poetry run pre-commit run --all-files --show-diff-on-failure
+        run: make format-code
 
       - name: Run tests
-        run: poetry run pytest
+        run: make run-tests
