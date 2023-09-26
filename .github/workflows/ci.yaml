@@ -81,18 +81,18 @@ jobs:
 
       - name: Test list command
         run: |
-          vertex-deployer list --with-configs
+          poetry run vertex-deployer list --with-configs
 
       - name: Test check command
         run: |
-          vertex-deployer -log DEBUG check --all
+          poetry run vertex-deployer -log DEBUG check --all
 
       - name: Test deploy command
       # Cannot check more than compile action here, need GCP environment for upload, run, schedule
         run: |
-          vertex-deployer -log DEBUG deploy dummy_pipeline --compile --env-file example.env
+          poetry run vertex-deployer -log DEBUG deploy dummy_pipeline --compile --env-file example.env
 
       - name: Test create command
         run: |
-          vertex-deployer create test_pipeline --config-type py
+          poetry run vertex-deployer create test_pipeline --config-type py
           [ -e vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0
