@@ -1,9 +1,9 @@
 import pytest
 from kfp.dsl import Artifact, Dataset, Input, Metrics, Model, Output
 
-from deployer.models import (
+from deployer.utils.models import (
     CustomBaseModel,
-    convert_artifact_type_to_str,
+    _convert_artifact_type_to_str,
     create_model_from_pipeline,
 )
 
@@ -29,7 +29,7 @@ def test_artifact_type_to_str(input_annotation, expected_annotation):
     # Given
 
     # When
-    result = convert_artifact_type_to_str(input_annotation)
+    result = _convert_artifact_type_to_str(input_annotation)
 
     # Then
     assert result == expected_annotation

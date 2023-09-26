@@ -258,10 +258,14 @@ vertex-deployer --log-level DEBUG deploy ...
 │  ├─ __init__.py
 │  ├─ cli.py
 │  ├─ constants.py
-│  ├─ models.py
 │  ├─ pipeline_checks.py
 │  ├─ pipeline_deployer.py
-│  └─ utils.py
+│  └─ utils
+│     ├─ config.py
+│     ├─ exceptions.py
+│     ├─ logging.py
+│     ├─ models.py
+│     └─ utils.py
 ├─ tests/
 ├─ example
 |   ├─ example.env

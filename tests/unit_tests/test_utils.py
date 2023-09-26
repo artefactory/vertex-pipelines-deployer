@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from deployer.utils import make_enum_from_python_package_dir
+from deployer.utils.utils import make_enum_from_python_package_dir
 
 
 class TestMakeEnumFromPythonPackageDir:

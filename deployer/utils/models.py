@@ -13,7 +13,7 @@ class CustomBaseModel(BaseModel):
     model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
 
 
-def convert_artifact_type_to_str(annotation: type) -> type:
+def _convert_artifact_type_to_str(annotation: type) -> type:
     """Convert a kfp.dsl.Artifact type to a string.
 
     This is mandatory for type checking, as kfp.dsl.Artifact types should be passed as strings
@@ -32,7 +32,7 @@ def create_model_from_pipeline(
     """Create a Pydantic model from pipeline parameters."""
     pipeline_signature = signature(pipeline.pipeline_func)
     pipeline_typing = {
-        p.name: convert_artifact_type_to_str(p.annotation)
+        p.name: _convert_artifact_type_to_str(p.annotation)
         for p in pipeline_signature.parameters.values()
     }
 

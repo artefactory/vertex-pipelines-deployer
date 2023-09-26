@@ -9,15 +9,16 @@ from deployer.constants import (
     CONFIG_ROOT_PATH,
     DEFAULT_LOCAL_PACKAGE_PATH,
     DEFAULT_TAGS,
+    PIPELINE_MINIMAL_TEMPLATE,
     PIPELINE_ROOT_PATH,
+    PYTHON_CONFIG_TEMPLATE,
 )
 from deployer.pipeline_checks import Pipelines
 from deployer.pipelines_deployer import VertexPipelineDeployer
-from deployer.utils import (
-    LoguruLevel,
+from deployer.utils.config import ConfigType, load_config, load_vertex_settings
+from deployer.utils.logging import LoguruLevel
+from deployer.utils.utils import (
     import_pipeline_from_dir,
-    load_config,
-    load_vertex_settings,
     make_enum_from_python_package_dir,
 )
 
@@ -277,3 +278,34 @@ def list(
                 for config_filepath in config_filepaths:
                     log_msg += f"  - {config_filepath.name}\n"
     logger.opt(ansi=True).info(log_msg)
+
+
+@app.command(no_args_is_help=True)
+def create(
+    pipeline_name: Annotated[
+        str,
+        typer.Argument(..., help="The name of the pipeline to create."),
+    ],
+    config_type: Annotated[
+        ConfigType,
+        typer.Option("--config-type", "-ct", help="The type of the config to create."),
+    ] = ConfigType.json,
+):
+    """Create files structure for a new pipeline."""
+    logger.info(f"Creating pipeline {pipeline_name}")
+
+    pipeline_filepath = Path(PIPELINE_ROOT_PATH) / f"{pipeline_name}.py"
+    pipeline_filepath.touch(exist_ok=False)
+    with open(pipeline_filepath, "w") as f:
+        f.write(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
+
+    config_dirpath = Path(CONFIG_ROOT_PATH) / pipeline_name
+    config_dirpath.mkdir(exist_ok=False)
+    for config_name in ["test", "dev", "prod"]:
+        config_filepath = config_dirpath / f"{config_name}.{config_type}"
+        config_filepath.touch(exist_ok=False)
+        if config_type == ConfigType.py:
+            with open(config_filepath, "w") as f:
+                f.write(PYTHON_CONFIG_TEMPLATE)
+
+    logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")

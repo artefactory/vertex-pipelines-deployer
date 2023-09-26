@@ -10,12 +10,12 @@ from deployer.constants import (
     PIPELINE_ROOT_PATH,
     TEMP_LOCAL_PACKAGE_PATH,
 )
-from deployer.models import CustomBaseModel, create_model_from_pipeline
 from deployer.pipelines_deployer import VertexPipelineDeployer
-from deployer.utils import (
-    disable_logger,
+from deployer.utils.config import load_config
+from deployer.utils.logging import disable_logger
+from deployer.utils.models import CustomBaseModel, create_model_from_pipeline
+from deployer.utils.utils import (
     import_pipeline_from_dir,
-    load_config,
     make_enum_from_python_package_dir,
 )
 
