@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from typing import List
 
 import typer
 from loguru import logger
@@ -88,7 +89,7 @@ def deploy(
         ),
     ] = False,
     tags: Annotated[
-        list[str], typer.Option(help="The tags to use when uploading the pipeline.")
+        List[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
     config_filepath: Annotated[
         Path,

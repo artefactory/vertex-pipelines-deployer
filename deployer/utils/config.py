@@ -2,6 +2,7 @@ import importlib
 import json
 from enum import Enum
 from pathlib import Path
+from typing import List, Optional, Tuple, Union
 
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -20,7 +21,7 @@ class VertexPipelinesSettings(BaseSettings):  # noqa: D101
     VERTEX_SERVICE_ACCOUNT: str
 
 
-def load_vertex_settings(env_file: Path | None = None) -> VertexPipelinesSettings:
+def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSettings:
     """Load the settings from the environment."""
     try:
         settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
@@ -40,7 +41,7 @@ class ConfigType(str, Enum):  # noqa: D101
     py = "py"
 
 
-def list_config_filepaths(config_root_path: Path | str, pipeline_name: str) -> list[Path]:
+def list_config_filepaths(config_root_path: Union[Path, str], pipeline_name: str) -> List[Path]:
     """List the config filepaths for a pipeline.
 
     Args:
@@ -48,7 +49,7 @@ def list_config_filepaths(config_root_path: Path | str, pipeline_name: str) -> l
         pipeline_name (str): The name of the pipeline.
 
     Returns:
-        list[Path]: A list of `Path` objects representing the config filepaths.
+        List[Path]: A list of `Path` objects representing the config filepaths.
     """
     configs_dirpath = Path(config_root_path) / pipeline_name
     config_filepaths = [
@@ -59,7 +60,7 @@ def list_config_filepaths(config_root_path: Path | str, pipeline_name: str) -> l
     return config_filepaths
 
 
-def load_config(config_filepath: Path) -> tuple[dict | None, dict | None]:
+def load_config(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
     """Load the parameter values and input artifacts from a config file.
 
     Config file can be a JSON or Python file.
@@ -71,7 +72,7 @@ def load_config(config_filepath: Path) -> tuple[dict | None, dict | None]:
         config_filepath (Path): A `Path` object representing the path to the config file.
 
     Returns:
-        tuple[dict | None, dict | None]: A tuple containing the loaded parameter values
+        Tuple[Optional[dict], Optional[dict]]:: A tuple containing the loaded parameter values
             and input artifacts (or `None` if not available).
 
     Raises:
@@ -94,14 +95,14 @@ def load_config(config_filepath: Path) -> tuple[dict | None, dict | None]:
     )
 
 
-def _load_config_python(config_filepath: Path) -> tuple[dict | None, dict | None]:
+def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
     """Load the parameter values and input artifacts from a Python config file.
 
     Args:
         config_filepath (Path): A `Path` object representing the path to the config file.
 
     Returns:
-        tuple[dict | None, dict | None]: A tuple containing the loaded parameter values
+        Tuple[Optional[dict], Optional[dict]]:: A tuple containing the loaded parameter values
             (or `None` if not available) and input artifacts (or `None` if not available).
 
     Raises:
