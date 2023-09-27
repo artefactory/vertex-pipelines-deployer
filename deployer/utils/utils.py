@@ -1,6 +1,7 @@
 import importlib
 from enum import Enum
 from pathlib import Path
+from typing import Optional
 
 from kfp.components import graph_component
 from loguru import logger
@@ -34,7 +35,7 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
         ) from e
 
     try:
-        pipeline: graph_component.GraphComponent | None = pipeline_module.pipeline
+        pipeline: Optional[graph_component.GraphComponent] = pipeline_module.pipeline
     except AttributeError as e:
         raise ImportError(
             f"Pipeline {module_path}:pipeline not found. "

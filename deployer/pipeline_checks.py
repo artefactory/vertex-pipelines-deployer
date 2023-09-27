@@ -1,9 +1,10 @@
 import shutil
 from pathlib import Path
-from typing import Annotated, Any, Generic, TypeVar
+from typing import Any, Dict, Generic, List, TypeVar
 
 from loguru import logger
 from pydantic import Field, computed_field, model_validator
+from typing_extensions import Annotated
 
 from deployer.constants import (
     CONFIG_ROOT_PATH,
@@ -27,14 +28,14 @@ PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 class DynamicConfigsModel(CustomBaseModel, Generic[PipelineConfigT]):
     """Model used to generate checks for configs based on pipeline dynamic model"""
 
-    configs: dict[str, PipelineConfigT]
+    configs: Dict[str, PipelineConfigT]
 
 
 class Pipeline(CustomBaseModel):
     """Validation of one pipeline and its configs"""
 
     pipeline_name: PipelineName
-    config_paths: Annotated[list[Path], Field(validate_default=True)] = None
+    config_paths: Annotated[List[Path], Field(validate_default=True)] = None
 
     @model_validator(mode="before")
     @classmethod
@@ -97,7 +98,7 @@ class Pipeline(CustomBaseModel):
 class Pipelines(CustomBaseModel):
     """Model to validate multiple pipelines at once"""
 
-    pipelines: dict[str, Pipeline]
+    pipelines: Dict[str, Pipeline]
 
     @model_validator(mode="before")
     @classmethod

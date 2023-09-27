@@ -1,8 +1,8 @@
 from inspect import signature
-from typing import _AnnotatedAlias
 
 import kfp.components.graph_component
 from pydantic import BaseModel, ConfigDict, create_model
+from typing_extensions import _AnnotatedAlias
 
 
 class CustomBaseModel(BaseModel):

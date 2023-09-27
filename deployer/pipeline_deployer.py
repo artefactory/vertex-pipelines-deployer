@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Callable
+from typing import Callable, List, Optional
 
 from google.cloud import aiplatform
 from google.cloud.aiplatform import PipelineJobSchedule
@@ -23,12 +23,12 @@ class VertexPipelineDeployer:
         self,
         pipeline_name: str,
         pipeline_func: Callable,
-        project_id: str | None = None,
-        region: str | None = None,
-        staging_bucket_name: str | None = None,
-        service_account: str | None = None,
-        gar_location: str | None = None,
-        gar_repo_id: str | None = None,
+        project_id: Optional[str] = None,
+        region: Optional[str] = None,
+        staging_bucket_name: Optional[str] = None,
+        service_account: Optional[str] = None,
+        gar_location: Optional[str] = None,
+        gar_repo_id: Optional[str] = None,
         local_package_path: Path = DEFAULT_LOCAL_PACKAGE_PATH,
     ) -> None:
         """I don't want to write a dostring here but ruff wants me to"""
@@ -53,7 +53,7 @@ class VertexPipelineDeployer:
         )
 
     @property
-    def gar_host(self) -> str | None:
+    def gar_host(self) -> Optional[str]:
         """Return the Artifact Registry host if the location and repo ID are provided"""
         if self.gar_location is not None and self.gar_repo_id is not None:
             return os.path.join(
@@ -68,7 +68,7 @@ class VertexPipelineDeployer:
     def staging_bucket_uri(self) -> str:  # noqa: D102
         return f"gs://{self.staging_bucket_name}/root"
 
-    def _get_template_path(self, tag: str | None = None) -> str:
+    def _get_template_path(self, tag: Optional[str] = None) -> str:
         """Return the path to the pipeline template
 
         If the Artifact Registry host is provided, return the path to the pipeline template in
@@ -96,7 +96,7 @@ class VertexPipelineDeployer:
                 "Please provide gar_location and gar_repo_id."
             )
 
-    def _check_experiment_name(self, experiment_name: str | None = None) -> str:
+    def _check_experiment_name(self, experiment_name: Optional[str] = None) -> str:
         if experiment_name is None:
             experiment_name = f"{self.pipeline_name}-experiment"
             logger.info(f"Experiment name not provided, using {experiment_name}")
@@ -109,8 +109,8 @@ class VertexPipelineDeployer:
         self,
         template_path: str,
         enable_caching: bool = False,
-        parameter_values: dict | None = None,
-        input_artifacts: dict | None = None,
+        parameter_values: Optional[dict] = None,
+        input_artifacts: Optional[dict] = None,
     ) -> aiplatform.PipelineJob:
         job = aiplatform.PipelineJob(
             display_name=self.pipeline_name,
@@ -138,7 +138,7 @@ class VertexPipelineDeployer:
 
     def upload_to_registry(
         self,
-        tags: list[str] = ["latest"],  # noqa: B006
+        tags: List[str] = ["latest"],  # noqa: B006
     ) -> "VertexPipelineDeployer":
         """Upload pipeline to Artifact Registry"""
         self._check_gar_host()
@@ -155,10 +155,10 @@ class VertexPipelineDeployer:
     def run(
         self,
         enable_caching: bool = False,
-        parameter_values: dict | None = None,
-        input_artifacts: dict | None = None,
-        experiment_name: str | None = None,
-        tag: str | None = None,
+        parameter_values: Optional[dict] = None,
+        input_artifacts: Optional[dict] = None,
+        experiment_name: Optional[str] = None,
+        tag: Optional[str] = None,
     ) -> "VertexPipelineDeployer":
         """Run pipeline on Vertex AI Pipelines
 
@@ -194,9 +194,9 @@ class VertexPipelineDeployer:
     def compile_upload_run(
         self,
         enable_caching: bool = False,
-        parameter_values: dict | None = None,
-        experiment_name: str | None = None,
-        tags: list[str] = ["latest"],  # noqa: B006
+        parameter_values: Optional[dict] = None,
+        experiment_name: Optional[str] = None,
+        tags: List[str] = ["latest"],  # noqa: B006
     ) -> "VertexPipelineDeployer":
         """Compile, upload and run pipeline on Vertex AI Pipelines"""
         self.compile()
@@ -216,8 +216,8 @@ class VertexPipelineDeployer:
         self,
         cron: str,
         enable_caching: bool = False,
-        parameter_values: dict | None = None,
-        tag: str | None = None,
+        parameter_values: Optional[dict] = None,
+        tag: Optional[str] = None,
         delete_last_schedule: bool = False,
     ) -> "VertexPipelineDeployer":
         """Create pipeline schedule on Vertex AI Pipelines
