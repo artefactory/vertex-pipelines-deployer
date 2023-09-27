@@ -11,7 +11,7 @@
 <!-- PROJECT SHIELDS -->
 <div align="center">
 
-[![Python Version](https://img.shields.io/badge/Python-3.10-informational.svg)](#supported-python-versions)
+[![Python Version](https://img.shields.io/badge/Python-3.8_3.9_3.10-blue?logo=python)](#supported-python-versions)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 [![Linting: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -56,7 +56,7 @@ Commands:
 ## Prerequisites
 
 - Unix-like environment (Linux, macOS, WSL, etc...)
-- Python 3.10
+- Python 3.8 to 3.10
 - Google Cloud SDK
 - A GCP project with Vertex Pipelines enabled
 
