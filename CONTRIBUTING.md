@@ -48,3 +48,21 @@ make format-code
 This project uses [Google docstring convention](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
 
 A full example is available in [here](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
+
+
+## How to release
+
+This project uses [Python Semantic Versioning](https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html)
+and [Poetry](https://python-poetry.org/docs/cli/#build) to create releases and tags.
+
+There are some specificities as we use squash and merge.
+
+Here is the process:
+- create a Pull Request from `develop` to `main`.
+- Locally on your computer, rebase main based on develop.
+- Push the rebased main branch.
+- It will trigger the CI, and if the CI succeeds, it will create a release and a tag through the Release action.
+
+> [!NOTE]
+> The release action will only work if the CI succeeds only.
+> Python semantic release github action will take care of version update, tag creation and release creation.
