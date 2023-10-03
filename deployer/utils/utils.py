@@ -1,7 +1,7 @@
 import importlib
 from enum import Enum
 from pathlib import Path
-from typing import Optional
+from typing import Dict, Optional
 
 from kfp.components import graph_component
 from loguru import logger
@@ -53,7 +53,7 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
 
 
 def print_check_results_table(
-    to_check: dict[str, list], validation_error: Optional[ValidationError] = None
+    to_check: Dict[str, list], validation_error: Optional[ValidationError] = None
 ) -> None:
     """This function prints a table of check results to the console.
 
