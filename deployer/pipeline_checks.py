@@ -48,7 +48,7 @@ class Pipeline(CustomBaseModel):
     @computed_field
     def pipeline(self) -> Any:
         """Import pipeline"""
-        with disable_logger("deployer.utils"):
+        with disable_logger("deployer.utils.utils"):
             return import_pipeline_from_dir(PIPELINE_ROOT_PATH, self.pipeline_name.value)
 
     @computed_field()
@@ -73,7 +73,7 @@ class Pipeline(CustomBaseModel):
         """Validate that the pipeline can be compiled"""
         logger.debug(f"Compiling pipeline {self.pipeline_name.value}")
         try:
-            with disable_logger("deployer.pipelines_deployer"):
+            with disable_logger("deployer.pipeline_deployer"):
                 VertexPipelineDeployer(
                     pipeline_name=self.pipeline_name.value,
                     pipeline_func=self.pipeline,
