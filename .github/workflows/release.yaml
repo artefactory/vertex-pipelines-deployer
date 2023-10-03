@@ -9,6 +9,7 @@ jobs:
   Release:
     runs-on: ubuntu-latest
     concurrency: Release
+    needs: CI
     permissions:
       id-token: write
       contents: write
