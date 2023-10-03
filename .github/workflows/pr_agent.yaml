@@ -1,0 +1,25 @@
+name: PR Agent
+
+on:
+  pull_request:
+  issue_comment:
+
+permissions:
+  pull-requests: write
+  issues: write
+
+jobs:
+  pr_agent_job:
+    runs-on: ubuntu-latest
+    name: Run pr agent on every pull request, respond to user comments
+    steps:
+      - name: PR Agent action step
+        id: pragent
+        uses: Codium-ai/pr-agent@main
+        env:
+          OPENAI_KEY: ${{ secrets.AZURE_API_KEY }}
+          OPENAI.API_TYPE: "azure"
+          OPENAI.DEPLOYMENT_ID: ${{ secrets.AZURE_DEPLOYMENT_ID }} # custom name of the deployed model on Azure
+          OPENAI.API_BASE: ${{ secrets.AZURE_API_BASE }}
+          OPENAI.API_VERSION: ${{ secrets.AZURE_API_VERSION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

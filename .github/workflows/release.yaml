@@ -1,0 +1,28 @@
+name: CI and Release on main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  CI:
+    uses: ./.github/workflows/ci.yaml
+
+  Release:
+    runs-on: ubuntu-latest
+    concurrency: Release
+    needs: CI
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Python Semantic Release
+      uses: python-semantic-release/python-semantic-release@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
