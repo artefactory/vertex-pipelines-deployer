@@ -3,9 +3,12 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - '*'
 
 jobs:
+  CI:
+    uses: ./github/workflows/ci.yaml
+
   Release:
     runs-on: ubuntu-latest
     concurrency: Release
@@ -18,7 +21,9 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Python Semantic Release
-      uses: python-semantic-release/python-semantic-release@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Python Semantic Release
+    #   uses: python-semantic-release/python-semantic-release@master
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - run: echo "Making a release"
