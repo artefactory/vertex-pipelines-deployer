@@ -1,9 +1,11 @@
 import sys
+import time
 from pathlib import Path
 from typing import List
 
 import typer
 from loguru import logger
+from pydantic import ValidationError
 from typing_extensions import Annotated
 
 from deployer.constants import (
@@ -22,10 +24,11 @@ from deployer.utils.config import (
     load_config,
     load_vertex_settings,
 )
-from deployer.utils.logging import LoguruLevel
+from deployer.utils.logging import LoguruLevel, console
 from deployer.utils.utils import (
     import_pipeline_from_dir,
     make_enum_from_python_package_dir,
+    print_check_results_table,
 )
 
 app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode="markdown")
@@ -151,31 +154,36 @@ def deploy(
         parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
-        deployer.compile()
+        with console.status("Compiling pipeline...\n"):
+            time.sleep(3)
+            deployer.compile()
 
     if upload:
-        deployer.upload_to_registry(tags=tags)
+        with console.status("Uploading pipeline...\n"):
+            deployer.upload_to_registry(tags=tags)
 
     if run:
-        deployer.run(
-            enable_caching=enable_caching,
-            parameter_values=parameter_values,
-            experiment_name=experiment_name,
-            input_artifacts=input_artifacts,
-            tag=tags[0] if tags else None,
-        )
+        with console.status("Running pipeline...\n"):
+            deployer.run(
+                enable_caching=enable_caching,
+                parameter_values=parameter_values,
+                experiment_name=experiment_name,
+                input_artifacts=input_artifacts,
+                tag=tags[0] if tags else None,
+            )
 
     if schedule:
-        if cron is None:
-            raise ValueError("`cron` must be specified when scheduling the pipeline")
-        cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
-        deployer.schedule(
-            cron=cron,
-            enable_caching=enable_caching,
-            parameter_values=parameter_values,
-            tag=tags[0] if tags else None,
-            delete_last_schedule=delete_last_schedule,
-        )
+        with console.status("Scheduling pipeline...\n"):
+            if cron is None:
+                raise ValueError("`cron` must be specified when scheduling the pipeline")
+            cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
+            deployer.schedule(
+                cron=cron,
+                enable_caching=enable_caching,
+                parameter_values=parameter_values,
+                tag=tags[0] if tags else None,
+                delete_last_schedule=delete_last_schedule,
+            )
 
 
 @app.command(no_args_is_help=True)
@@ -199,6 +207,14 @@ def check(
             file_okay=True,
         ),
     ] = None,
+    raise_error: Annotated[
+        bool,
+        typer.Option(
+            "--raise-error / --no-raise-error",
+            "-re / -nre",
+            help="Whether to raise an error if the pipeline is not valid.",
+        ),
+    ] = False,
 ):
     """Check that pipelines are valid.
 
@@ -231,24 +247,30 @@ def check(
     else:
         raise ValueError("Please specify either --all or a pipeline name")
 
-    config_filepaths = [config_filepath] if config_filepath is not None else None
-    pipelines = Pipelines.model_validate(
-        {
-            "pipelines": {
-                p.value: {"pipeline_name": p.value, "config_paths": config_filepaths}
-                for p in pipelines_to_check
-            }
+    if config_filepath is None:
+        to_check = {
+            p.value: list_config_filepaths(CONFIG_ROOT_PATH, p.value) for p in pipelines_to_check
         }
-    )
+    else:
+        to_check = {p.value: [config_filepath] for p in pipelines_to_check}
 
-    log_message = "Checked pipelines and config paths:\n"
-    for pipeline in pipelines.pipelines.values():
-        log_message += f"- {pipeline.pipeline_name.value}:\n"
-        if len(pipeline.config_paths) == 0:
-            log_message += "  <yellow>- No config path found</yellow>\n"
-        for config_filepath in pipeline.config_paths:
-            log_message += f"  - {config_filepath.name}\n"
-    logger.opt(ansi=True).success(log_message)
+    try:
+        with console.status("Checking pipelines..."):
+            Pipelines.model_validate(
+                {
+                    "pipelines": {
+                        p: {"pipeline_name": p, "config_paths": config_filepaths}
+                        for p, config_filepaths in to_check.items()
+                    }
+                }
+            )
+    except ValidationError as e:
+        if raise_error:
+            raise e
+        print_check_results_table(to_check, e)
+        sys.exit(1)
+    else:
+        print_check_results_table(to_check)
 
 
 @app.command()
