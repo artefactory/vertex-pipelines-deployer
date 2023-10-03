@@ -1,5 +1,4 @@
 import sys
-import time
 from pathlib import Path
 from typing import List
 
@@ -155,7 +154,6 @@ def deploy(
 
     if compile:
         with console.status("Compiling pipeline...\n"):
-            time.sleep(3)
             deployer.compile()
 
     if upload:
