@@ -1,6 +1,9 @@
-name: Release
+name: CI and Release on main
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   CI:
@@ -19,9 +22,7 @@ jobs:
       with:
         fetch-depth: 0
 
-    # - name: Python Semantic Release
-    #   uses: python-semantic-release/python-semantic-release@master
-    #   with:
-    #     github_token: ${{ secrets.GITHUB_TOKEN }}
-
-    - run: echo "Making a release"
+    - name: Python Semantic Release
+      uses: python-semantic-release/python-semantic-release@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
