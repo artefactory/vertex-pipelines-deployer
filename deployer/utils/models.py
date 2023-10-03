@@ -52,7 +52,7 @@ class ChecksTableRow(CustomBaseModel):
     status: Literal["✅", "⚠️", "❌"]
     pipeline: str
     pipeline_error_message: str = None
-    config_path: str
+    config_file: str
     attribute: str = None
     config_error_type: str = None
     config_error_message: str = None

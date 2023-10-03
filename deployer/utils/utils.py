@@ -72,7 +72,7 @@ def print_check_results_table(
     table.add_column("Status", justify="center")
     table.add_column("Pipeline")
     table.add_column("Pipeline Error Message")
-    table.add_column("Config Path")
+    table.add_column("Config File")
     table.add_column("Attribute")
     table.add_column("Config Error Type")
     table.add_column("Config Error Message")
@@ -84,14 +84,14 @@ def print_check_results_table(
                 row = ChecksTableRow(
                     status="✅",
                     pipeline=pipeline_name,
-                    config_path=config_filepath.name,
+                    config_file=config_filepath.name,
                 )
                 table.add_row(*row.model_dump().values(), style="green")
             if len(config_filepaths) == 0:
                 row = ChecksTableRow(
                     status="⚠️",
                     pipeline=pipeline_name,
-                    config_path="No configs found",
+                    config_file="No configs found",
                 )
                 table.add_row(*row.model_dump().values(), style="bold yellow")
 
@@ -101,7 +101,7 @@ def print_check_results_table(
                 status="❌",
                 pipeline=pipeline_name,
                 pipeline_error_message=errors[0]["msg"],
-                config_path="Could not check config files due to pipeline error.",
+                config_file="Could not check config files due to pipeline error.",
             )
             table.add_row(*row.model_dump().values(), style="red")
 
@@ -120,7 +120,7 @@ def print_check_results_table(
                     row = ChecksTableRow(
                         status="❌",
                         pipeline=pipeline_name,
-                        config_path=config_filepath.name,
+                        config_file=config_filepath.name,
                         config_error_type="\n".join([er["type"] for er in error_rows]),
                         attribute="\n".join([er["attribute"] for er in error_rows]),
                         config_error_message="\n".join([er["msg"] for er in error_rows]),
@@ -130,7 +130,7 @@ def print_check_results_table(
                     row = ChecksTableRow(
                         status="✅",
                         pipeline=pipeline_name,
-                        config_path=config_filepath.name,
+                        config_file=config_filepath.name,
                     )
                     table.add_row(*row.model_dump().values(), style="green")
 
