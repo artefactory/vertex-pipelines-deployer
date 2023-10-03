@@ -109,4 +109,6 @@ def print_check_results_table(to_check: dict[str, list], validation_error: Valid
                         pipeline_name, None, config_filepath.name, None, None, None, style="green"
                     )
 
+    table.columns = [c for c in table.columns if "".join(c._cells) != ""]
+
     console.print(table)
