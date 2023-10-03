@@ -1,18 +1,14 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows:
-      - CI
+  push:
     branches:
       - main
-    types:
-      - completed
 
 jobs:
   Release:
-    if: github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'chore(release):')
     runs-on: ubuntu-latest
+    concurrency: Release
     permissions:
       id-token: write
       contents: write
