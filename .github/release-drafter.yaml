@@ -1,0 +1,30 @@
+# Release drafter configuration https://github.com/release-drafter/release-drafter#configuration
+
+name-template: "$RESOLVED_VERSION"
+tag-template: "$RESOLVED_VERSION"
+
+categories:
+  - title: "Feature"
+    labels:
+      - "feat"
+      - "Feat"
+  - title: "Fix"
+    labels:
+      - "fix"
+      - "Fix"
+  - title: "Chore"
+    labels:
+      - "chore"
+      - "Chore"
+  - title:
+    labels:
+      - "ci"
+      - "Ci"
+      - "CI"
+  - title: "Unknown"
+    label: "unknown"
+
+template: |
+  ## $RESOLVED_VERSION ($CURRENT_DATE)
+
+  $CHANGES
