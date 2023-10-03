@@ -15,7 +15,7 @@ kfp = ">=2.0.1, <2.1.0"
 google-cloud-aiplatform = "^1.26.1"
 requests = "^2.31.0"
 typer = "^0.9.0"
-rich = {version = "^13.5.3", optional = true}
+rich = "^13.5.3"
 loguru = "^0.7.2"
 pydantic-settings = "^2.0.3"
 pydantic = "^2.3.0"
@@ -29,9 +29,6 @@ ipykernel = "6.9.1"
 nbstripout = "^0.6.1"
 ruff = "^0.0.289"
 pytest-cov = "^4.1.0"
-
-[tool.poetry.extras]
-rich = ["rich"]
 
 [build-system]
 requires = ["poetry-core"]
