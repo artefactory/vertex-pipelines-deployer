@@ -55,14 +55,22 @@ A full example is available in [here](https://sphinxcontrib-napoleon.readthedocs
 This project uses [Python Semantic Versioning](https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html)
 and [Poetry](https://python-poetry.org/docs/cli/#build) to create releases and tags.
 
-There are some specificities as we use squash and merge.
+The release process is automated through GitHub Actions. Here is the process:
 
-Here is the process:
-- create a Pull Request from `develop` to `main`.
-- Locally on your computer, rebase main based on develop.
-- Push the rebased main branch.
-- It will trigger the CI, and if the CI succeeds, it will create a release and a tag through the Release action.
+- Create a Pull Request from `develop` to `main`.
+- Merge the Pull Request. This can be a merge commit or a squash and merge.
+- The merge will trigger the Release GitHub Action defined in [this workflow](.github/workflows/release.yaml).
+
+The Release GitHub Action does the following:
+
+- Checks out the code.
+- Runs the CI GitHub Action, which runs the tests and linters.
+- Runs Python Semantic Release, which takes care of version update, tag creation, and release creation.
+
+The action is triggered by any push to main.
+
+Here is the relevant part of the GitHub Action:
 
 > [!NOTE]
-> The release action will only work if the CI succeeds only.
-> Python semantic release github action will take care of version update, tag creation and release creation.
+> The release action will be triggered by any push to `main` only if the 'CI' job in the 'release.yaml' workflow succeeds.
+> Python Semantic Release will take care of version number update, tag creation and release creation.
