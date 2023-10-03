@@ -16,7 +16,7 @@ categories:
     labels:
       - "chore"
       - "Chore"
-  - title:
+  - title: "Ci"
     labels:
       - "ci"
       - "Ci"
