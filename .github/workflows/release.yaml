@@ -7,7 +7,7 @@ on:
 
 jobs:
   CI:
-    uses: ./github/workflows/ci.yaml
+    uses: ./.github/workflows/ci.yaml
 
   Release:
     runs-on: ubuntu-latest
