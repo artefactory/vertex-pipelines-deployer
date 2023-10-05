@@ -28,6 +28,7 @@ from deployer.utils.utils import (
     import_pipeline_from_dir,
     make_enum_from_python_package_dir,
     print_check_results_table,
+    print_pipelines_list,
 )
 
 
@@ -324,24 +325,21 @@ def list(
     ] = False
 ):
     """List all pipelines."""
-    log_msg = "Available pipelines:\n"
     if len(PipelineName.__members__) == 0:
-        log_msg += (
-            "<yellow>No pipeline found. Please check that the pipeline root path is"
-            f" correct ('{PIPELINE_ROOT_PATH}')</yellow>"
+        logger.warning(
+            "No pipeline found. Please check that the pipeline root path is"
+            f" correct (current: '{PIPELINE_ROOT_PATH}')"
         )
+
+    if with_configs:
+        pipelines_dict = {
+            p.name: list_config_filepaths(CONFIG_ROOT_PATH, p.name)
+            for p in PipelineName.__members__.values()
+        }
     else:
-        for pipeline_name in PipelineName.__members__.values():
-            log_msg += f"- {pipeline_name.value}\n"
+        pipelines_dict = {p.name: [] for p in PipelineName.__members__.values()}
 
-            if with_configs:
-                config_filepaths = list_config_filepaths(CONFIG_ROOT_PATH, pipeline_name.value)
-                if len(config_filepaths) == 0:
-                    log_msg += "  <yellow>- No config file found</yellow>\n"
-                for config_filepath in config_filepaths:
-                    log_msg += f"  - {config_filepath.name}\n"
-
-    logger.opt(ansi=True).info(log_msg)
+    print_pipelines_list(pipelines_dict, with_configs)
 
 
 @app.command(no_args_is_help=True)
