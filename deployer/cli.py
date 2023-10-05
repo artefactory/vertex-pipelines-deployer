@@ -102,7 +102,13 @@ def deploy(
             help="Whether to create a schedule for the pipeline.",
         ),
     ] = False,
-    cron: Annotated[str, typer.Option(help="Cron expression for scheduling the pipeline.")] = None,
+    cron: Annotated[
+        str,
+        typer.Option(
+            help="Cron expression for scheduling the pipeline."
+            " To pass it to the CLI, use hyphens e.g. '0-10-*-*-*'."
+        ),
+    ] = None,
     delete_last_schedule: Annotated[
         bool,
         typer.Option(
