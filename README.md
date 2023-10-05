@@ -27,6 +27,8 @@
 - [Why this tool?](#why-this-tool)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+    - [From git repo](#from-git-repo)
+    - [From GCS (not available in PyPI yet)](#from-gcs-not-available-in-pypi-yet)
 - [Usage](#usage)
   - [Setup](#setup)
   - [Folder Structure](#folder-structure)
@@ -48,6 +50,8 @@ Two uses cases:
 Commands:
 - `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
 - `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
+- `create`: create a new pipeline and config files.
+- `list`: list all pipelines in the `vertex/pipelines` folder.
 
 ## Prerequisites
 
@@ -169,12 +173,16 @@ You must respect the following folder structure. If you already follow the
 
 ```
 vertex
-├─ config/
+├─ configs/
 │  └─ {pipeline_name}
 │     └─ {config_name}.json
 └─ pipelines/
    └─ {pipeline_name}.py
 ```
+
+> [!NOTE]
+> You must have at lease these files. If you need to share some config elements between pipelines,
+> you can have a `shared` folder in `configs` and import them in your pipeline configs.
 
 #### Pipelines
 
@@ -220,7 +228,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 > **Note**
 > We're using env files and dotenv to load the environment variables.
 > No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
-> An [`example.env`](example/example.env) file is provided in this repo.
+> An [`example.env`](./example/example.env) file is provided in this repo.
 > This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
 
 ### CLI: Deploying a Pipeline
