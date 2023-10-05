@@ -3,7 +3,8 @@ from pathlib import Path
 from typing import Any, Dict, Generic, List, TypeVar
 
 from loguru import logger
-from pydantic import Field, computed_field, model_validator
+from pydantic import Field, ValidationError, computed_field, model_validator
+from pydantic.functional_validators import ModelWrapValidatorHandler
 from typing_extensions import Annotated
 
 from deployer.constants import (
@@ -100,15 +101,16 @@ class Pipelines(CustomBaseModel):
 
     pipelines: Dict[str, Pipeline]
 
-    @model_validator(mode="before")
-    @classmethod
-    def _init_temp_directory(cls, data: Any) -> Any:
-        """Create temporary directory"""
+    @model_validator(mode="wrap")
+    def _init_remove_temp_directory(self, handler: ModelWrapValidatorHandler) -> Any:
+        """Create and remove temporary directory"""
         Path(TEMP_LOCAL_PACKAGE_PATH).mkdir(exist_ok=True)
-        return data
 
-    @model_validator(mode="after")
-    def _remove_temp_directory(self) -> None:
-        """Remove temporary directory"""
-        shutil.rmtree(TEMP_LOCAL_PACKAGE_PATH)
-        return self
+        try:
+            validated_self = handler(self)
+        except ValidationError as e:
+            raise e
+        finally:
+            shutil.rmtree(TEMP_LOCAL_PACKAGE_PATH)
+
+        return validated_self
