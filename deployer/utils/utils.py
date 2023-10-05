@@ -52,6 +52,36 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
     return pipeline
 
 
+def print_pipelines_list(pipelines_dict: Dict[str, list], with_configs: bool = False) -> None:
+    """This function prints a table of pipelines to the console.
+
+    Args:
+        pipelines_dict (dict[str, list]): A dictionary containing the pipelines as keys
+            and the config filepaths as values.
+        with_configs (bool, optional): Whether to print the config filepaths or not.
+            Defaults to False.
+    """
+    table = Table(show_header=True, header_style="bold", show_lines=True)
+
+    table.add_column("Pipeline")
+    table.add_column("Config Files")
+
+    for pipeline_name, config_filepaths in pipelines_dict.items():
+        config_paths_str = "\n".join([c.name for c in config_filepaths])
+        style = None
+
+        if len(config_filepaths) == 0 and with_configs:
+            config_paths_str = "No config files found"
+            style = "yellow"
+
+        table.add_row(pipeline_name, config_paths_str, style=style)
+
+    if not with_configs:
+        table.columns = table.columns[:1]
+
+    console.print(table)
+
+
 def print_check_results_table(
     to_check: Dict[str, list], validation_error: Optional[ValidationError] = None
 ) -> None:

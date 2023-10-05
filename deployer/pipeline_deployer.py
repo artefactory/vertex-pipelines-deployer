@@ -100,10 +100,10 @@ class VertexPipelineDeployer:
 
     def _check_experiment_name(self, experiment_name: Optional[str] = None) -> str:
         if experiment_name is None:
-            experiment_name = f"{self.pipeline_name}-experiment"
+            experiment_name = f"{self.pipeline_name}-experiment".replace("_", "-")
             logger.info(f"Experiment name not provided, using {experiment_name}")
-
-        experiment_name = experiment_name.replace("_", "-")
+        else:
+            experiment_name = experiment_name.replace("_", "-")
 
         return experiment_name
 

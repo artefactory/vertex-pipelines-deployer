@@ -28,14 +28,36 @@ from deployer.utils.utils import (
     import_pipeline_from_dir,
     make_enum_from_python_package_dir,
     print_check_results_table,
+    print_pipelines_list,
 )
+
+
+def display_version_and_exit(value: bool):
+    if value:
+        from deployer import __version__
+
+        typer.echo(f"version: {__version__}")
+        raise typer.Exit()
+
 
 app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode="markdown")
 
 
 @app.callback(name="set_logger")
 def cli_set_logger(
-    log_level: Annotated[LoguruLevel, typer.Option("--log-level", "-log")] = LoguruLevel.INFO
+    ctx: typer.Context,
+    log_level: Annotated[
+        LoguruLevel, typer.Option("--log-level", "-log", help="Set the logging level.")
+    ] = LoguruLevel.INFO,
+    version: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            "-v",
+            callback=display_version_and_exit,
+            help="Display the version number and exit.",
+        ),
+    ] = False,
 ):
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
 
@@ -44,7 +66,7 @@ PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 
 
 @app.command(no_args_is_help=True)
-def deploy(
+def deploy(  # noqa: C901
     pipeline_name: Annotated[
         PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
     ],
@@ -81,7 +103,13 @@ def deploy(
             help="Whether to create a schedule for the pipeline.",
         ),
     ] = False,
-    cron: Annotated[str, typer.Option(help="Cron expression for scheduling the pipeline.")] = None,
+    cron: Annotated[
+        str,
+        typer.Option(
+            help="Cron expression for scheduling the pipeline."
+            " To pass it to the CLI, use hyphens e.g. '0-10-*-*-*'."
+        ),
+    ] = None,
     delete_last_schedule: Annotated[
         bool,
         typer.Option(
@@ -99,10 +127,20 @@ def deploy(
             "--config-filepath",
             "-cfp",
             help="Path to the json/py file with parameter values and input artifacts"
-            "to use when running the pipeline.",
+            " to use when running the pipeline.",
             exists=True,
             dir_okay=False,
             file_okay=True,
+        ),
+    ] = None,
+    config_name: Annotated[
+        str,
+        typer.Option(
+            "--config-name",
+            "-cn",
+            help="Name of the json/py file with parameter values and input artifacts"
+            " to use when running the pipeline. It must be in the pipeline config dir."
+            " e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.",
         ),
     ] = None,
     enable_caching: Annotated[
@@ -135,6 +173,21 @@ def deploy(
     """Compile, upload, run and schedule pipelines."""
     vertex_settings = load_vertex_settings(env_file=env_file)
 
+    if schedule:
+        if cron is None or cron == "":
+            raise typer.BadParameter("--cron must be specified to schedule a pipeline")
+    if run or schedule:
+        if config_filepath is None and config_name is None:
+            raise typer.BadParameter(
+                "Both --config-filepath and --config-name are missing."
+                " Please specify at least one to run or schedule a pipeline."
+            )
+        if config_filepath is not None and config_name is not None:
+            raise typer.BadParameter(
+                "Both --config-filepath and --config-name are provided."
+                " Please specify only one to run or schedule a pipeline."
+            )
+
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
 
     deployer = VertexPipelineDeployer(
@@ -150,6 +203,8 @@ def deploy(
     )
 
     if run or schedule:
+        if config_name is not None:
+            config_filepath = Path(CONFIG_ROOT_PATH) / pipeline_name.value / config_name
         parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
@@ -172,8 +227,6 @@ def deploy(
 
     if schedule:
         with console.status("Scheduling pipeline...\n"):
-            if cron is None:
-                raise ValueError("`cron` must be specified when scheduling the pipeline")
             cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
             deployer.schedule(
                 cron=cron,
@@ -281,24 +334,21 @@ def list(
     ] = False
 ):
     """List all pipelines."""
-    log_msg = "Available pipelines:\n"
     if len(PipelineName.__members__) == 0:
-        log_msg += (
-            "<yellow>No pipeline found. Please check that the pipeline root path is"
-            f" correct ('{PIPELINE_ROOT_PATH}')</yellow>"
+        logger.warning(
+            "No pipeline found. Please check that the pipeline root path is"
+            f" correct (current: '{PIPELINE_ROOT_PATH}')"
         )
+
+    if with_configs:
+        pipelines_dict = {
+            p.name: list_config_filepaths(CONFIG_ROOT_PATH, p.name)
+            for p in PipelineName.__members__.values()
+        }
     else:
-        for pipeline_name in PipelineName.__members__.values():
-            log_msg += f"- {pipeline_name.value}\n"
+        pipelines_dict = {p.name: [] for p in PipelineName.__members__.values()}
 
-            if with_configs:
-                config_filepaths = list_config_filepaths(CONFIG_ROOT_PATH, pipeline_name.value)
-                if len(config_filepaths) == 0:
-                    log_msg += "  <yellow>- No config file found</yellow>\n"
-                for config_filepath in config_filepaths:
-                    log_msg += f"  - {config_filepath.name}\n"
-
-    logger.opt(ansi=True).info(log_msg)
+    print_pipelines_list(pipelines_dict, with_configs)
 
 
 @app.command(no_args_is_help=True)

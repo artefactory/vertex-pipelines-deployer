@@ -82,6 +82,11 @@ jobs:
           poetry run pip install --upgrade pip
           poetry install
 
+      - name: Test root command
+        run: |
+          cd example
+          poetry run vertex-deployer --version
+
       - name: Test list command
         run: |
           cd example

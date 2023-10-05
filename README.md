@@ -23,14 +23,12 @@
 </div>
 
 
-> **Warning**
-> This is a work in progress and is not ready for production use.
-
-
 ## Table of Contents
 - [Why this tool?](#why-this-tool)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+    - [From git repo](#from-git-repo)
+    - [From GCS (not available in PyPI yet)](#from-gcs-not-available-in-pypi-yet)
 - [Usage](#usage)
   - [Setup](#setup)
   - [Folder Structure](#folder-structure)
@@ -52,6 +50,8 @@ Two uses cases:
 Commands:
 - `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
 - `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
+- `create`: create a new pipeline and config files.
+- `list`: list all pipelines in the `vertex/pipelines` folder.
 
 ## Prerequisites
 
@@ -62,6 +62,15 @@ Commands:
 
 ## Installation
 
+
+### From git repo
+
+Stable version:
+```bash
+pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@main
+```
+
+Develop version:
 ```bash
 pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@develop
 ```
@@ -71,6 +80,20 @@ If you want to test this package on examples from this repo:
 git clone git@github.com:artefactory/vertex-pipelines-deployer.git
 poetry install
 cd example
+```
+
+### From GCS (not available in PyPI yet)
+
+Install a specific version:
+```bash
+export VERSION=0.0.1
+wget https://storage.cloud.google.com/vertex-pipelines-deployer/vertex_deployer-$VERSION.tar.gz
+pip install ./vertex_deployer-$VERSION.tar.gz
+```
+
+List available versions:
+```bash
+gsutil ls gs://vertex-pipelines-deployer
 ```
 
 ## Usage
@@ -150,12 +173,16 @@ You must respect the following folder structure. If you already follow the
 
 ```
 vertex
-├─ config/
+├─ configs/
 │  └─ {pipeline_name}
 │     └─ {config_name}.json
 └─ pipelines/
    └─ {pipeline_name}.py
 ```
+
+> [!NOTE]
+> You must have at lease these files. If you need to share some config elements between pipelines,
+> you can have a `shared` folder in `configs` and import them in your pipeline configs.
 
 #### Pipelines
 
@@ -201,7 +228,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 > **Note**
 > We're using env files and dotenv to load the environment variables.
 > No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
-> An [`example.env`](example/example.env) file is provided in this repo.
+> An [`example.env`](./example/example.env) file is provided in this repo.
 > This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
 
 ### CLI: Deploying a Pipeline
