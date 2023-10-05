@@ -86,8 +86,8 @@ cd example
 
 Install a specific version:
 ```bash
-export VERSION=0.0.1
-wget https://storage.cloud.google.com/vertex-pipelines-deployer/vertex_deployer-$VERSION.tar.gz
+export VERSION=0.1.0
+gsutil -m cp  gs://vertex-pipelines-deployer/vertex_deployer-$VERSION.tar.gz .
 pip install ./vertex_deployer-$VERSION.tar.gz
 ```
 

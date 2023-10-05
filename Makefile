@@ -55,6 +55,14 @@ run-tests:
 	@poetry run pytest tests --cov=deployer --cov-report=term-missing -s -vv -W ignore:::pkg_resources
 
 
+.PHONY: profile-cli
+## Profile CLI using pyinstrument (https://pyinstrument.readthedocs.io/en/latest/index.html)
+profile-cli:
+	@echo "Check that you have pyinstrument installed: poetry install -E profiling"
+	@poetry run pyinstrument -r html -o pyinstrument.html --from-path vertex-deployer --version
+	@open pyinstrument.html
+
+
 #################################################################################
 # Self Documenting Commands                                                     #
 #################################################################################
