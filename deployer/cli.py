@@ -15,8 +15,6 @@ from deployer.constants import (
     PIPELINE_ROOT_PATH,
     PYTHON_CONFIG_TEMPLATE,
 )
-from deployer.pipeline_checks import Pipelines
-from deployer.pipeline_deployer import VertexPipelineDeployer
 from deployer.utils.config import (
     ConfigType,
     list_config_filepaths,
@@ -190,6 +188,8 @@ def deploy(  # noqa: C901
 
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
 
+    from deployer.pipeline_deployer import VertexPipelineDeployer
+
     deployer = VertexPipelineDeployer(
         project_id=vertex_settings.PROJECT_ID,
         region=vertex_settings.GCP_REGION,
@@ -283,6 +283,8 @@ def check(
 
     **This command can be used to check pipelines in a Continuous Integration workflow.**
     """
+    from deployer.pipeline_checks import Pipelines
+
     if len(PipelineName.__members__) == 0:
         raise ValueError(
             "No pipeline found. Please check that the pipeline root path is correct"
