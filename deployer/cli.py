@@ -30,12 +30,33 @@ from deployer.utils.utils import (
     print_check_results_table,
 )
 
+
+def version_callback(value: bool):
+    if value:
+        from deployer import __version__
+
+        typer.echo(f"version: {__version__}")
+        raise typer.Exit()
+
+
 app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode="markdown")
 
 
 @app.callback(name="set_logger")
 def cli_set_logger(
-    log_level: Annotated[LoguruLevel, typer.Option("--log-level", "-log")] = LoguruLevel.INFO
+    ctx: typer.Context,
+    log_level: Annotated[
+        LoguruLevel, typer.Option("--log-level", "-log", help="Set the logging level.")
+    ] = LoguruLevel.INFO,
+    version: Annotated[
+        bool,
+        typer.Option(
+            "--version",
+            "-v",
+            callback=version_callback,
+            help="Display the version number and exit.",
+        ),
+    ] = False,
 ):
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
 
