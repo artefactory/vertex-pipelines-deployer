@@ -32,7 +32,7 @@ from deployer.utils.utils import (
 )
 
 
-def version_callback(value: bool):
+def display_version_and_exit(value: bool):
     if value:
         from deployer import __version__
 
@@ -54,7 +54,7 @@ def cli_set_logger(
         typer.Option(
             "--version",
             "-v",
-            callback=version_callback,
+            callback=display_version_and_exit,
             help="Display the version number and exit.",
         ),
     ] = False,
