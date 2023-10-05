@@ -120,10 +120,20 @@ def deploy(
             "--config-filepath",
             "-cfp",
             help="Path to the json/py file with parameter values and input artifacts"
-            "to use when running the pipeline.",
+            " to use when running the pipeline.",
             exists=True,
             dir_okay=False,
             file_okay=True,
+        ),
+    ] = None,
+    config_name: Annotated[
+        str,
+        typer.Option(
+            "--config-name",
+            "-cn",
+            help="Name of the json/py file with parameter values and input artifacts"
+            " to use when running the pipeline. It must be in the pipeline config dir."
+            " e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.",
         ),
     ] = None,
     enable_caching: Annotated[
@@ -171,6 +181,12 @@ def deploy(
     )
 
     if run or schedule:
+        if config_filepath is None and config_name is None:
+            raise ValueError("Please specify either --config-filepath or --config-name")
+        if config_filepath is not None and config_name is not None:
+            raise ValueError("Please specify either --config-filepath or --config-name, not both")
+        if config_name is not None:
+            config_filepath = Path(CONFIG_ROOT_PATH) / pipeline_name.value / config_name
         parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
