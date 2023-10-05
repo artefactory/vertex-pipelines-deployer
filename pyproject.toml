@@ -19,6 +19,7 @@ rich = "^13.5.3"
 loguru = "^0.7.2"
 pydantic-settings = "^2.0.3"
 pydantic = "^2.3.0"
+pyinstrument = { version = "^4.5.3", optional = true }
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
@@ -29,6 +30,9 @@ ipykernel = "6.9.1"
 nbstripout = "^0.6.1"
 ruff = "^0.0.289"
 pytest-cov = "^4.1.0"
+
+[tool.poetry.extras]
+profiling = ["pyinstrument"]
 
 [build-system]
 requires = ["poetry-core"]
