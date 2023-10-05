@@ -256,13 +256,14 @@ class VertexPipelineDeployer:
 
         if tag:
             client = RegistryClient(host=self.gar_host)
+            package_name = self.pipeline_name.replace("_", "-")
             try:
-                tag_metadata = client.get_tag(package_name=self.pipeline_name, tag=tag)
+                tag_metadata = client.get_tag(package_name=package_name, tag=tag)
             except HTTPError as e:
-                tags_list = client.list_tags(self.pipeline_name)
+                tags_list = client.list_tags(package_name)
                 tags_list_parsed = [x["name"].split("/")[-1] for x in tags_list]
                 raise TagNotFoundError(
-                    f"Tag {tag} not found for package {self.gar_host}/{self.pipeline_name}.\
+                    f"Tag {tag} not found for package {self.gar_host}/{package_name}.\
                         Available tags: {tags_list_parsed}"
                 ) from e
 

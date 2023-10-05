@@ -208,15 +208,15 @@ def deploy(  # noqa: C901
         parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
-        with console.status("Compiling pipeline...\n"):
+        with console.status("Compiling pipeline..."):
             deployer.compile()
 
     if upload:
-        with console.status("Uploading pipeline...\n"):
+        with console.status("Uploading pipeline..."):
             deployer.upload_to_registry(tags=tags)
 
     if run:
-        with console.status("Running pipeline...\n"):
+        with console.status("Running pipeline..."):
             deployer.run(
                 enable_caching=enable_caching,
                 parameter_values=parameter_values,
@@ -226,7 +226,7 @@ def deploy(  # noqa: C901
             )
 
     if schedule:
-        with console.status("Scheduling pipeline...\n"):
+        with console.status("Scheduling pipeline..."):
             cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
             deployer.schedule(
                 cron=cron,
