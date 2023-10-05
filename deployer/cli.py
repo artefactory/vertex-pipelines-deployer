@@ -209,7 +209,7 @@ def deploy(
 
     if schedule:
         with console.status("Scheduling pipeline...\n"):
-            if cron is None:
+            if cron is None or cron == "":
                 raise ValueError("`cron` must be specified when scheduling the pipeline")
             cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
             deployer.schedule(
