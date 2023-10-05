@@ -341,6 +341,7 @@ def list(
             "No pipeline found. Please check that the pipeline root path is"
             f" correct (current: '{PIPELINE_ROOT_PATH}')"
         )
+        raise typer.Exit()
 
     if with_configs:
         pipelines_dict = {
