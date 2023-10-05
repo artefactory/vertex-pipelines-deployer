@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 from pathlib import Path
 from typing import Callable, List, Optional
@@ -77,17 +79,17 @@ class VertexPipelineDeployer:
         """
         if self.gar_host is not None:
             if tag:
-                return f"{self.gar_host}/{self.pipeline_name.replace('_', '-')}/{tag}"
+                return os.path.join(self.gar_host, self.pipeline_name.replace("_", "-"), tag)
 
             if self.template_name is not None and self.version_name is not None:
-                return f"{self.gar_host}/{self.template_name}/{self.version_name}"
+                return os.path.join(self.gar_host, self.template_name, self.version_name)
 
             logger.warning(
                 "tag or template_name and version_name not provided."
                 " Falling back to local package."
             )
 
-        return str(self.local_package_path / f"{self.pipeline_name}.yaml")
+        return os.path.join(str(self.local_package_path), f"{self.pipeline_name}.yaml")
 
     def _check_gar_host(self) -> None:
         if self.gar_host is None:
@@ -98,10 +100,10 @@ class VertexPipelineDeployer:
 
     def _check_experiment_name(self, experiment_name: Optional[str] = None) -> str:
         if experiment_name is None:
-            experiment_name = f"{self.pipeline_name}-experiment"
+            experiment_name = f"{self.pipeline_name}-experiment".replace("_", "-")
             logger.info(f"Experiment name not provided, using {experiment_name}")
-
-        experiment_name = experiment_name.replace("_", "-")
+        else:
+            experiment_name = experiment_name.replace("_", "-")
 
         return experiment_name
 
@@ -123,7 +125,7 @@ class VertexPipelineDeployer:
         )
         return job
 
-    def compile(self) -> "VertexPipelineDeployer":
+    def compile(self) -> VertexPipelineDeployer:
         """Compile pipeline and save it to the local package path using kfp compiler"""
         self.local_package_path.mkdir(parents=True, exist_ok=True)
         pipeline_filepath = self.local_package_path / f"{self.pipeline_name}.yaml"
@@ -139,7 +141,7 @@ class VertexPipelineDeployer:
     def upload_to_registry(
         self,
         tags: List[str] = ["latest"],  # noqa: B006
-    ) -> "VertexPipelineDeployer":
+    ) -> VertexPipelineDeployer:
         """Upload pipeline to Artifact Registry"""
         self._check_gar_host()
         client = RegistryClient(host=self.gar_host)
@@ -159,7 +161,7 @@ class VertexPipelineDeployer:
         input_artifacts: Optional[dict] = None,
         experiment_name: Optional[str] = None,
         tag: Optional[str] = None,
-    ) -> "VertexPipelineDeployer":
+    ) -> VertexPipelineDeployer:
         """Run pipeline on Vertex AI Pipelines
 
         If the experiment name is not provided, use the pipeline name with the suffix
@@ -197,7 +199,7 @@ class VertexPipelineDeployer:
         parameter_values: Optional[dict] = None,
         experiment_name: Optional[str] = None,
         tags: List[str] = ["latest"],  # noqa: B006
-    ) -> "VertexPipelineDeployer":
+    ) -> VertexPipelineDeployer:
         """Compile, upload and run pipeline on Vertex AI Pipelines"""
         self.compile()
 
@@ -219,7 +221,7 @@ class VertexPipelineDeployer:
         parameter_values: Optional[dict] = None,
         tag: Optional[str] = None,
         delete_last_schedule: bool = False,
-    ) -> "VertexPipelineDeployer":
+    ) -> VertexPipelineDeployer:
         """Create pipeline schedule on Vertex AI Pipelines
 
         Compiled pipeline file is the one uploaded on artifact registry if the host is provided,
@@ -254,13 +256,14 @@ class VertexPipelineDeployer:
 
         if tag:
             client = RegistryClient(host=self.gar_host)
+            package_name = self.pipeline_name.replace("_", "-")
             try:
-                tag_metadata = client.get_tag(package_name=self.pipeline_name, tag=tag)
+                tag_metadata = client.get_tag(package_name=package_name, tag=tag)
             except HTTPError as e:
-                tags_list = client.list_tags(self.pipeline_name)
+                tags_list = client.list_tags(package_name)
                 tags_list_parsed = [x["name"].split("/")[-1] for x in tags_list]
                 raise TagNotFoundError(
-                    f"Tag {tag} not found for package {self.gar_host}/{self.pipeline_name}.\
+                    f"Tag {tag} not found for package {self.gar_host}/{package_name}.\
                         Available tags: {tags_list_parsed}"
                 ) from e
 

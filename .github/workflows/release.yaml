@@ -1,3 +1,15 @@
+# This workflow triggers the CI, updates the version, and uploads the release to GitHub and Google Cloud Storage when a push is made to either the 'main' or 'develop' branch.
+#
+# Workflow Steps:
+#
+# 1. Ci is triggered using the CI workflow defined in .github/workflows/ci.yaml
+# 2. If it succeeds, the version is updated using Python Semantic Release
+# 3. The release is uploaded to GitHub (same step and GitHub action)
+# 5. Authentication to Google Cloud is achieved using Workload Identity Federation
+# 6. The release is uploaded to Google Cloud Storage
+#
+# For more details on setting up Workload Identity Federation for GitHub, visit https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
+
 name: CI and Release on main
 
 on:
@@ -26,3 +38,20 @@ jobs:
       uses: python-semantic-release/python-semantic-release@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        token_format: 'access_token'
+        workload_identity_provider: '${{ secrets.WIF_PROVIDER }}' # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+        service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
+
+    - name: Copy release to root
+      run: cp -r dist/*.tar.gz .
+
+    - name: 'Upload Release to Google Cloud Storage'
+      uses: 'google-github-actions/upload-cloud-storage@v1'
+      with:
+        path: '.'
+        destination: vertex-pipelines-deployer
+        glob: '*.tar.gz'

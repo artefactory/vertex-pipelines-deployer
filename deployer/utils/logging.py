@@ -1,6 +1,7 @@
 from enum import Enum
 
 from loguru import logger
+from rich.console import Console
 
 
 class LoguruLevel(str, Enum):  # noqa: D101
@@ -24,3 +25,6 @@ class disable_logger(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:  # noqa: D105
         logger.enable(self.name)
+
+
+console = Console()

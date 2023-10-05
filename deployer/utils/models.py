@@ -1,4 +1,5 @@
 from inspect import signature
+from typing import Literal
 
 import kfp.components.graph_component
 from pydantic import BaseModel, ConfigDict, create_model
@@ -43,3 +44,15 @@ def create_model_from_pipeline(
     )
 
     return pipeline_model
+
+
+class ChecksTableRow(CustomBaseModel):
+    """A class to represent a row of the check results table."""
+
+    status: Literal["✅", "⚠️", "❌"]
+    pipeline: str
+    pipeline_error_message: str = None
+    config_file: str
+    attribute: str = None
+    config_error_type: str = None
+    config_error_message: str = None
