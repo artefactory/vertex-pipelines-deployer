@@ -66,7 +66,7 @@ PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 
 
 @app.command(no_args_is_help=True)
-def deploy(
+def deploy(  # noqa: C901
     pipeline_name: Annotated[
         PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
     ],
@@ -173,6 +173,21 @@ def deploy(
     """Compile, upload, run and schedule pipelines."""
     vertex_settings = load_vertex_settings(env_file=env_file)
 
+    if schedule:
+        if cron is None or cron == "":
+            raise typer.BadParameter("--cron must be specified to schedule a pipeline")
+    if run or schedule:
+        if config_filepath is None and config_name is None:
+            raise typer.BadParameter(
+                "Both --config-filepath and --config-name are missing."
+                " Please specify at least one to run or schedule a pipeline."
+            )
+        if config_filepath is not None and config_name is not None:
+            raise typer.BadParameter(
+                "Both --config-filepath and --config-name are provided."
+                " Please specify only one to run or schedule a pipeline."
+            )
+
     pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
 
     deployer = VertexPipelineDeployer(
@@ -188,10 +203,6 @@ def deploy(
     )
 
     if run or schedule:
-        if config_filepath is None and config_name is None:
-            raise ValueError("Please specify either --config-filepath or --config-name")
-        if config_filepath is not None and config_name is not None:
-            raise ValueError("Please specify either --config-filepath or --config-name, not both")
         if config_name is not None:
             config_filepath = Path(CONFIG_ROOT_PATH) / pipeline_name.value / config_name
         parameter_values, input_artifacts = load_config(config_filepath)
@@ -216,8 +227,6 @@ def deploy(
 
     if schedule:
         with console.status("Scheduling pipeline...\n"):
-            if cron is None or cron == "":
-                raise ValueError("`cron` must be specified when scheduling the pipeline")
             cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
             deployer.schedule(
                 cron=cron,
