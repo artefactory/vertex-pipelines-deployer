@@ -4,6 +4,7 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
+import toml
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -39,6 +40,7 @@ def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSett
 class ConfigType(str, Enum):  # noqa: D101
     json = "json"
     py = "py"
+    toml = "toml"
 
 
 def list_config_filepaths(config_root_path: Union[Path, str], pipeline_name: str) -> List[Path]:
@@ -83,6 +85,10 @@ def load_config(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
     if config_filepath.suffix == ".json":
         with open(config_filepath, "r") as f:
             parameter_values = json.load(f)
+        return parameter_values, None
+
+    if config_filepath.suffix == ".toml":
+        parameter_values = toml.load(config_filepath)
         return parameter_values, None
 
     if config_filepath.suffix == ".py":

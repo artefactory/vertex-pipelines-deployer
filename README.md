@@ -216,15 +216,15 @@ def pipeline():
 
 #### Configs
 
-Config file can be either `.py` files or `.json` files.
+Config file can be either `.py`, `.json` or `.toml` files.
 They must be located in the `config/{pipeline_name}` folder.
 
 **Why two formats?**
 
-`.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` files are useful to define simple configs (e.g. a string).
+`.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` files are useful to define simple configs (e.g. a string).
 
 **How to format them?**
-- `.json` files must be valid json files containing only one dict of key: value.
+- `.json` and `.toml` files must be valid json files containing only one dict of key: value representing parameter values.
 - `.py` files must be valid python files with two important elements:
     - `parameter_values` to pass arguments to your pipeline
     - `input_artifacts` if you want to retrieve and create input artifacts to your pipeline.
@@ -232,7 +232,7 @@ They must be located in the `config/{pipeline_name}` folder.
 
 **How to name them?**
 
-`{config_name}.json` or `{config_name}.py`. config_name is free but must be unique for a given pipeline.
+`{config_name}.py` or `{config_name}.json` or `{config_name}.toml`. config_name is free but must be unique for a given pipeline.
 
 
 #### Settings
@@ -325,7 +325,9 @@ vertex-deployer --log-level DEBUG deploy ...
 ├─ .github
 │  ├─ ISSUE_TEMPLATE/
 │  ├─ workflows
-│  │  └─ ci.yaml
+│  │  ├─ ci.yaml
+│  │  ├─ pr_agent.yaml
+│  │  └─ release.yaml
 │  ├─ CODEOWNERS
 │  └─ PULL_REQUEST_TEMPLATE.md
 ├─ deployer
@@ -350,7 +352,9 @@ vertex-deployer --log-level DEBUG deploy ...
 │      │  ├─ broken_pipeline
 │      │  │  └─ config_test.json
 │      │  └─ dummy_pipeline
-│      │     └─ config_test.json
+│      │     ├─ config_test.json
+│      │     ├─ config.py
+│      │     └─ config.toml
 │      ├─ deployment
 │      ├─ lib
 │      └─ pipelines
