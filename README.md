@@ -186,8 +186,23 @@ vertex
 
 #### Pipelines
 
-You file `{pipeline_name}.py` must contain a function called `pipeline` decorated using `kfp.dsl.pipeline`.
+You file `{pipeline_name}.py` must contain a function called `{pipeline_name}` decorated using `kfp.dsl.pipeline`.
+In previous versions, the functions / object used to be called `pipeline` but it was changed to `{pipeline_name}` to avoid confusion with the `kfp.dsl.pipeline` decorator.
 
+```python
+# vertex/pipelines/dummy_pipeline.py
+import kfp.dsl
+
+# New name to avoid confusion with the kfp.dsl.pipeline decorator
+@kfp.dsl.pipeline()
+def dummy_pipeline():
+    ...
+
+# Old name
+@kfp.dsl.pipeline()
+def pipeline():
+    ...
+```
 
 #### Configs
 
