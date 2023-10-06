@@ -5,6 +5,7 @@ from typing import Any, Dict, Generic, List, TypeVar
 from loguru import logger
 from pydantic import Field, ValidationError, computed_field, model_validator
 from pydantic.functional_validators import ModelWrapValidatorHandler
+from pydantic_core import PydanticCustomError
 from typing_extensions import Annotated
 
 from deployer.constants import (
@@ -14,6 +15,7 @@ from deployer.constants import (
 )
 from deployer.pipeline_deployer import VertexPipelineDeployer
 from deployer.utils.config import list_config_filepaths, load_config
+from deployer.utils.exceptions import BadConfigError
 from deployer.utils.logging import disable_logger
 from deployer.utils.models import CustomBaseModel, create_model_from_pipeline
 from deployer.utils.utils import (
@@ -26,10 +28,29 @@ PipelineConfigT = TypeVar("PipelineConfigT")
 PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 
 
-class DynamicConfigsModel(CustomBaseModel, Generic[PipelineConfigT]):
+class ConfigDynamicModel(CustomBaseModel, Generic[PipelineConfigT]):
     """Model used to generate checks for configs based on pipeline dynamic model"""
 
-    configs: Dict[str, PipelineConfigT]
+    config_path: Path
+    config: PipelineConfigT
+
+    @model_validator(mode="before")
+    @classmethod
+    def load_config_if_empty(cls, data: Any) -> Any:
+        """Load config if it is empty"""
+        if data.get("config") is None:
+            try:
+                parameter_values, input_artifacts = load_config(data["config_path"])
+            except BadConfigError as e:
+                raise PydanticCustomError("BadConfigError", str(e)) from e
+            data["config"] = {**(parameter_values or {}), **(input_artifacts or {})}
+        return data
+
+
+class ConfigsDynamicModel(CustomBaseModel, Generic[PipelineConfigT]):
+    """Model used to generate checks for configs based on pipeline dynamic model"""
+
+    configs: Dict[str, ConfigDynamicModel[PipelineConfigT]]
 
 
 class Pipeline(CustomBaseModel):
@@ -49,15 +70,12 @@ class Pipeline(CustomBaseModel):
     @computed_field
     def pipeline(self) -> Any:
         """Import pipeline"""
-        with disable_logger("deployer.utils.utils"):
-            return import_pipeline_from_dir(PIPELINE_ROOT_PATH, self.pipeline_name.value)
-
-    @computed_field()
-    def configs(self) -> Any:
-        """Load configs"""
-        configs = [load_config(config_path) for config_path in self.config_paths]
-        configs = [{**(pv or {}), **(ia or {})} for pv, ia in configs]
-        return configs
+        if getattr(self, "_pipeline", None) is None:
+            with disable_logger("deployer.utils.utils"):
+                self._pipeline = import_pipeline_from_dir(
+                    PIPELINE_ROOT_PATH, self.pipeline_name.value
+                )
+        return self._pipeline
 
     @model_validator(mode="after")
     def import_pipeline(self):
@@ -89,9 +107,9 @@ class Pipeline(CustomBaseModel):
         """Validate configs against pipeline parameters definition"""
         logger.debug(f"Validating configs for pipeline {self.pipeline_name.value}")
         PipelineDynamicModel = create_model_from_pipeline(self.pipeline)
-        ConfigsModel = DynamicConfigsModel[PipelineDynamicModel]
+        ConfigsModel = ConfigsDynamicModel[PipelineDynamicModel]
         ConfigsModel.model_validate(
-            {"configs": dict(zip([x.name for x in self.config_paths], self.configs))}
+            {"configs": {x.name: {"config_path": x} for x in self.config_paths}}
         )
         return self
 

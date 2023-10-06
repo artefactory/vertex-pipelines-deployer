@@ -272,7 +272,7 @@ def check(
     Checking that a pipeline is valid includes:
 
     * Checking that the pipeline can be imported. It must be a valid python module with a
-    `pipeline` function decorated with `@kfp.dsl.pipeline`.
+    `{pipeline_name}` function decorated with `@kfp.dsl.pipeline`.
 
     * Checking that the pipeline can be compiled using `kfp.compiler.Compiler`.
 

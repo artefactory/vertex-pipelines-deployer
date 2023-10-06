@@ -2,6 +2,7 @@ from inspect import signature
 from typing import Literal
 
 import kfp.components.graph_component
+import kfp.dsl
 from pydantic import BaseModel, ConfigDict, create_model
 from typing_extensions import _AnnotatedAlias
 

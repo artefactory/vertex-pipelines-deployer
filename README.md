@@ -39,6 +39,7 @@
     - [`list`](#list)
   - [CLI: Options](#cli-options)
 
+[Full CLI documentation](docs/CLI_REFERENCE.md)
 
 ## Why this tool?
 
@@ -94,6 +95,15 @@ pip install ./vertex_deployer-$VERSION.tar.gz
 List available versions:
 ```bash
 gsutil ls gs://vertex-pipelines-deployer
+```
+
+### Add to requirements
+
+It's better to get the .tar.gz archive from gcs, and version it.
+
+Then add the following line to your `requirements.in` file:
+```bash
+file:my/path/to/vertex_deployer-$VERSION.tar.gz
 ```
 
 ## Usage
@@ -164,7 +174,7 @@ gcloud artifacts repositories add-iam-policy-binding ${GAR_PIPELINES_REPO_ID} \
    --role="roles/artifactregistry.admin"
 ```
 
-You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code (try it yourself).
+You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/pipeline_deployer.py) in your code (try it yourself).
 
 ### Folder Structure
 
@@ -186,20 +196,35 @@ vertex
 
 #### Pipelines
 
-You file `{pipeline_name}.py` must contain a function called `pipeline` decorated using `kfp.dsl.pipeline`.
+You file `{pipeline_name}.py` must contain a function called `{pipeline_name}` decorated using `kfp.dsl.pipeline`.
+In previous versions, the functions / object used to be called `pipeline` but it was changed to `{pipeline_name}` to avoid confusion with the `kfp.dsl.pipeline` decorator.
 
+```python
+# vertex/pipelines/dummy_pipeline.py
+import kfp.dsl
+
+# New name to avoid confusion with the kfp.dsl.pipeline decorator
+@kfp.dsl.pipeline()
+def dummy_pipeline():
+    ...
+
+# Old name
+@kfp.dsl.pipeline()
+def pipeline():
+    ...
+```
 
 #### Configs
 
-Config file can be either `.py` files or `.json` files.
+Config file can be either `.py`, `.json` or `.toml` files.
 They must be located in the `config/{pipeline_name}` folder.
 
 **Why two formats?**
 
-`.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` files are useful to define simple configs (e.g. a string).
+`.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` files are useful to define simple configs (e.g. a string).
 
 **How to format them?**
-- `.json` files must be valid json files containing only one dict of key: value.
+- `.json` and `.toml` files must be valid json files containing only one dict of key: value representing parameter values.
 - `.py` files must be valid python files with two important elements:
     - `parameter_values` to pass arguments to your pipeline
     - `input_artifacts` if you want to retrieve and create input artifacts to your pipeline.
@@ -207,7 +232,7 @@ They must be located in the `config/{pipeline_name}` folder.
 
 **How to name them?**
 
-`{config_name}.json` or `{config_name}.py`. config_name is free but must be unique for a given pipeline.
+`{config_name}.py` or `{config_name}.json` or `{config_name}.toml`. config_name is free but must be unique for a given pipeline.
 
 
 #### Settings
@@ -300,7 +325,9 @@ vertex-deployer --log-level DEBUG deploy ...
 ├─ .github
 │  ├─ ISSUE_TEMPLATE/
 │  ├─ workflows
-│  │  └─ ci.yaml
+│  │  ├─ ci.yaml
+│  │  ├─ pr_agent.yaml
+│  │  └─ release.yaml
 │  ├─ CODEOWNERS
 │  └─ PULL_REQUEST_TEMPLATE.md
 ├─ deployer
@@ -325,7 +352,9 @@ vertex-deployer --log-level DEBUG deploy ...
 │      │  ├─ broken_pipeline
 │      │  │  └─ config_test.json
 │      │  └─ dummy_pipeline
-│      │     └─ config_test.json
+│      │     ├─ config_test.json
+│      │     ├─ config.py
+│      │     └─ config.toml
 │      ├─ deployment
 │      ├─ lib
 │      └─ pipelines

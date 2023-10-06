@@ -4,10 +4,11 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
+import toml
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from deployer.utils.exceptions import UnsupportedConfigFileError
+from deployer.utils.exceptions import BadConfigError, UnsupportedConfigFileError
 
 
 class VertexPipelinesSettings(BaseSettings):  # noqa: D101
@@ -39,6 +40,7 @@ def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSett
 class ConfigType(str, Enum):  # noqa: D101
     json = "json"
     py = "py"
+    toml = "toml"
 
 
 def list_config_filepaths(config_root_path: Union[Path, str], pipeline_name: str) -> List[Path]:
@@ -85,6 +87,10 @@ def load_config(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
             parameter_values = json.load(f)
         return parameter_values, None
 
+    if config_filepath.suffix == ".toml":
+        parameter_values = toml.load(config_filepath)
+        return parameter_values, None
+
     if config_filepath.suffix == ".py":
         parameter_values, input_artifacts = _load_config_python(config_filepath)
         return parameter_values, input_artifacts
@@ -119,7 +125,7 @@ def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional
     input_artifacts = getattr(module, "input_artifacts", None)
 
     if parameter_values is None and input_artifacts is None:
-        raise ValueError(
+        raise BadConfigError(
             f"{config_filepath}: Python config file must contain a `parameter_values` "
             "and/or `input_artifacts` dict."
         )
@@ -127,7 +133,7 @@ def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional
     if parameter_values is not None and input_artifacts is not None:
         common_keys = set(parameter_values.keys()).intersection(set(input_artifacts.keys()))
         if common_keys:
-            raise ValueError(
+            raise BadConfigError(
                 f"{config_filepath}: Python config file must not contain common keys in "
                 "`parameter_values` and `input_artifacts` dict. Common keys: {common_keys}"
             )
