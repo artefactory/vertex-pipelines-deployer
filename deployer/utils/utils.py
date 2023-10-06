@@ -1,4 +1,5 @@
 import importlib
+import warnings
 from enum import Enum
 from pathlib import Path
 from typing import Dict, Optional
@@ -40,11 +41,22 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
         ) from e
 
     try:
-        pipeline: Optional[graph_component.GraphComponent] = pipeline_module.pipeline
+        pipeline: Optional[graph_component.GraphComponent]
+        pipeline = getattr(pipeline_module, pipeline_name, None)
+        if pipeline is None:
+            pipeline = pipeline_module.pipeline
+            warnings.warn(
+                f"Pipeline in `{module_path}` is named `pipeline` instead of `{pipeline_name}`. "
+                "This is deprecated and will be removed in a future version. "
+                f"Please rename your pipeline to `{pipeline_name}`.",
+                FutureWarning,
+                stacklevel=1,
+            )
     except AttributeError as e:
         raise ImportError(
-            f"Pipeline {module_path}:pipeline not found. "
+            f"Pipeline object not found in `{module_path}`. "
             "Please check that the pipeline is correctly defined and named."
+            f"It should be named `{pipeline_name}` or `pipeline` (deprecated)."
         ) from e
 
     logger.debug(f"Pipeline {module_path} imported successfully.")

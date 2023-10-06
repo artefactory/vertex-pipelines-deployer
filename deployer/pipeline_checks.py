@@ -70,8 +70,12 @@ class Pipeline(CustomBaseModel):
     @computed_field
     def pipeline(self) -> Any:
         """Import pipeline"""
-        with disable_logger("deployer.utils.utils"):
-            return import_pipeline_from_dir(PIPELINE_ROOT_PATH, self.pipeline_name.value)
+        if getattr(self, "_pipeline", None) is None:
+            with disable_logger("deployer.utils.utils"):
+                self._pipeline = import_pipeline_from_dir(
+                    PIPELINE_ROOT_PATH, self.pipeline_name.value
+                )
+        return self._pipeline
 
     @model_validator(mode="after")
     def import_pipeline(self):
