@@ -39,6 +39,7 @@
     - [`list`](#list)
   - [CLI: Options](#cli-options)
 
+[Full CLI documentation](docs/CLI_REFERENCE.md)
 
 ## Why this tool?
 
