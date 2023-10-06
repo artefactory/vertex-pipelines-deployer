@@ -39,6 +39,7 @@
     - [`list`](#list)
   - [CLI: Options](#cli-options)
 
+[Full CLI documentation](docs/CLI_REFERENCE.md)
 
 ## Why this tool?
 
@@ -94,6 +95,15 @@ pip install ./vertex_deployer-$VERSION.tar.gz
 List available versions:
 ```bash
 gsutil ls gs://vertex-pipelines-deployer
+```
+
+### Add to requirements
+
+It's better to get the .tar.gz archive from gcs, and version it.
+
+Then add the following line to your `requirements.in` file:
+```bash
+file:my/path/to/vertex_deployer-$VERSION.tar.gz
 ```
 
 ## Usage
@@ -164,7 +174,7 @@ gcloud artifacts repositories add-iam-policy-binding ${GAR_PIPELINES_REPO_ID} \
    --role="roles/artifactregistry.admin"
 ```
 
-You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code (try it yourself).
+You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/pipeline_deployer.py) in your code (try it yourself).
 
 ### Folder Structure
 

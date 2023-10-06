@@ -58,7 +58,7 @@ and [Poetry](https://python-poetry.org/docs/cli/#build) to create releases and t
 The release process is automated through GitHub Actions. Here is the process:
 
 - Create a Pull Request from `develop` to `main`.
-- Merge the Pull Request. This can be a merge commit or a squash and merge.
+- Merge the Pull Request. This must create a merge commit.
 - The merge will trigger the Release GitHub Action defined in [this workflow](.github/workflows/release.yaml).
 
 The Release GitHub Action does the following:
@@ -68,8 +68,6 @@ The Release GitHub Action does the following:
 - Runs Python Semantic Release, which takes care of version update, tag creation, and release creation.
 
 The action is triggered by any push to main.
-
-Here is the relevant part of the GitHub Action:
 
 > [!NOTE]
 > The release action will be triggered by any push to `main` only if the 'CI' job in the 'release.yaml' workflow succeeds.
