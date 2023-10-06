@@ -173,7 +173,7 @@ gcloud artifacts repositories add-iam-policy-binding ${GAR_PIPELINES_REPO_ID} \
    --role="roles/artifactregistry.admin"
 ```
 
-You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/deployer.py) in your code (try it yourself).
+You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/pipeline_deployer.py) in your code (try it yourself).
 
 ### Folder Structure
 
