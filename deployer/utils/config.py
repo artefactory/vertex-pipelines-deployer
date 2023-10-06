@@ -7,7 +7,7 @@ from typing import List, Optional, Tuple, Union
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from deployer.utils.exceptions import UnsupportedConfigFileError
+from deployer.utils.exceptions import BadConfigError, UnsupportedConfigFileError
 
 
 class VertexPipelinesSettings(BaseSettings):  # noqa: D101
@@ -119,7 +119,7 @@ def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional
     input_artifacts = getattr(module, "input_artifacts", None)
 
     if parameter_values is None and input_artifacts is None:
-        raise ValueError(
+        raise BadConfigError(
             f"{config_filepath}: Python config file must contain a `parameter_values` "
             "and/or `input_artifacts` dict."
         )
@@ -127,7 +127,7 @@ def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional
     if parameter_values is not None and input_artifacts is not None:
         common_keys = set(parameter_values.keys()).intersection(set(input_artifacts.keys()))
         if common_keys:
-            raise ValueError(
+            raise BadConfigError(
                 f"{config_filepath}: Python config file must not contain common keys in "
                 "`parameter_values` and `input_artifacts` dict. Common keys: {common_keys}"
             )
