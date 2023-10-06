@@ -4,6 +4,6 @@ from vertex.components.dummy import broken_component
 
 
 @kfp.dsl.pipeline(name="broken-pipeline")
-def pipeline(name: str):
+def broken_pipeline(name: str):
     """This pipeline is broken!"""
     broken_component(name=name)
