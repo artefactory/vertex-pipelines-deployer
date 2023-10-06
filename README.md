@@ -96,6 +96,15 @@ List available versions:
 gsutil ls gs://vertex-pipelines-deployer
 ```
 
+### Add to requirements
+
+It's better to get the .tar.gz archive from gcs, and version it.
+
+Then add the following line to your `requirements.in` file:
+```bash
+file:my/path/to/vertex_deployer-$VERSION.tar.gz
+```
+
 ## Usage
 
 ### Setup
