@@ -8,3 +8,7 @@ class MissingGoogleArtifactRegistryHostError(Exception):
 
 class UnsupportedConfigFileError(Exception):
     """Raised when the config file is not supported."""
+
+
+class BadConfigError(ValueError):
+    """Raised when a config is invalid."""

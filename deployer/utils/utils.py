@@ -82,7 +82,7 @@ def print_pipelines_list(pipelines_dict: Dict[str, list], with_configs: bool = F
     console.print(table)
 
 
-def print_check_results_table(
+def print_check_results_table(  # noqa: C901
     to_check: Dict[str, list], validation_error: Optional[ValidationError] = None
 ) -> None:
     """This function prints a table of check results to the console.
@@ -126,7 +126,6 @@ def print_check_results_table(
                 table.add_row(*row.model_dump().values(), style="bold yellow")
 
         elif len(errors) == 1 and len(errors[0]["loc"]) == 2:
-            print(errors)
             row = ChecksTableRow(
                 status="❌",
                 pipeline=pipeline_name,
@@ -140,11 +139,9 @@ def print_check_results_table(
                 error_rows = []
                 for error in errors:
                     if error["loc"][3] == config_filepath.name:
-                        error_row = {
-                            "type": error["type"],
-                            "attribute": error["loc"][4],
-                            "msg": error["msg"],
-                        }
+                        error_row = {"type": error["type"], "msg": error["msg"]}
+                        if len(error["loc"]) > 4:
+                            error_row["attribute"] = error["loc"][5]
                         error_rows.append(error_row)
                 if error_rows:
                     row = ChecksTableRow(
@@ -152,7 +149,7 @@ def print_check_results_table(
                         pipeline=pipeline_name,
                         config_file=config_filepath.name,
                         config_error_type="\n".join([er["type"] for er in error_rows]),
-                        attribute="\n".join([er["attribute"] for er in error_rows]),
+                        attribute="\n".join([er.get("attribute", "") for er in error_rows]),
                         config_error_message="\n".join([er["msg"] for er in error_rows]),
                     )
                     table.add_row(*row.model_dump().values(), style="red")
