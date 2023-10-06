@@ -20,6 +20,7 @@ loguru = "^0.7.2"
 pydantic-settings = "^2.0.3"
 pydantic = "^2.3.0"
 pyinstrument = { version = "^4.5.3", optional = true }
+toml = "^0.10.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7.0"
