@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set up Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
@@ -33,4 +33,4 @@ jobs:
           export PYTHONPATH "${PYTHONPATH}:."
           cd example
           ls vertex
-          vertex-deployer check --all --raise-error
+          python3 -m vertex-deployer check --all --raise-error
