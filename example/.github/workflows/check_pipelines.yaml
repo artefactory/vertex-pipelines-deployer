@@ -2,31 +2,33 @@ name: Check pipelines
 
 on: [pull_request, workflow_call]
 
+env:
+  PYTHON_VERSION: 3.10
+  VERTEX_DEPLOYER_VERSION: 0.2.0
+
 jobs:
   check-pipelines:
     name: Check vertex pipelines and config files
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.10']
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Get vertex-deployer from remote
         run: |
-          gsutil cp gs://vertex-deployer/vertex_deployer-0.2.0.tar.gz .
+          gsutil cp gs://vertex-deployer/vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz .
 
       - name: Install requirements
         run: |
           python3 -m pip install --upgrade pip
-          pip install ./vertex_deployer-0.2.0.tar.gz
+          pip install ./vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz
 
       - name: Check pipelines
         run: |
+          cd example
           vertex-deployer check --all --raise-error
