@@ -26,7 +26,7 @@ jobs:
       - name: Install requirements
         run: |
           python3 -m pip install --upgrade pip
-          pip install ./vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz
+          python3 -m pip install ./vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz
 
       - name: Check pipelines
         run: |
