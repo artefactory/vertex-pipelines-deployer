@@ -10,6 +10,9 @@ on:
   workflow_call:
 
 jobs:
+  Trigger-example-ci-action:
+    uses: ./example/.github/workflows/check_pipelines.yaml
+
   CI:
     name: Launching CI
     runs-on: ubuntu-latest
