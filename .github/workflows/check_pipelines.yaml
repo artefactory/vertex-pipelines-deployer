@@ -34,4 +34,4 @@ jobs:
         run: |
           cd example
           ls vertex
-          vertex-deployer check --all --raise-error
+          PYTHONPATH=. vertex-deployer check --all --raise-error
