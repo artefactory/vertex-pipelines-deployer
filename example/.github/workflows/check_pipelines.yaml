@@ -21,7 +21,7 @@ jobs:
 
       - name: Get vertex-deployer from remote
         run: |
-          gsutil cp gs://vertex-deployer/vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz .
+          gsutil cp gs://vertex-pipelines-deployer/vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz .
 
       - name: Install requirements
         run: |
