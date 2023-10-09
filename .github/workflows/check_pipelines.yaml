@@ -33,5 +33,5 @@ jobs:
       - name: Check pipelines
         run: |
           cd example
-          ls vertex
-          PYTHONPATH=. vertex-deployer check --all --raise-error
+          export PYTHONPATH=.
+          vertex-deployer check --all --raise-error
