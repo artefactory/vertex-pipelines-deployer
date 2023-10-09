@@ -26,7 +26,8 @@ jobs:
       - name: Install requirements
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install ./vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz
+          # python3 -m pip install ./vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz
+          python3 -m pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@docs/add-full-example-to-repo
 
       - name: Check pipelines
         run: |

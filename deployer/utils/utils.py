@@ -43,6 +43,7 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> GraphComponen
         dirpath = dirpath[1:]
     parent_module = ".".join(Path(dirpath).parts)
     module_path = f"{parent_module}.{pipeline_name}"
+    print(dirpath, parent_module, module_path)
 
     try:
         pipeline_module = importlib.import_module(module_path)
