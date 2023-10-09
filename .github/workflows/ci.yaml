@@ -11,7 +11,14 @@ on:
 
 jobs:
   Trigger-example-ci-action:
-    uses: ./example/.github/workflows/check_pipelines.yaml
+    name: Triggering example CI action
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3 # Necessary to access local action
+
+      - name: Trigger example CI action
+        uses: ./example/.github/workflows/check_pipelines.yaml
 
   CI:
     name: Launching CI
