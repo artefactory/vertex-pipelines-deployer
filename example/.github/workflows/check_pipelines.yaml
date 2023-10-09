@@ -3,8 +3,8 @@ name: Check pipelines
 on: [pull_request, workflow_call]
 
 env:
-  PYTHON_VERSION: 3.10
-  VERTEX_DEPLOYER_VERSION: 0.2.0
+  PYTHON_VERSION: "3.10"
+  VERTEX_DEPLOYER_VERSION: "0.2.0"
 
 jobs:
   check-pipelines:
