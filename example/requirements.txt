@@ -1,0 +1,7 @@
+# base
+pandas<2.0.0
+
+# deploy
+kfp
+google-cloud-aiplatform
+file:vertex_deployer-0.2.0.tar.gz
