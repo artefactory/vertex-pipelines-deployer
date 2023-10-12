@@ -29,11 +29,12 @@
 - [Installation](#installation)
     - [From git repo](#from-git-repo)
     - [From GCS (not available in PyPI yet)](#from-gcs-not-available-in-pypi-yet)
+    - [Add to requirements](#add-to-requirements)
 - [Usage](#usage)
   - [Setup](#setup)
   - [Folder Structure](#folder-structure)
-  - [CLI: Deploying a Pipeline](#cli-deploying-a-pipeline)
-  - [CLI: Checking Pipelines are valid](#cli-checking-pipelines-are-valid)
+  - [CLI: Deploying a Pipeline with `deploy`](#cli-deploying-a-pipeline-with-deploy)
+  - [CLI: Checking Pipelines are valid with `check`](#cli-checking-pipelines-are-valid-with-check)
   - [CLI: Other commands](#cli-other-commands)
     - [`create`](#create)
     - [`list`](#list)
@@ -257,7 +258,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 > An [`example.env`](./example/example.env) file is provided in this repo.
 > This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
 
-### CLI: Deploying a Pipeline
+### CLI: Deploying a Pipeline with `deploy`
 
 Let's say you defines a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
 ```bash
@@ -273,7 +274,7 @@ vertex-deployer deploy dummy_pipeline \
     --enable-caching
 ```
 
-### CLI: Checking Pipelines are valid
+### CLI: Checking Pipelines are valid with `check`
 
 To check that your pipelines are valid, you can use the `check` command. It uses a pydantic model to:
 - check that your pipeline imports and definition are valid
