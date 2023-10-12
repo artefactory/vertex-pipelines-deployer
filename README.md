@@ -43,12 +43,13 @@
 
 ## Why this tool?
 
-Two uses cases:
-- quickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
-- deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
-- check pipeline validity in your CI.
+Three uses cases:
+1. **CI:** check pipeline validity.
+1. **Dev mode:** duickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
+2. **CD:** deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
 
-Commands:
+
+Four commands:
 - `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
 - `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
 - `create`: create a new pipeline and config files.
