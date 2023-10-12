@@ -368,6 +368,13 @@ def create(
     """Create files structure for a new pipeline."""
     logger.info(f"Creating pipeline {pipeline_name}")
 
+    if not Path(PIPELINE_ROOT_PATH).is_dir():
+        raise FileNotFoundError(
+            f"Pipeline root path '{PIPELINE_ROOT_PATH}' does not exist."
+            " Please check that the pipeline root path is correct"
+            f" or create it with `mkdir -p {PIPELINE_ROOT_PATH}`."
+        )
+
     pipeline_filepath = Path(PIPELINE_ROOT_PATH) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
     pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
