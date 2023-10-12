@@ -155,7 +155,7 @@ export GCP_REGION=<your_gcp_region>
 export VERTEX_STAGING_BUCKET_NAME=<your_bucket_name>
 gcloud storage buckets create gs://${VERTEX_STAGING_BUCKET_NAME} --location=${GCP_REGION}
 ```
-7. Create a service account for Vertex Pipelines: # TODO: complete iam bindings
+7. Create a service account for Vertex Pipelines:
 ```bash
 export VERTEX_SERVICE_ACCOUNT_NAME=foobar
 export VERTEX_SERVICE_ACCOUNT="${VERTEX_SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
@@ -193,7 +193,7 @@ vertex
 ```
 
 > [!NOTE]
-> You must have at lease these files. If you need to share some config elements between pipelines,
+> You must have at least these files. If you need to share some config elements between pipelines,
 > you can have a `shared` folder in `configs` and import them in your pipeline configs.
 
 #### Pipelines
@@ -221,7 +221,7 @@ def pipeline():
 Config file can be either `.py`, `.json` or `.toml` files.
 They must be located in the `config/{pipeline_name}` folder.
 
-**Why two formats?**
+**Why three formats?**
 
 `.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` files are useful to define simple configs (e.g. a string).
 
@@ -269,7 +269,7 @@ vertex-deployer deploy dummy_pipeline \
     --env-file example.env \
     --local-package-path . \
     --tags my-tag \
-    --parameter-values-filepath vertex/configs/dummy_pipeline/config_test.json \
+    --config-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
     --enable-caching
 ```
@@ -279,7 +279,7 @@ vertex-deployer deploy dummy_pipeline \
 To check that your pipelines are valid, you can use the `check` command. It uses a pydantic model to:
 - check that your pipeline imports and definition are valid
 - check that your pipeline can be compiled
-- generate a pydantic model from the pipeline parameters definition and check that all configs related to the pipeline are valid
+- check that all configs related to the pipeline are respecting the pipeline definition (using a Pydantic model based on pipeline signature)
 
 To validate one specific pipeline:
 ```bash
