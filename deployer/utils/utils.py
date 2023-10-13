@@ -20,7 +20,7 @@ def make_enum_from_python_package_dir(dir_path: Path, raise_if_not_found: bool =
         raise FileNotFoundError(f"Directory {dir_path_} not found.")
     file_paths = dir_path_.glob("*.py")
     enum_dict = {x.stem: x.stem for x in file_paths if x.stem != "__init__"}
-    FileNamesEnum = Enum("PipelineNames", enum_dict)
+    FileNamesEnum = Enum(dir_path_.stem, enum_dict)
     return FileNamesEnum
 
 

@@ -18,14 +18,9 @@ from deployer.utils.config import list_config_filepaths, load_config
 from deployer.utils.exceptions import BadConfigError
 from deployer.utils.logging import disable_logger
 from deployer.utils.models import CustomBaseModel, create_model_from_pipeline
-from deployer.utils.utils import (
-    import_pipeline_from_dir,
-    make_enum_from_python_package_dir,
-)
+from deployer.utils.utils import import_pipeline_from_dir
 
 PipelineConfigT = TypeVar("PipelineConfigT")
-
-PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 
 
 class ConfigDynamicModel(CustomBaseModel, Generic[PipelineConfigT]):
@@ -56,7 +51,7 @@ class ConfigsDynamicModel(CustomBaseModel, Generic[PipelineConfigT]):
 class Pipeline(CustomBaseModel):
     """Validation of one pipeline and its configs"""
 
-    pipeline_name: PipelineName
+    pipeline_name: str
     config_paths: Annotated[List[Path], Field(validate_default=True)] = None
 
     @model_validator(mode="before")
@@ -72,29 +67,27 @@ class Pipeline(CustomBaseModel):
         """Import pipeline"""
         if getattr(self, "_pipeline", None) is None:
             with disable_logger("deployer.utils.utils"):
-                self._pipeline = import_pipeline_from_dir(
-                    PIPELINE_ROOT_PATH, self.pipeline_name.value
-                )
+                self._pipeline = import_pipeline_from_dir(PIPELINE_ROOT_PATH, self.pipeline_name)
         return self._pipeline
 
     @model_validator(mode="after")
     def import_pipeline(self):
         """Validate that the pipeline can be imported by calling pipeline computed field"""
-        logger.debug(f"Importing pipeline {self.pipeline_name.value}")
+        logger.debug(f"Importing pipeline {self.pipeline_name}")
         try:
             _ = self.pipeline
-        except Exception as e:
+        except (ImportError, ModuleNotFoundError) as e:
             raise ValueError(f"Pipeline import failed: {e.__repr__()}")  # noqa: B904
         return self
 
     @model_validator(mode="after")
     def compile_pipeline(self):
         """Validate that the pipeline can be compiled"""
-        logger.debug(f"Compiling pipeline {self.pipeline_name.value}")
+        logger.debug(f"Compiling pipeline {self.pipeline_name}")
         try:
             with disable_logger("deployer.pipeline_deployer"):
                 VertexPipelineDeployer(
-                    pipeline_name=self.pipeline_name.value,
+                    pipeline_name=self.pipeline_name,
                     pipeline_func=self.pipeline,
                     local_package_path=TEMP_LOCAL_PACKAGE_PATH,
                 ).compile()
@@ -105,7 +98,7 @@ class Pipeline(CustomBaseModel):
     @model_validator(mode="after")
     def validate_configs(self):
         """Validate configs against pipeline parameters definition"""
-        logger.debug(f"Validating configs for pipeline {self.pipeline_name.value}")
+        logger.debug(f"Validating configs for pipeline {self.pipeline_name}")
         PipelineDynamicModel = create_model_from_pipeline(self.pipeline)
         ConfigsModel = ConfigsDynamicModel[PipelineDynamicModel]
         ConfigsModel.model_validate(

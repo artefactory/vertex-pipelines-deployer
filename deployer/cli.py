@@ -283,7 +283,8 @@ def check(
 
     **This command can be used to check pipelines in a Continuous Integration workflow.**
     """
-    from deployer.pipeline_checks import Pipelines
+    if all and pipeline_name is not None:
+        raise typer.BadParameter("Please specify either --all or a pipeline name")
 
     if len(PipelineName.__members__) == 0:
         raise ValueError(
@@ -291,15 +292,14 @@ def check(
             f" ('{PIPELINE_ROOT_PATH}')"
         )
 
+    from deployer.pipeline_checks import Pipelines
+
     if all:
         logger.info("Checking all pipelines")
         pipelines_to_check = PipelineName.__members__.values()
     elif pipeline_name is not None:
         logger.info(f"Checking pipeline {pipeline_name}")
         pipelines_to_check = [pipeline_name]
-    else:
-        raise ValueError("Please specify either --all or a pipeline name")
-
     if config_filepath is None:
         to_check = {
             p.value: list_config_filepaths(CONFIG_ROOT_PATH, p.value) for p in pipelines_to_check
@@ -367,6 +367,13 @@ def create(
 ):
     """Create files structure for a new pipeline."""
     logger.info(f"Creating pipeline {pipeline_name}")
+
+    if not Path(PIPELINE_ROOT_PATH).is_dir():
+        raise FileNotFoundError(
+            f"Pipeline root path '{PIPELINE_ROOT_PATH}' does not exist."
+            " Please check that the pipeline root path is correct"
+            f" or create it with `mkdir -p {PIPELINE_ROOT_PATH}`."
+        )
 
     pipeline_filepath = Path(PIPELINE_ROOT_PATH) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
