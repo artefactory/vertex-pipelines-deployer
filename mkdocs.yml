@@ -14,4 +14,5 @@ nav:
     - Usage: usage.md
   - CLI Reference: CLI_REFERENCE.md
   - Example: example.md
-  - Contribute: contribute.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md
