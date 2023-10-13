@@ -43,28 +43,34 @@
 [Full CLI documentation](docs/CLI_REFERENCE.md)
 
 ## Why this tool?
+<!-- --8<-- [start:why] -->
 
 Three uses cases:
+
 1. **CI:** check pipeline validity.
 1. **Dev mode:** duickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
 2. **CD:** deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
 
 
 Four commands:
+
 - `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
 - `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
 - `create`: create a new pipeline and config files.
 - `list`: list all pipelines in the `vertex/pipelines` folder.
+<!-- --8<-- [end:why] -->
 
 ## Prerequisites
+<!-- --8<-- [start:prerequisites] -->
 
 - Unix-like environment (Linux, macOS, WSL, etc...)
 - Python 3.8 to 3.10
 - Google Cloud SDK
 - A GCP project with Vertex Pipelines enabled
+<!-- --8<-- [end:prerequisites] -->
 
 ## Installation
-
+<!-- --8<-- [start:installation] -->
 
 ### From git repo
 
@@ -107,25 +113,25 @@ Then add the following line to your `requirements.in` file:
 ```bash
 file:my/path/to/vertex_deployer-$VERSION.tar.gz
 ```
+<!-- --8<-- [end:installation] -->
 
 ## Usage
-
+<!-- --8<-- [start:setup] -->
 ### Setup
 
 1. Setup your GCP environment:
-
 ```bash
 export PROJECT_ID=<gcp_project_id>
 gcloud config set project $PROJECT_ID
 gcloud auth login
 gcloud auth application-default login
 ```
-2. You need the following APIs to be enabled:
-    - Cloud Build API
-    - Artifact Registry API
-    - Cloud Storage API
-    - Vertex AI API
 
+2. You need the following APIs to be enabled:
+- Cloud Build API
+- Artifact Registry API
+- Cloud Storage API
+- Vertex AI API
 ```bash
 gcloud services enable \
     cloudbuild.googleapis.com \
@@ -133,6 +139,7 @@ gcloud services enable \
     storage.googleapis.com \
     aiplatform.googleapis.com
 ```
+
 3. Create an artifact registry repository for your base images (Docker format):
 ```bash
 export GAR_DOCKER_REPO_ID=<your_gar_repo_id_for_images>
@@ -141,7 +148,9 @@ gcloud artifacts repositories create ${GAR_DOCKER_REPO_ID} \
     --location=${GAR_LOCATION} \
     --repository-format=docker
 ```
+
 4. Build and upload your base images to the repository. To do so, please follow Google Cloud Build documentation.
+
 5. Create an artifact registry repository for your pipelines (KFP format):
 ```bash
 export GAR_PIPELINES_REPO_ID=<your_gar_repo_id_for_pipelines>
@@ -149,12 +158,14 @@ gcloud artifacts repositories create ${GAR_PIPELINES_REPO_ID} \
     --location=${GAR_LOCATION} \
     --repository-format=kfp
 ```
+
 6. Create a GCS bucket for Vertex Pipelines staging:
 ```bash
 export GCP_REGION=<your_gcp_region>
 export VERTEX_STAGING_BUCKET_NAME=<your_bucket_name>
 gcloud storage buckets create gs://${VERTEX_STAGING_BUCKET_NAME} --location=${GCP_REGION}
 ```
+
 7. Create a service account for Vertex Pipelines:
 ```bash
 export VERTEX_SERVICE_ACCOUNT_NAME=foobar
@@ -192,9 +203,11 @@ vertex
    └─ {pipeline_name}.py
 ```
 
-> [!NOTE]
-> You must have at least these files. If you need to share some config elements between pipelines,
-> you can have a `shared` folder in `configs` and import them in your pipeline configs.
+!!! tip "About folder structure"
+    You must have at least these files. If you need to share some config elements between pipelines,
+    you can have a `shared` folder in `configs` and import them in your pipeline configs.
+
+    You can use the [`create`](../usage#create) command to create a new pipeline and config files.
 
 #### Pipelines
 
@@ -226,10 +239,12 @@ They must be located in the `config/{pipeline_name}` folder.
 `.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` files are useful to define simple configs (e.g. a string).
 
 **How to format them?**
+
 - `.json` and `.toml` files must be valid json files containing only one dict of key: value representing parameter values.
 - `.py` files must be valid python files with two important elements:
-    - `parameter_values` to pass arguments to your pipeline
-    - `input_artifacts` if you want to retrieve and create input artifacts to your pipeline.
+
+    * `parameter_values` to pass arguments to your pipeline
+    * `input_artifacts` if you want to retrieve and create input artifacts to your pipeline.
         See [Vertex Documentation](https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob) for more information.
 
 **How to name them?**
@@ -252,12 +267,14 @@ VERTEX_STAGING_BUCKET_NAME=YOUR_VERTEX_STAGING_BUCKET_NAME  # GCS Bucket for Ver
 VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service Account
 ```
 
-> **Note**
-> We're using env files and dotenv to load the environment variables.
-> No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
-> An [`example.env`](./example/example.env) file is provided in this repo.
-> This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
+!!! note "About env files"
+    We're using env files and dotenv to load the environment variables.
+    No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
+    An [`example.env`](./example/example.env) file is provided in this repo.
+    This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
+<!-- --8<-- [end:setup] -->
 
+<!-- --8<-- [start:usage] -->
 ### CLI: Deploying a Pipeline with `deploy`
 
 Let's say you defines a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
@@ -316,10 +333,17 @@ vertex-deployer list --with-configs
 vertex-deployer --help
 ```
 
+To see package version:
+```bash
+vertex-deployer --version
+```
+
 To adapt log level, use the `--log-level` option. Default is `INFO`.
 ```bash
 vertex-deployer --log-level DEBUG deploy ...
 ```
+
+<!-- --8<-- [end:usage] -->
 
 ## Repository Structure
 
