@@ -29,11 +29,12 @@
 - [Installation](#installation)
     - [From git repo](#from-git-repo)
     - [From GCS (not available in PyPI yet)](#from-gcs-not-available-in-pypi-yet)
+    - [Add to requirements](#add-to-requirements)
 - [Usage](#usage)
   - [Setup](#setup)
   - [Folder Structure](#folder-structure)
-  - [CLI: Deploying a Pipeline](#cli-deploying-a-pipeline)
-  - [CLI: Checking Pipelines are valid](#cli-checking-pipelines-are-valid)
+  - [CLI: Deploying a Pipeline with `deploy`](#cli-deploying-a-pipeline-with-deploy)
+  - [CLI: Checking Pipelines are valid with `check`](#cli-checking-pipelines-are-valid-with-check)
   - [CLI: Other commands](#cli-other-commands)
     - [`create`](#create)
     - [`list`](#list)
@@ -43,12 +44,13 @@
 
 ## Why this tool?
 
-Two uses cases:
-- quickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
-- deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
-- check pipeline validity in your CI.
+Three uses cases:
+1. **CI:** check pipeline validity.
+1. **Dev mode:** duickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
+2. **CD:** deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
 
-Commands:
+
+Four commands:
 - `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
 - `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
 - `create`: create a new pipeline and config files.
@@ -153,7 +155,7 @@ export GCP_REGION=<your_gcp_region>
 export VERTEX_STAGING_BUCKET_NAME=<your_bucket_name>
 gcloud storage buckets create gs://${VERTEX_STAGING_BUCKET_NAME} --location=${GCP_REGION}
 ```
-7. Create a service account for Vertex Pipelines: # TODO: complete iam bindings
+7. Create a service account for Vertex Pipelines:
 ```bash
 export VERTEX_SERVICE_ACCOUNT_NAME=foobar
 export VERTEX_SERVICE_ACCOUNT="${VERTEX_SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
@@ -191,7 +193,7 @@ vertex
 ```
 
 > [!NOTE]
-> You must have at lease these files. If you need to share some config elements between pipelines,
+> You must have at least these files. If you need to share some config elements between pipelines,
 > you can have a `shared` folder in `configs` and import them in your pipeline configs.
 
 #### Pipelines
@@ -219,7 +221,7 @@ def pipeline():
 Config file can be either `.py`, `.json` or `.toml` files.
 They must be located in the `config/{pipeline_name}` folder.
 
-**Why two formats?**
+**Why three formats?**
 
 `.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` files are useful to define simple configs (e.g. a string).
 
@@ -256,7 +258,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 > An [`example.env`](./example/example.env) file is provided in this repo.
 > This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
 
-### CLI: Deploying a Pipeline
+### CLI: Deploying a Pipeline with `deploy`
 
 Let's say you defines a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
 ```bash
@@ -267,17 +269,17 @@ vertex-deployer deploy dummy_pipeline \
     --env-file example.env \
     --local-package-path . \
     --tags my-tag \
-    --parameter-values-filepath vertex/configs/dummy_pipeline/config_test.json \
+    --config-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
     --enable-caching
 ```
 
-### CLI: Checking Pipelines are valid
+### CLI: Checking Pipelines are valid with `check`
 
 To check that your pipelines are valid, you can use the `check` command. It uses a pydantic model to:
 - check that your pipeline imports and definition are valid
 - check that your pipeline can be compiled
-- generate a pydantic model from the pipeline parameters definition and check that all configs related to the pipeline are valid
+- check that all configs related to the pipeline are respecting the pipeline definition (using a Pydantic model based on pipeline signature)
 
 To validate one specific pipeline:
 ```bash
