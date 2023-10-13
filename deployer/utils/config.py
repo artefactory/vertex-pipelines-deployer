@@ -96,8 +96,8 @@ def load_config(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
         return parameter_values, input_artifacts
 
     raise UnsupportedConfigFileError(
-        f"{config_filepath}: Config file type {config_filepath.suffix} is not supported."
-        " Please use a JSON or Python file."
+        f"{config_filepath}: Config file extension '{config_filepath.suffix}' is not supported."
+        f" Supported config file types are: {', '.join(ConfigType.__members__.values())}"
     )
 
 
