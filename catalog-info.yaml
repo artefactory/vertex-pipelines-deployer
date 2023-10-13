@@ -1,0 +1,19 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: vertex-pipelines-deployer
+  title: Vertex Pipelines Deployer
+  description: >
+    Check, compile, upload, run and schedule Vertex Pipelines in a standardized manner.
+  annotations:
+    github.com/project-slug: artefactory/vertex-pipelines-deployer
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - vertex
+    - mlops
+    - python
+
+spec:
+  type: service
+  owner: julesbertrand
+  lifecycle: experimental
