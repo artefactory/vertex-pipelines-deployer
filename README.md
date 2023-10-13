@@ -23,7 +23,7 @@
 </div>
 
 
-## Table of Contents
+## 📚 Table of Contents
 - [Why this tool?](#why-this-tool)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -42,8 +42,9 @@
 
 [Full CLI documentation](docs/CLI_REFERENCE.md)
 
-## Why this tool?
 <!-- --8<-- [start:why] -->
+## ❓ Why this tool?
+
 
 Three uses cases:
 
@@ -60,7 +61,7 @@ Four commands:
 - `list`: list all pipelines in the `vertex/pipelines` folder.
 <!-- --8<-- [end:why] -->
 
-## Prerequisites
+## 📋 Prerequisites
 <!-- --8<-- [start:prerequisites] -->
 
 - Unix-like environment (Linux, macOS, WSL, etc...)
@@ -69,7 +70,7 @@ Four commands:
 - A GCP project with Vertex Pipelines enabled
 <!-- --8<-- [end:prerequisites] -->
 
-## Installation
+## 📦 Installation
 <!-- --8<-- [start:installation] -->
 
 ### From git repo
@@ -115,9 +116,9 @@ file:my/path/to/vertex_deployer-$VERSION.tar.gz
 ```
 <!-- --8<-- [end:installation] -->
 
-## Usage
+## 🚀 Usage
 <!-- --8<-- [start:setup] -->
-### Setup
+### 🛠️ Setup
 
 1. Setup your GCP environment:
 ```bash
@@ -189,7 +190,7 @@ gcloud artifacts repositories add-iam-policy-binding ${GAR_PIPELINES_REPO_ID} \
 
 You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/pipeline_deployer.py) in your code (try it yourself).
 
-### Folder Structure
+### 📁 Folder Structure
 
 You must respect the following folder structure. If you already follow the
 [Vertex Pipelines Starter Kit folder structure](https://github.com/artefactory/vertex-pipeline-starter-kit), it should be pretty smooth to use this tool:
@@ -275,7 +276,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
 <!-- --8<-- [end:setup] -->
 
 <!-- --8<-- [start:usage] -->
-### CLI: Deploying a Pipeline with `deploy`
+### 🚀 CLI: Deploying a Pipeline with `deploy`
 
 Let's say you defines a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
 ```bash
@@ -291,7 +292,7 @@ vertex-deployer deploy dummy_pipeline \
     --enable-caching
 ```
 
-### CLI: Checking Pipelines are valid with `check`
+### ✅ CLI: Checking Pipelines are valid with `check`
 
 To check that your pipelines are valid, you can use the `check` command. It uses a pydantic model to:
 - check that your pipeline imports and definition are valid
@@ -309,7 +310,7 @@ vertex-deployer check --all
 ```
 
 
-### CLI: Other commands
+### 🛠️ CLI: Other commands
 
 #### `create`
 
@@ -327,7 +328,7 @@ You can list all pipelines in the `vertex/pipelines` folder using the `list` com
 vertex-deployer list --with-configs
 ```
 
-### CLI: Options
+### 🍭 CLI: Options
 
 ```bash
 vertex-deployer --help

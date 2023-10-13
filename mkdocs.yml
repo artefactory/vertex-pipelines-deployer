@@ -7,8 +7,7 @@ plugins:
 
 nav:
   - Get Started:
-    - Welcome to Vertex Pipelines Deployer: index.md
-    - Why use Vertex Pipelines Deployer: why.md
+    - Welcome: index.md
     - Installation: install.md
     - Prerequisites & Setup: setup.md
     - Usage: usage.md
