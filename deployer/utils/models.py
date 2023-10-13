@@ -12,7 +12,9 @@ class CustomBaseModel(BaseModel):
 
     # FIXME: arbitrary_types_allowed is a workaround to allow to pass
     #        Vertex Pipelines Artifacts as parameters to a pipeline.
-    model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)
+    model_config = ConfigDict(
+        extra="forbid", arbitrary_types_allowed=True, protected_namespaces=()
+    )
 
 
 def _convert_artifact_type_to_str(annotation: type) -> type:
