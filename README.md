@@ -3,7 +3,7 @@
     <h1 align="center">Vertex Pipelines Deployer</h1>
     <h3 align="center">Deploy Vertex Pipelines within minutes</h3>
         <p align="center">
-        This tool is a wrapper aound <a href="https://www.kubeflow.org/docs/components/pipelines/v2/hello-world/">kfp</a> and <a href="https://cloud.google.com/python/docs/reference/aiplatform/latest">google-cloud-aiplatform</a> that allows you to check, compile, upload, run and schedule Vertex Pipelines to a Vertex AI Pipelines endpoint in a standardized manner.
+        This tool is a wrapper around <a href="https://www.kubeflow.org/docs/components/pipelines/v2/hello-world/">kfp</a> and <a href="https://cloud.google.com/python/docs/reference/aiplatform/latest">google-cloud-aiplatform</a> that allows you to check, compile, upload, run and schedule Vertex Pipelines in a standardized manner.
         </p>
 </div>
 </br>
