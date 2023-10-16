@@ -357,7 +357,7 @@ vertex-deployer --log-level DEBUG deploy ...
 │  │  └─ release.yaml
 │  ├─ CODEOWNERS
 │  └─ PULL_REQUEST_TEMPLATE.md
-├─ deployer
+├─ deployer                                     # Source code
 │  ├─ __init__.py
 │  ├─ cli.py
 │  ├─ constants.py
@@ -369,8 +369,10 @@ vertex-deployer --log-level DEBUG deploy ...
 │     ├─ logging.py
 │     ├─ models.py
 │     └─ utils.py
+├─ docs/                                        # Documentation folder (mkdocs)
+├─ templates/                                   # Semantic Release templates
 ├─ tests/
-├─ example
+├─ example                                      # Example folder with dummy pipeline and config
 |   ├─ example.env
 │   └─ vertex
 │      ├─ components
@@ -389,8 +391,12 @@ vertex-deployer --log-level DEBUG deploy ...
 │         └─ dummy_pipeline.py
 ├─ .gitignore
 ├─ .pre-commit-config.yaml
+├─ catalog-info.yaml                            # Roadie integration configuration
+├─ CHANGELOG.md
+├─ CONTRIBUTING.md
 ├─ LICENSE
 ├─ Makefile
+├─ mkdocs.yml                                   # Mkdocs configuration
 ├─ pyproject.toml
 └─ README.md
 ```
