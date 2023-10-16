@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vertex"
+version = "0.0.1"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    # base
+    "pandas<2.0.0",
+    # deploy
+    "kfp",
+    "google-cloud-aiplatform",
+]

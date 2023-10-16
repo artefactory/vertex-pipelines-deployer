@@ -53,7 +53,8 @@ jobs:
     - name: Install requirements
       run: |
         python3 -m pip install --upgrade pip
-        python3 -m pip install ./vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz
+        python3 -m pip install -e example
+        python3 -m pip install vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz
 
     - name: Authenticate to Google Cloud
       uses: 'google-github-actions/auth@v1'
@@ -65,7 +66,6 @@ jobs:
     - name: Deploy dummy_pipeline
       run: |
         cd example
-        # export PYTHONPATH "${PYTHONPATH}:."
         vertex-deployer -log DEBUG deploy dummy_pipeline \
           --compile \
           --upload \
