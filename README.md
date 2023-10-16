@@ -24,21 +24,21 @@
 
 
 ## 📚 Table of Contents
-- [Why this tool?](#why-this-tool)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
+- [Why this tool?](#❓-why-this-tool)
+- [Prerequisites](#📋-prerequisites)
+- [Installation](#📦-installation)
     - [From git repo](#from-git-repo)
     - [From GCS (not available in PyPI yet)](#from-gcs-not-available-in-pypi-yet)
     - [Add to requirements](#add-to-requirements)
-- [Usage](#usage)
-  - [Setup](#setup)
-  - [Folder Structure](#folder-structure)
-  - [CLI: Deploying a Pipeline with `deploy`](#cli-deploying-a-pipeline-with-deploy)
-  - [CLI: Checking Pipelines are valid with `check`](#cli-checking-pipelines-are-valid-with-check)
-  - [CLI: Other commands](#cli-other-commands)
+- [Usage](#🚀-usage)
+  - [Setup](#🛠️-setup)
+  - [Folder Structure](#📁-folder-structure)
+  - [CLI: Deploying a Pipeline with `deploy`](#🚀-cli-deploying-a-pipeline-with-deploy)
+  - [CLI: Checking Pipelines are valid with `check`](#✅-cli-checking-pipelines-are-valid-with-check)
+  - [CLI: Other commands](#🛠️-cli-other-commands)
     - [`create`](#create)
     - [`list`](#list)
-  - [CLI: Options](#cli-options)
+  - [CLI: Options](#🍭-cli-options)
 
 [Full CLI documentation](docs/CLI_REFERENCE.md)
 
