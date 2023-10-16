@@ -30,5 +30,4 @@ jobs:
 
       - name: Check pipelines
         run: |
-          cd example
           vertex-deployer check --all --raise-error
