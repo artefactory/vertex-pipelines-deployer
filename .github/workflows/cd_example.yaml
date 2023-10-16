@@ -40,6 +40,12 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
     - name: Get vertex-deployer from remote
       run: |
         gsutil cp gs://vertex-pipelines-deployer/vertex_deployer-${{ env.VERTEX_DEPLOYER_VERSION }}.tar.gz .
@@ -59,7 +65,7 @@ jobs:
     - name: Deploy dummy_pipeline
       run: |
         cd example
-        export PYTHONPATH "${PYTHONPATH}:."
+        # export PYTHONPATH "${PYTHONPATH}:."
         vertex-deployer -log DEBUG deploy dummy_pipeline \
           --compile \
           --upload \
