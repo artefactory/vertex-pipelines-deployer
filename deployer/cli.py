@@ -7,6 +7,7 @@ from loguru import logger
 from pydantic import ValidationError
 from typing_extensions import Annotated
 
+from deployer.configuration import load_configuration
 from deployer.constants import (
     CONFIG_ROOT_PATH,
     DEFAULT_LOCAL_PACKAGE_PATH,
@@ -29,6 +30,10 @@ from deployer.utils.utils import (
     print_pipelines_list,
 )
 
+deployer_config = load_configuration()
+
+PipelineName = make_enum_from_python_package_dir(deployer_config.pipelines_root_path)
+
 
 def display_version_and_exit(value: bool):
     if value:
@@ -43,7 +48,6 @@ app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode
 
 @app.callback(name="set_logger")
 def cli_set_logger(
-    ctx: typer.Context,
     log_level: Annotated[
         LoguruLevel, typer.Option("--log-level", "-log", help="Set the logging level.")
     ] = LoguruLevel.INFO,
@@ -58,9 +62,6 @@ def cli_set_logger(
     ] = False,
 ):
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
-
-
-PipelineName = make_enum_from_python_package_dir(PIPELINE_ROOT_PATH)
 
 
 @app.command(no_args_is_help=True)
