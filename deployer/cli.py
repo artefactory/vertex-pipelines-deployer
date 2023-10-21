@@ -9,11 +9,9 @@ from typing_extensions import Annotated
 
 from deployer.configuration import load_configuration
 from deployer.constants import (
-    CONFIG_ROOT_PATH,
     DEFAULT_LOCAL_PACKAGE_PATH,
     DEFAULT_TAGS,
     PIPELINE_MINIMAL_TEMPLATE,
-    PIPELINE_ROOT_PATH,
     PYTHON_CONFIG_TEMPLATE,
 )
 from deployer.utils.config import (
@@ -187,7 +185,9 @@ def deploy(  # noqa: C901
                 " Please specify only one to run or schedule a pipeline."
             )
 
-    pipeline_func = import_pipeline_from_dir(PIPELINE_ROOT_PATH, pipeline_name.value)
+    pipeline_func = import_pipeline_from_dir(
+        deployer_config.pipelines_root_path, pipeline_name.value
+    )
 
     from deployer.pipeline_deployer import VertexPipelineDeployer
 
@@ -205,7 +205,9 @@ def deploy(  # noqa: C901
 
     if run or schedule:
         if config_name is not None:
-            config_filepath = Path(CONFIG_ROOT_PATH) / pipeline_name.value / config_name
+            config_filepath = (
+                Path(deployer_config.config_root_path) / pipeline_name.value / config_name
+            )
         parameter_values, input_artifacts = load_config(config_filepath)
 
     if compile:
@@ -290,7 +292,7 @@ def check(
     if len(PipelineName.__members__) == 0:
         raise ValueError(
             "No pipeline found. Please check that the pipeline root path is correct"
-            f" ('{PIPELINE_ROOT_PATH}')"
+            f" ('{deployer_config.pipelines_root_path}')"
         )
 
     from deployer.pipeline_checks import Pipelines
@@ -303,7 +305,8 @@ def check(
         pipelines_to_check = [pipeline_name]
     if config_filepath is None:
         to_check = {
-            p.value: list_config_filepaths(CONFIG_ROOT_PATH, p.value) for p in pipelines_to_check
+            p.value: list_config_filepaths(deployer_config.config_root_path, p.value)
+            for p in pipelines_to_check
         }
     else:
         to_check = {p.value: [config_filepath] for p in pipelines_to_check}
@@ -340,13 +343,13 @@ def list(
     if len(PipelineName.__members__) == 0:
         logger.warning(
             "No pipeline found. Please check that the pipeline root path is"
-            f" correct (current: '{PIPELINE_ROOT_PATH}')"
+            f" correct (current: '{deployer_config.pipelines_root_path}')"
         )
         raise typer.Exit()
 
     if with_configs:
         pipelines_dict = {
-            p.name: list_config_filepaths(CONFIG_ROOT_PATH, p.name)
+            p.name: list_config_filepaths(deployer_config.config_root_path, p.name)
             for p in PipelineName.__members__.values()
         }
     else:
@@ -369,18 +372,18 @@ def create(
     """Create files structure for a new pipeline."""
     logger.info(f"Creating pipeline {pipeline_name}")
 
-    if not Path(PIPELINE_ROOT_PATH).is_dir():
+    if not Path(deployer_config.pipelines_root_path).is_dir():
         raise FileNotFoundError(
-            f"Pipeline root path '{PIPELINE_ROOT_PATH}' does not exist."
+            f"Pipeline root path '{deployer_config.pipelines_root_path}' does not exist."
             " Please check that the pipeline root path is correct"
-            f" or create it with `mkdir -p {PIPELINE_ROOT_PATH}`."
+            f" or create it with `mkdir -p {deployer_config.pipelines_root_path}`."
         )
 
-    pipeline_filepath = Path(PIPELINE_ROOT_PATH) / f"{pipeline_name}.py"
+    pipeline_filepath = Path(deployer_config.pipelines_root_path) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
     pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
 
-    config_dirpath = Path(CONFIG_ROOT_PATH) / pipeline_name
+    config_dirpath = Path(deployer_config.config_root_path) / pipeline_name
     config_dirpath.mkdir(exist_ok=False)
     for config_name in ["test", "dev", "prod"]:
         config_filepath = config_dirpath / f"{config_name}.{config_type}"
