@@ -41,11 +41,16 @@ def display_version_and_exit(value: bool):
         raise typer.Exit()
 
 
-app = typer.Typer(no_args_is_help=True, rich_help_panel="rich", rich_markup_mode="markdown")
+app = typer.Typer(
+    no_args_is_help=True,
+    rich_help_panel="rich",
+    rich_markup_mode="markdown",
+    context_settings={"default_map": deployer_config.model_dump()},
+)
 
 
-@app.callback(name="set_logger")
-def cli_set_logger(
+@app.callback(invoke_without_command=True)
+def main(
     log_level: Annotated[
         LoguruLevel, typer.Option("--log-level", "-log", help="Set the logging level.")
     ] = LoguruLevel.INFO,
