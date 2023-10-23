@@ -5,9 +5,11 @@ from pathlib import Path
 from typing import Any
 
 import toml
+from pydantic import ValidationError
 
 from deployer import constants
 from deployer.utils.config import ConfigType
+from deployer.utils.exceptions import InvalidPyProjectTOMLError
 from deployer.utils.models import CustomBaseModel
 
 
@@ -68,9 +70,9 @@ def find_pyproject_toml(path_project_root: Path) -> str | None:
         return str(path_pyproject_toml)
 
 
-def parse_pyproject_toml(path_config: str) -> dict[str, Any]:
+def parse_pyproject_toml(path_pyproject_toml: str) -> dict[str, Any]:
     """Parse a pyproject toml file, pulling out relevant parts for Deployer."""
-    pyproject_toml = toml.load(path_config)
+    pyproject_toml = toml.load(path_pyproject_toml)
     config: dict[str, Any] = pyproject_toml.get("tool", {}).get("vertex_deployer", {})
     config = {k.replace("--", "").replace("-", "_"): v for k, v in config.items()}
     return config
@@ -80,7 +82,12 @@ def parse_pyproject_toml(path_config: str) -> dict[str, Any]:
 def load_configuration() -> VertexDeployerConfig:
     """Load the configuration for Vertex Deployer."""
     path_project_root = Path(__file__).parent.parent
-    path_config = find_pyproject_toml(path_project_root)
-    config = parse_pyproject_toml(path_config)
-    config = VertexDeployerConfig(**config)
+    path_pyproject_toml = find_pyproject_toml(path_project_root)
+    config = parse_pyproject_toml(path_pyproject_toml)
+
+    try:
+        config = VertexDeployerConfig(**config)
+    except ValidationError as e:
+        raise InvalidPyProjectTOMLError(f"In {path_pyproject_toml}:\n{e}") from e
+
     return config
