@@ -93,8 +93,6 @@ exclude_commit_patterns = ['''^chore\(release\).*''']
 
 
 [tool.vertex_deployer]
-pipelines_root_path = "example/vertex/pipelines"
-config_root_path = "example/vertex/configs"
 log_level = "DEBUG"
 
 [tool.vertex_deployer.list]
