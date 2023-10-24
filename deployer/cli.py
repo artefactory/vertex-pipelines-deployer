@@ -11,6 +11,7 @@ from typing_extensions import Annotated
 from deployer.configuration import load_configuration
 from deployer.constants import (
     DEFAULT_LOCAL_PACKAGE_PATH,
+    DEFAULT_SCHEDULER_TIMEZONE,
     DEFAULT_TAGS,
     PIPELINE_MINIMAL_TEMPLATE,
     PYTHON_CONFIG_TEMPLATE,
@@ -146,6 +147,13 @@ def deploy(  # noqa: C901
             help="Whether to delete the previous schedule before creating a new one.",
         ),
     ] = False,
+    scheduler_timezone: Annotated[
+        str,
+        typer.Option(
+            help="Timezone for scheduling the pipeline."
+            " Must be a valid string from IANA time zone database",
+        ),
+    ] = DEFAULT_SCHEDULER_TIMEZONE,
     tags: Annotated[
         List[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
@@ -268,6 +276,7 @@ def deploy(  # noqa: C901
                 parameter_values=parameter_values,
                 tag=tags[0] if tags else None,
                 delete_last_schedule=delete_last_schedule,
+                scheduler_timezone=scheduler_timezone,
             )
 
 

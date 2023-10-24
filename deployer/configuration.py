@@ -21,6 +21,7 @@ class DeployerDeployConfig(CustomBaseModel):
     schedule: bool = False
     cron: Optional[str] = None
     delete_last_schedule: bool = False
+    scheduler_timezone: str = constants.DEFAULT_SCHEDULER_TIMEZONE
     tags: List[str] = constants.DEFAULT_TAGS
     config_filepath: Optional[Path] = None
     config_name: Optional[str] = None

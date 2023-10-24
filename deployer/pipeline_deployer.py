@@ -11,7 +11,7 @@ from kfp.registry import RegistryClient
 from loguru import logger
 from requests import HTTPError
 
-from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH, DEFAULT_SCHEDULER_TIMEZONE
+from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH
 from deployer.utils.exceptions import (
     MissingGoogleArtifactRegistryHostError,
     TagNotFoundError,
@@ -221,6 +221,7 @@ class VertexPipelineDeployer:
         parameter_values: Optional[dict] = None,
         tag: Optional[str] = None,
         delete_last_schedule: bool = False,
+        scheduler_timezone: str = "Europe/Paris",
     ) -> VertexPipelineDeployer:
         """Create pipeline schedule on Vertex AI Pipelines
 
@@ -228,12 +229,14 @@ class VertexPipelineDeployer:
         and if either the tag or the template_name and version_name are provided.
 
         Args:
-            cron (str): Cron expression without TZ. TZ is hardcoded to 'TZ=Europe/Paris'.
+            cron (str): Cron expression without TZ.
             enable_caching (bool, optional): Whether to enable caching. Defaults to False.
             parameter_values (dict, optional): Pipeline parameter values. Defaults to None.
             tag (str, optional): Tag of the pipeline template. Defaults to None.
             delete_last_schedule (bool, optional): Whether to delete previous schedule.
                 Defaults to False.
+            scheduler_timezone (str, optional): Scheduler timezone. Must be a valid string from
+                IANA time zone database. Defaults to 'Europe/Paris'.
         """
         self._check_gar_host()
 
@@ -290,9 +293,9 @@ class VertexPipelineDeployer:
             display_name=schedule_display_name,
             location=self.region,
         )
-        # TZ must be a valid string from IANA time zone database
+
         pipeline_job_schedule.create(
-            cron=f"TZ={DEFAULT_SCHEDULER_TIMEZONE} {cron}",
+            cron=f"TZ={scheduler_timezone} {cron}",
             service_account=self.service_account,
         )
 
