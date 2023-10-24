@@ -364,15 +364,46 @@ This will overwrite default values. It can be usefull if you always use the same
 
 ```toml
 [tool.vertex-deployer]
-pipelines_root_path = "vertex/pipelines"
-configs_root_path = "vertex/configs"
+pipelines_root_path = "my/path/to/vertex/pipelines"
+configs_root_path = "my/path/to/vertex/configs"
 log_level = "INFO"
 
 [tool.vertex-deployer.deploy]
 scheduler_timezone = "Europe/Paris"
 ```
 
-You can display all the configurable parameterss with default values by running `vertex-deployer config --all`.
+You can display all the configurable parameterss with default values by running:
+```bash
+$ vertex-deployer config --all
+'*' means the value was set in config file
+
+* pipelines_root_path=my/path/to/vertex/pipelines
+* config_root_path=my/path/to/vertex/configs
+* log_level=INFO
+deploy
+  env_file=None
+  compile=True
+  upload=False
+  run=False
+  schedule=False
+  cron=None
+  delete_last_schedule=False
+  * scheduler_timezone=Europe/Paris
+  tags=['latest']
+  config_filepath=None
+  config_name=None
+  enable_caching=False
+  experiment_name=None
+  local_package_path=vertex/pipelines/compiled_pipelines
+check
+  all=False
+  config_filepath=None
+  raise_error=False
+list
+  with_configs=True
+create
+  config_type=json
+```
 
 ## Repository Structure
 
