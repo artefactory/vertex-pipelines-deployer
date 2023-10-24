@@ -1,6 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 import toml
 from pydantic import ValidationError
@@ -68,7 +68,7 @@ def find_pyproject_toml(path_project_root: Path) -> Optional[str]:
         return str(path_pyproject_toml)
 
 
-def parse_pyproject_toml(path_pyproject_toml: str) -> dict[str, Any]:
+def parse_pyproject_toml(path_pyproject_toml: str) -> Dict[str, Any]:
     """Parse a pyproject toml file, pulling out relevant parts for Deployer."""
     pyproject_toml = toml.load(path_pyproject_toml)
     config: dict[str, Any] = pyproject_toml.get("tool", {}).get("vertex_deployer", {})
