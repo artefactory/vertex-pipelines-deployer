@@ -58,7 +58,7 @@ class Pipeline(CustomBaseModel):
         """Populate config names before validation"""
         if data.get("config_paths") is None:
             data["config_paths"] = list_config_filepaths(
-                data["config_root_path"], data["pipeline_name"]
+                str(data["config_root_path"]), data["pipeline_name"]
             )
         return data
 
@@ -68,7 +68,7 @@ class Pipeline(CustomBaseModel):
         if getattr(self, "_pipeline", None) is None:
             with disable_logger("deployer.utils.utils"):
                 self._pipeline = import_pipeline_from_dir(
-                    self.pipelines_root_path, self.pipeline_name
+                    str(self.pipelines_root_path), self.pipeline_name
                 )
         return self._pipeline
 
