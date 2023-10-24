@@ -33,7 +33,7 @@ class DeployerCheckConfig(CustomBaseModel):
     """Configuration for Vertex Deployer `check` command."""
 
     all: bool = False
-    config_filepath: Path | None = None
+    config_filepath: Optional[Path] = None
     raise_error: bool = False
 
 
@@ -61,7 +61,7 @@ class DeployerConfig(CustomBaseModel):
     create: DeployerCreateConfig = DeployerCreateConfig()
 
 
-def find_pyproject_toml(path_project_root: Path) -> str | None:
+def find_pyproject_toml(path_project_root: Path) -> Optional[str]:
     """Find the pyproject.toml file."""
     path_pyproject_toml = path_project_root / "pyproject.toml"
     if path_pyproject_toml.is_file():
