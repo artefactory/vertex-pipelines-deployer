@@ -347,7 +347,12 @@ def check(
             Pipelines.model_validate(
                 {
                     "pipelines": {
-                        p: {"pipeline_name": p, "config_paths": config_filepaths}
+                        p: {
+                            "pipeline_name": p,
+                            "config_paths": config_filepaths,
+                            "pipelines_root_path": deployer_config.pipelines_root_path,
+                            "config_root_path": deployer_config.config_root_path,
+                        }
                         for p, config_filepaths in to_check.items()
                     }
                 }

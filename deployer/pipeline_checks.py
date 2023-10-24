@@ -8,11 +8,7 @@ from pydantic.functional_validators import ModelWrapValidatorHandler
 from pydantic_core import PydanticCustomError
 from typing_extensions import Annotated
 
-from deployer.constants import (
-    CONFIG_ROOT_PATH,
-    PIPELINE_ROOT_PATH,
-    TEMP_LOCAL_PACKAGE_PATH,
-)
+from deployer.constants import TEMP_LOCAL_PACKAGE_PATH
 from deployer.pipeline_deployer import VertexPipelineDeployer
 from deployer.utils.config import list_config_filepaths, load_config
 from deployer.utils.exceptions import BadConfigError
@@ -53,13 +49,17 @@ class Pipeline(CustomBaseModel):
 
     pipeline_name: str
     config_paths: Annotated[List[Path], Field(validate_default=True)] = None
+    pipelines_root_path: Path
+    config_root_path: Path
 
     @model_validator(mode="before")
     @classmethod
     def populate_config_names(cls, data: Any) -> Any:
         """Populate config names before validation"""
         if data.get("config_paths") is None:
-            data["config_paths"] = list_config_filepaths(CONFIG_ROOT_PATH, data["pipeline_name"])
+            data["config_paths"] = list_config_filepaths(
+                data["config_root_path"], data["pipeline_name"]
+            )
         return data
 
     @computed_field
@@ -67,7 +67,9 @@ class Pipeline(CustomBaseModel):
         """Import pipeline"""
         if getattr(self, "_pipeline", None) is None:
             with disable_logger("deployer.utils.utils"):
-                self._pipeline = import_pipeline_from_dir(PIPELINE_ROOT_PATH, self.pipeline_name)
+                self._pipeline = import_pipeline_from_dir(
+                    self.pipelines_root_path, self.pipeline_name
+                )
         return self._pipeline
 
     @model_validator(mode="after")
