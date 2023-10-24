@@ -38,7 +38,9 @@
   - [CLI: Other commands](#🛠️-cli-other-commands)
     - [`create`](#create)
     - [`list`](#list)
-  - [CLI: Options](#🍭-cli-options)
+    - [`config`](#config)
+  - [CLI: Options](#cli-options)
+- [Configuration](#configuration)
 
 [Full CLI documentation](docs/CLI_REFERENCE.md)
 
@@ -208,7 +210,8 @@ vertex
     You must have at least these files. If you need to share some config elements between pipelines,
     you can have a `shared` folder in `configs` and import them in your pipeline configs.
 
-    You can use the [`create`](../usage#create) command to create a new pipeline and config files.
+    If you're following a different folder structure, you can change the default paths in the `pyproject.toml` file.
+    See [Configuration](#configuration) section for more information.
 
 #### Pipelines
 
@@ -328,6 +331,14 @@ You can list all pipelines in the `vertex/pipelines` folder using the `list` com
 vertex-deployer list --with-configs
 ```
 
+#### `config`
+
+You can check your `vertex-deployer` configuration options using the `config` command.
+Fields set in `pyproject.toml` will overwrite default values and will be displayed differently:
+```bash
+vertex-deployer config --all
+```
+
 ### 🍭 CLI: Options
 
 ```bash
@@ -346,6 +357,23 @@ vertex-deployer --log-level DEBUG deploy ...
 
 <!-- --8<-- [end:usage] -->
 
+## Configuration
+
+You can configure the deployer using the `pyproject.toml` file to better fit your needs.
+This will overwrite default values. It can be usefull if you always use the same options, e.g. always the same `--scheduler-timezone`
+
+```toml
+[tool.vertex-deployer]
+pipelines_root_path = "vertex/pipelines"
+configs_root_path = "vertex/configs"
+log_level = "INFO"
+
+[tool.vertex-deployer.deploy]
+scheduler_timezone = "Europe/Paris"
+```
+
+You can display all the configurable parameterss with default values by running `vertex-deployer config --all`.
+
 ## Repository Structure
 
 ```
@@ -360,6 +388,7 @@ vertex-deployer --log-level DEBUG deploy ...
 ├─ deployer                                     # Source code
 │  ├─ __init__.py
 │  ├─ cli.py
+│  ├─ configuration.py
 │  ├─ constants.py
 │  ├─ pipeline_checks.py
 │  ├─ pipeline_deployer.py
