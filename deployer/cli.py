@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 from typing import List
 
+import rich.traceback
 import typer
 from loguru import logger
 from pydantic import ValidationError
@@ -22,11 +23,14 @@ from deployer.utils.config import (
 )
 from deployer.utils.logging import LoguruLevel, console
 from deployer.utils.utils import (
+    dict_to_repr,
     import_pipeline_from_dir,
     make_enum_from_python_package_dir,
     print_check_results_table,
     print_pipelines_list,
 )
+
+rich.traceback.install()
 
 deployer_config = load_configuration()
 
@@ -65,6 +69,28 @@ def main(
     ] = False,
 ):
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
+
+
+@app.command()
+def config(
+    all: Annotated[
+        bool, typer.Option("--all", "-a", help="Whether to display all configuration values.")
+    ] = False,
+):
+    """Display the configuration from pyproject.toml."""
+
+    if all:
+        config_repr = dict_to_repr(
+            dict_=deployer_config.model_dump(),
+            subdict=deployer_config.model_dump(exclude_unset=True),
+        )
+        config_str = "[italic]'*' means the value was set in config file[/italic]\n\n"
+        config_str += "\n".join(config_repr)
+    else:
+        config_repr = dict_to_repr(dict_=deployer_config.model_dump(exclude_unset=True))
+        config_str = "\n".join(config_repr)
+
+    console.print(config_str)
 
 
 @app.command(no_args_is_help=True)

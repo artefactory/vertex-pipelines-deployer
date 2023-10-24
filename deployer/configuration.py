@@ -1,8 +1,6 @@
-from __future__ import annotations
-
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, List, Optional
 
 import toml
 from pydantic import ValidationError
@@ -16,18 +14,18 @@ from deployer.utils.models import CustomBaseModel
 class DeployerDeployConfig(CustomBaseModel):
     """Configuration for Vertex Deployer `deploy` command."""
 
-    env_file: Path | None = None
+    env_file: Optional[Path] = None
     compile: bool = True
     upload: bool = False
     run: bool = False
     schedule: bool = False
-    cron: str | None = None
+    cron: Optional[str] = None
     delete_last_schedule: bool = False
-    tags: list[str] = ["latest"]
-    config_filepath: Path | None = None
-    config_name: str | None = None
+    tags: List[str] = ["latest"]
+    config_filepath: Optional[Path] = None
+    config_name: Optional[str] = None
     enable_caching: bool = False
-    experiment_name: str | None = None
+    experiment_name: Optional[str] = None
     local_package_path: Path = Path("vertex/pipelines/compiled_pipelines")
 
 
@@ -51,7 +49,7 @@ class DeployerCreateConfig(CustomBaseModel):
     config_type: ConfigType = ConfigType.json
 
 
-class VertexDeployerConfig(CustomBaseModel):
+class DeployerConfig(CustomBaseModel):
     """Configuration for Vertex Deployer."""
 
     pipelines_root_path: Path = constants.PIPELINE_ROOT_PATH
@@ -79,15 +77,18 @@ def parse_pyproject_toml(path_pyproject_toml: str) -> dict[str, Any]:
 
 
 @lru_cache()
-def load_configuration() -> VertexDeployerConfig:
+def load_configuration() -> DeployerConfig:
     """Load the configuration for Vertex Deployer."""
     path_project_root = Path(__file__).parent.parent
     path_pyproject_toml = find_pyproject_toml(path_project_root)
     config = parse_pyproject_toml(path_pyproject_toml)
 
     try:
-        config = VertexDeployerConfig(**config)
+        config = DeployerConfig(**config)
     except ValidationError as e:
-        raise InvalidPyProjectTOMLError(f"In {path_pyproject_toml}:\n{e}") from e
+        msg = f"In {path_pyproject_toml}:\n{e}\n"
+        msg += "Please check your configuration file."
+
+        raise InvalidPyProjectTOMLError(msg) from e
 
     return config
