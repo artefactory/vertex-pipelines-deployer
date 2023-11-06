@@ -2,6 +2,15 @@
 
 
 
+## 0.3.1 (2023-11-06)
+
+### Fix
+
+* fix: build doc after release (#89) ([`e9b6b36`](https://github.com/artefactory/vertex-pipelines-deployer/commit/e9b6b361cf07b6cfb5b9d1944b8a26ce9fa72053))
+
+* fix: run option fails when not uploading to gar (#87) ([`6fb7c14`](https://github.com/artefactory/vertex-pipelines-deployer/commit/6fb7c146683fc053e565fde29054389a9405ad4a))
+
+
 ## 0.3.0 (2023-11-06)
 
 ### Feature
