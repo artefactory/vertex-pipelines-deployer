@@ -15,7 +15,8 @@ name: CI and Release on main
 on:
   push:
     branches:
-      - main
+      - 'main'
+      - 'fix/cd-push-to-artifact-registry'
 
 jobs:
   CI:
@@ -34,10 +35,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Python Semantic Release
-      uses: python-semantic-release/python-semantic-release@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Python Semantic Release
+    #   uses: python-semantic-release/python-semantic-release@master
+    #   with:
+    #     github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
@@ -46,12 +47,21 @@ jobs:
         workload_identity_provider: '${{ secrets.WIF_PROVIDER }}' # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
         service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
 
-    - name: Copy release to root
-      run: cp -r dist/*.tar.gz .
+    # - name: Copy release to root
+    #   run: cp -r dist/*.tar.gz .
 
-    - name: 'Upload Release to Google Cloud Storage'
-      uses: 'google-github-actions/upload-cloud-storage@v1'
-      with:
-        path: '.'
-        destination: vertex-pipelines-deployer
-        glob: '*.tar.gz'
+    # - name: 'Upload Release to Google Cloud Storage'
+    #   uses: 'google-github-actions/upload-cloud-storage@v1'
+    #   with:
+    #     path: '.'
+    #     destination: vertex-pipelines-deployer
+    #     glob: '*.tar.gz'
+
+    - name: Install twine
+      run: pip install twine
+
+    - name: Upload to Google Artifact Registry
+      run: |
+        python3 -m twine upload \
+          --repository-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer \
+          dist/*
