@@ -29,7 +29,7 @@ pytest = "^7.4"
 pre-commit = "^3.3"
 ipykernel = "^6.9"
 nbstripout = "^0.6"
-ruff = "^0.0"
+ruff = "^0.1"
 pytest-cov = "^4.1"
 
 
