@@ -23,7 +23,7 @@ jobs:
         run: make download-poetry
 
       - name: Set up pip cache
-        uses: actions/cache@v3.2.4
+        uses: actions/cache@v3.3.2
         with:
           path: ~/.cache/pypoetry/virtualenvs
           key: venv-${{ env.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
