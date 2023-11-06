@@ -58,7 +58,7 @@ jobs:
     #     glob: '*.tar.gz'
 
     - name: Install twine
-      run: pip install twine
+      run: pip install twine keyrings.google-artifactregistry-auth
 
     - name: Upload to Google Artifact Registry
       run: |
