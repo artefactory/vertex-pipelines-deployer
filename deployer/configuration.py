@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import toml
+from loguru import logger
 from pydantic import ValidationError
 
 from deployer import constants
@@ -66,7 +67,9 @@ def find_pyproject_toml(path_project_root: Path) -> Optional[str]:
     """Find the pyproject.toml file."""
     path_pyproject_toml = path_project_root / "pyproject.toml"
     if path_pyproject_toml.is_file():
-        return str(path_pyproject_toml)
+        if path_pyproject_toml.exists():
+            return str(path_pyproject_toml)
+    return None
 
 
 def parse_pyproject_toml(path_pyproject_toml: str) -> Dict[str, Any]:
@@ -80,9 +83,16 @@ def parse_pyproject_toml(path_pyproject_toml: str) -> Dict[str, Any]:
 @lru_cache()
 def load_configuration() -> DeployerConfig:
     """Load the configuration for Vertex Deployer."""
-    path_project_root = Path(__file__).parent.parent
+    path_project_root = Path.cwd().resolve()
     path_pyproject_toml = find_pyproject_toml(path_project_root)
-    config = parse_pyproject_toml(path_pyproject_toml)
+
+    if path_pyproject_toml is None:
+        logger.debug(
+            "No pyproject.toml file found. Using default configuration for Vertex Deployer."
+        )
+        config = {}
+    else:
+        config = parse_pyproject_toml(path_pyproject_toml)
 
     try:
         config = DeployerConfig(**config)
