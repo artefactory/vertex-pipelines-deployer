@@ -78,11 +78,11 @@ class VertexPipelineDeployer:
         local package.
         """
         if self.gar_host is not None:
-            if tag:
-                return os.path.join(self.gar_host, self.pipeline_name.replace("_", "-"), tag)
-
             if self.template_name is not None and self.version_name is not None:
                 return os.path.join(self.gar_host, self.template_name, self.version_name)
+
+            if tag:
+                return os.path.join(self.gar_host, self.pipeline_name.replace("_", "-"), tag)
 
             logger.warning(
                 "tag or template_name and version_name not provided."
@@ -198,7 +198,7 @@ class VertexPipelineDeployer:
         enable_caching: bool = False,
         parameter_values: Optional[dict] = None,
         experiment_name: Optional[str] = None,
-        tags: List[str] = ["latest"],  # noqa: B006
+        tags: Optional[List[str]] = None,
     ) -> VertexPipelineDeployer:
         """Compile, upload and run pipeline on Vertex AI Pipelines"""
         self.compile()
