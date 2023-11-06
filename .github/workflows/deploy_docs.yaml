@@ -38,7 +38,7 @@ jobs:
       - name: Install requirements
         run: |
           poetry run pip install --upgrade pip
-          poetry install
+          poetry install --with docs
 
       - name: Deploying MkDocs documentation
         run: |
