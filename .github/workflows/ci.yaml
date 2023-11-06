@@ -87,6 +87,11 @@ jobs:
           cd example
           poetry run vertex-deployer --version
 
+      - name: Test config command
+        run: |
+          cd example
+          poetry run vertex-deployer config --all
+
       - name: Test list command
         run: |
           cd example
@@ -95,7 +100,7 @@ jobs:
       - name: Test check command
         run: |
           cd example
-          poetry run vertex-deployer -log DEBUG check --all
+          poetry run vertex-deployer check --all
 
       - name: Test deploy command
       # Cannot check more than compile action here, need GCP environment for upload, run, schedule
@@ -107,4 +112,4 @@ jobs:
         run: |
           cd example
           poetry run vertex-deployer create test_pipeline --config-type py
-          [ -e vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0
+          [ -e example/vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0
