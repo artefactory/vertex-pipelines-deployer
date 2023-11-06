@@ -1,7 +1,10 @@
 from inspect import signature
 from typing import Literal
 
-import kfp.components.graph_component
+try:
+    from kfp.dsl import graph_component  # since 2.1
+except ImportError:
+    from kfp.components import graph_component  # until 2.0.1
 import kfp.dsl
 from pydantic import BaseModel, ConfigDict, create_model
 from typing_extensions import _AnnotatedAlias
@@ -31,7 +34,7 @@ def _convert_artifact_type_to_str(annotation: type) -> type:
 
 
 def create_model_from_pipeline(
-    pipeline: kfp.components.graph_component.GraphComponent,
+    pipeline: graph_component.GraphComponent,
 ) -> CustomBaseModel:
     """Create a Pydantic model from pipeline parameters."""
     pipeline_signature = signature(pipeline.pipeline_func)

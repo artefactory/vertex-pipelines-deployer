@@ -1,0 +1,32 @@
+# Configuration: https://dependabot.com/docs/config-file/
+# Docs: https://docs.github.com/en/github/administering-a-repository/keeping-your-dependencies-updated-automatically
+
+version: 2
+
+updates:
+  - package-ecosystem: "pip"
+    target-branch: "develop"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    allow:
+      - dependency-type: "all"
+    labels:
+      - draft
+      - dependencies
+      - python
+  - package-ecosystem: "github-actions"
+    target-branch: "develop"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    allow:
+      - dependency-type: "all"
+    labels:
+      - draft
+      - dependencies
+      - github_actions
