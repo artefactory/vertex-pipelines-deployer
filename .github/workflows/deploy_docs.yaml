@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - docs/add-mkdocs-documentation
 
 env:
     python-version: "3.10"
