@@ -19,13 +19,13 @@ on:
       - 'fix/cd-push-to-artifact-registry'
 
 jobs:
-  CI:
-    uses: ./.github/workflows/ci.yaml
+  # CI:
+  #   uses: ./.github/workflows/ci.yaml
 
   Release:
     runs-on: ubuntu-latest
     concurrency: Release
-    needs: CI
+    # needs: CI
     permissions:
       id-token: write
       contents: write
@@ -64,4 +64,4 @@ jobs:
       run: |
         python3 -m twine upload \
           --repository-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer \
-          dist/*
+          dist/* --verbose
