@@ -53,6 +53,21 @@ $ vertex-deployer check [OPTIONS]
 * `--raise-error, -re / --no-raise-error, -nre`: Whether to raise an error if the pipeline is not valid. [default: no-raise-error]
 * `--help`: Show this message and exit.
 
+## `vertex-deployer config`
+
+Display the configuration from pyproject.toml.
+
+**Usage**:
+
+```console
+$ vertex-deployer config [OPTIONS]
+```
+
+**Options**:
+
+* `-a, --all`: Whether to display all configuration values.
+* `--help`: Show this message and exit.
+
 ## `vertex-deployer create`
 
 Create files structure for a new pipeline.

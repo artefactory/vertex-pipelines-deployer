@@ -12,3 +12,7 @@ class UnsupportedConfigFileError(Exception):
 
 class BadConfigError(ValueError):
     """Raised when a config is invalid."""
+
+
+class InvalidPyProjectTOMLError(Exception):
+    """Raised when the configuration is invalid."""

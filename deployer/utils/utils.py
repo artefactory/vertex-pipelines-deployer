@@ -2,7 +2,7 @@ import importlib
 import warnings
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, List, Mapping, Optional
 
 from kfp.components import graph_component
 from loguru import logger
@@ -62,6 +62,37 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
     logger.debug(f"Pipeline {module_path} imported successfully.")
 
     return pipeline
+
+
+def dict_to_repr(dict_: dict, subdict: dict = None, depth: int = 0, indent: int = 2) -> List[str]:
+    """Convert a dictionary to a list of strings for printing, recursively.
+
+    Args:
+        dict_ (dict): The dictionary to convert.
+        subdict (dict, optional): A subdictionary to highlight in the output.
+            Defaults to {}.
+        depth (int, optional): The depth of the dictionary. Defaults to 0.
+        indent (int, optional): The indentation level. Defaults to 2.
+
+    Returns:
+        list[str]: A list of strings representing the dictionary.
+    """
+    if subdict is None:
+        subdict = {}
+
+    dict_repr = []
+    for k, v in dict_.items():
+        if isinstance(v, Mapping):
+            v_ref = subdict.get(k, {})
+            dict_repr.append(" " * indent * depth + f"{k}")
+            dict_repr.extend(dict_to_repr(v, v_ref, depth=depth + 1, indent=indent))
+        else:
+            if subdict.get(k):
+                v_str = " " * indent * depth + f"[cyan]* {k}={v}[/cyan]"
+            else:
+                v_str = " " * indent * depth + f"[white]{k}={v}[/white]"
+            dict_repr.append(v_str)
+    return dict_repr
 
 
 def print_pipelines_list(pipelines_dict: Dict[str, list], with_configs: bool = False) -> None:
