@@ -6,9 +6,10 @@
 # 2. If it succeeds, the version is updated using Python Semantic Release
 # 3. The release is uploaded to GitHub (same step and GitHub action)
 # 5. Authentication to Google Cloud is achieved using Workload Identity Federation
-# 6. The release is uploaded to Google Cloud Storage
+# 6. The release is uploaded to Google Artifact Registry
 #
 # For more details on setting up Workload Identity Federation for GitHub, visit https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
+# WIF service account must have roles/artifactregistry.write access to the Artifact Registry repository
 
 name: CI and Release on main
 
@@ -46,12 +47,12 @@ jobs:
         workload_identity_provider: '${{ secrets.WIF_PROVIDER }}' # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
         service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
 
-    - name: Copy release to root
-      run: cp -r dist/*.tar.gz .
+    - name: Install twine
+      run: pip install twine keyrings.google-artifactregistry-auth
 
-    - name: 'Upload Release to Google Cloud Storage'
-      uses: 'google-github-actions/upload-cloud-storage@v1'
-      with:
-        path: '.'
-        destination: vertex-pipelines-deployer
-        glob: '*.tar.gz'
+    - name: Upload dist to Google Artifact Registry
+      run: |
+        python3 -m twine upload \
+          --repository-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer \
+          --verbose \
+          dist/*
