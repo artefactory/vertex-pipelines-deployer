@@ -2,6 +2,13 @@
 
 
 
+## 0.3.0 (2023-11-06)
+
+### Feature
+
+* feat: configure with pyproject (#82) ([`56d69f4`](https://github.com/artefactory/vertex-pipelines-deployer/commit/56d69f418d40d0a30007e6b66af212409e2717fc))
+
+
 ## 0.2.2 (2023-11-06)
 
 ### Ci
