@@ -4,7 +4,10 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Mapping, Optional
 
-from kfp.components import graph_component
+try:
+    from kfp.dsl import graph_component  # since 2.1
+except ImportError:
+    from kfp.components import graph_component  # until 2.0.1
 from loguru import logger
 from pydantic import ValidationError
 from rich.table import Table
