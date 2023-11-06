@@ -32,8 +32,8 @@ To develop, you will need dev requirements too. Run:
 make install-dev-requirements
 ```
 
-> **Note**
-> `poetry.lock` is not committed deliberately, as recommended by Poetry's doc. You can read more about it [here](https://python-poetry.org/docs/basic-usage/#as-a-library-developer).
+!!! note "About poetry.lock"
+    `poetry.lock` is not committed deliberately, as recommended by Poetry's doc. You can read more about it [here](https://python-poetry.org/docs/basic-usage/#as-a-library-developer).
 
 ### Codestyle
 
@@ -69,6 +69,11 @@ The Release GitHub Action does the following:
 
 The action is triggered by any push to main.
 
-> [!NOTE]
-> The release action will be triggered by any push to `main` only if the 'CI' job in the 'release.yaml' workflow succeeds.
-> Python Semantic Release will take care of version number update, tag creation and release creation.
+!!! tip
+    The release action will be triggered by any push to `main` only if the 'CI' job in the 'release.yaml' workflow succeeds.
+    Python Semantic Release will take care of version number update, tag creation and release creation.
+
+
+When it's done, rebase develop to keep it up to date with main.
+
+And you're done ! 🎉

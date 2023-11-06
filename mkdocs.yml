@@ -1,0 +1,17 @@
+site_name: Vertex Pipelines Deployer
+repo_name: artefactory/vertex-pipelines-deployer
+repo_url: https://github.com/artefactory/vertex-pipelines-deployer
+
+plugins:
+  - techdocs-core
+
+nav:
+  - Get Started:
+    - Welcome: index.md
+    - Installation: install.md
+    - Prerequisites & Setup: setup.md
+    - Usage: usage.md
+  - CLI Reference: CLI_REFERENCE.md
+  - 🚧 Example: example.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md

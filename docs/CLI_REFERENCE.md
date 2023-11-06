@@ -69,7 +69,7 @@ $ vertex-deployer create [OPTIONS] PIPELINE_NAME
 
 **Options**:
 
-* `--config-type, -ct [json|py]`: The type of the config to create. [default: ConfigType.json]
+* `--config-type, -ct [json|py|toml]`: The type of the config to create. [default: ConfigType.json]
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer deploy`
@@ -93,7 +93,7 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAME:{}
 * `--upload, -u / --no-upload, -nu`: Whether to upload the pipeline to Google Artifact Registry. [default: no-upload]
 * `--run, -r / --no-run, -nr`: Whether to run the pipeline. [default: no-run]
 * `--schedule, -s / --no-schedule, -ns`: Whether to create a schedule for the pipeline. [default: no-schedule]
-* `--cron TEXT`: Cron expression for scheduling the pipeline. To pass it to the CLI, use hyphens e.g. '0-10-*-*-*'.
+* `--cron TEXT`: Cron expression for scheduling the pipeline. To pass it to the CLI, use hyphens e.g. `0-10-*-*-*`.
 * `--delete-last-schedule, -dls / --no-delete-last-schedule`: Whether to delete the previous schedule before creating a new one. [default: no-delete-last-schedule]
 * `--tags TEXT`: The tags to use when uploading the pipeline. [default: latest]
 * `--config-filepath, -cfp PATH`: Path to the json/py file with parameter values and input artifacts to use when running the pipeline.
