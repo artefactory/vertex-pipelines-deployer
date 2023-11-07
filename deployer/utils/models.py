@@ -1,13 +1,7 @@
 from inspect import signature
-from typing import Literal
+from typing import Callable, Literal, Optional, Protocol
 
-try:
-    from kfp.dsl import graph_component  # since 2.1
-except ImportError:
-    from kfp.components import graph_component  # until 2.0.1
-import kfp.dsl
 from pydantic import BaseModel, ConfigDict, create_model
-from typing_extensions import _AnnotatedAlias
 
 
 class CustomBaseModel(BaseModel):
@@ -20,36 +14,39 @@ class CustomBaseModel(BaseModel):
     )
 
 
-def _convert_artifact_type_to_str(annotation: type) -> type:
-    """Convert a kfp.dsl.Artifact type to a string.
+class TypeConverterType(Protocol):
+    """Type converter function type."""
 
-    This is mandatory for type checking, as kfp.dsl.Artifact types should be passed as strings
-    to VertexAI. See https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob
-    for details.
-    """  # noqa: E501
-    if isinstance(annotation, _AnnotatedAlias):
-        if issubclass(annotation.__origin__, kfp.dsl.Artifact):
-            return str
-    return annotation
+    def __call__(self, annotation: type) -> type:  # noqa: D102
+        ...
 
 
-def create_model_from_pipeline(
-    pipeline: graph_component.GraphComponent,
+def create_model_from_func(
+    func: Callable,
+    model_name: Optional[str] = None,
+    type_converter: Optional[TypeConverterType] = None,
 ) -> CustomBaseModel:
     """Create a Pydantic model from pipeline parameters."""
-    pipeline_signature = signature(pipeline.pipeline_func)
-    pipeline_typing = {
-        p.name: _convert_artifact_type_to_str(p.annotation)
-        for p in pipeline_signature.parameters.values()
+    if model_name is None:
+        model_name = func.__name__
+
+    if type_converter is None:
+
+        def type_converter(annotation: type) -> type:
+            return annotation
+
+    func_signature = signature(func)
+    func_typing = {
+        p.name: type_converter(p.annotation) for p in func_signature.parameters.values()
     }
 
-    pipeline_model = create_model(
-        __model_name=pipeline.pipeline_spec.pipeline_info.name,
+    func_model = create_model(
+        __model_name=model_name,
         __base__=CustomBaseModel,
-        **{name: (annotation, ...) for name, annotation in pipeline_typing.items()}
+        **{name: (annotation, ...) for name, annotation in func_typing.items()}
     )
 
-    return pipeline_model
+    return func_model
 
 
 class ChecksTableRow(CustomBaseModel):
