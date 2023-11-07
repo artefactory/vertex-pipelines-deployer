@@ -51,7 +51,7 @@ class TestCreateModelFromPipeline:
 
         # When / Then
         with pytest.raises(TypeError):
-            create_model_from_func(pipeline.pipeline_func)
+            create_model_from_func(pipeline.pipeline_func, name="dummy_pipeline")
 
     def test_create_model_from_func_types_are_good(self, dummy_pipeline_fixture):
         # Given
