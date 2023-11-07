@@ -94,27 +94,30 @@ poetry install
 cd example
 ```
 
-### From GCS (not available in PyPI yet)
+### From Artifact Registry (not available in PyPI yet)
 
-Install a specific version:
+The package is available on a public Google Artifact Registry repo. You need to specify a
+[pip extra index url](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-extra-index-url) to install it.
+
+Install latest version:
 ```bash
-export VERSION=0.1.0
-gsutil -m cp  gs://vertex-pipelines-deployer/vertex_deployer-$VERSION.tar.gz .
-pip install ./vertex_deployer-$VERSION.tar.gz
+pip install --extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple vertex-deployer
 ```
 
 List available versions:
 ```bash
-gsutil ls gs://vertex-pipelines-deployer
+pip index versions --extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple vertex-deployer
 ```
 
 ### Add to requirements
 
 It's better to get the .tar.gz archive from gcs, and version it.
 
-Then add the following line to your `requirements.in` file:
+Then add the following lines to your `requirements.in` file:
 ```bash
-file:my/path/to/vertex_deployer-$VERSION.tar.gz
+--extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple
+
+vertex-deployer==0.3.1
 ```
 <!-- --8<-- [end:installation] -->
 
