@@ -2,6 +2,51 @@
 
 
 
+## 0.3.2 (2023-11-08)
+
+### Build
+
+* build(deps-dev): update ruff requirement from ^0.0 to ^0.1 (#95)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`cff19af`](https://github.com/artefactory/vertex-pipelines-deployer/commit/cff19af4bd76b96b595f3cc653b4316f336b5988))
+
+* build(deps): bump actions/cache from 3.2.4 to 3.3.2 (#94)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`5d2dbf9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5d2dbf93360313d843ef7d1c8685367ef0adbf39))
+
+* build(deps): bump actions/setup-python from 2 to 4 (#92)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9d25ad6`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9d25ad64f2442baba1cc1906817d0c66473bac07))
+
+* build(deps): bump actions/checkout from 2 to 4 (#93)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`c97ec85`](https://github.com/artefactory/vertex-pipelines-deployer/commit/c97ec85383e0f8a391a24a74890e0d7639a034f0))
+
+* build: update dependencies specifiers to be more flexible (#91) ([`fddf1a9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/fddf1a97d5929095d03ae702c4b2c3a95001463e))
+
+### Ci
+
+* ci: build and deploy docs when a release is published (#90) ([`01ce99a`](https://github.com/artefactory/vertex-pipelines-deployer/commit/01ce99afed4bc4e791b86106d30ecc76f49bf6ff))
+
+### Documentation
+
+* docs: add full example to repo (#72) ([`42ccfc9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/42ccfc9b45dd2ad14a5228f8b4f387d84bec9534))
+
+* docs: update installation instructions (#98) ([`6e51b89`](https://github.com/artefactory/vertex-pipelines-deployer/commit/6e51b8931eaa4a60b484759bc9acc8ff108897c7))
+
+### Fix
+
+* fix: warn when cannot associate run to experiment (#99) ([`7ba89f3`](https://github.com/artefactory/vertex-pipelines-deployer/commit/7ba89f3bc0d6b267b26920ecfd5b17a9f2801500))
+
+### Performance
+
+* perf: rationalize kfp imports (#97) ([`19da429`](https://github.com/artefactory/vertex-pipelines-deployer/commit/19da4298baa1ce549fa72b60fe4fcf4e1dcf1a92))
+
+
 ## 0.3.1 (2023-11-06)
 
 ### Fix
