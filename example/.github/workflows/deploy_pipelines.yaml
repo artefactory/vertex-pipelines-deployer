@@ -22,7 +22,7 @@ on:
 
 env:
   PYTHON_VERSION: "3.10"
-  PROJECT_ID: "vertex-deployer-sandbox-3a8a"
+  PROJECT_ID: "my-project"
   GCP_REGION: "europe-west1"
   TAG: "latest"
   # Google Artifact Registry
@@ -31,9 +31,8 @@ env:
   GAR_PIPELINES_REPO_ID: "test-pipelines"
   GAR_VERTEX_BASE_IMAGE_NAME: "base-image"
   # Vertex AI
-  VERTEX_STAGING_BUCKET_NAME: "vertex-deployer-sandbox-3a8a-vertex-staging"
-  VERTEX_SERVICE_ACCOUNT_NAME: "vertexai-pipelines"
-  VERTEX_SERVICE_ACCOUNT: "vertexai-pipelines@vertex-deployer-sandbox-3a8a.iam.gserviceaccount.com"
+  VERTEX_STAGING_BUCKET_NAME: "my-project-vertex-staging"
+  VERTEX_SERVICE_ACCOUNT: "my-service-account@my-project.iam.gserviceaccount.com"
 
 jobs:
   check-pipelines:

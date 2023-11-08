@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+    - id: vertex-deployer-check
+      name: check pipelines
+      entry: vertex-deployer check -a
+      pass_filenames: false
+      language: system
