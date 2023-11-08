@@ -85,7 +85,7 @@ jobs:
       - name: Test root command
         run: |
           cd example
-          poetry run vertex-deployer --version
+          vertex-deployer --version
 
       - name: Test config command
         run: |
