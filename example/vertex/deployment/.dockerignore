@@ -1,0 +1,65 @@
+# Project
+data/
+notebooks/
+tests/
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+**/*.py[cod]
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Notebooks
+*.ipynb
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+# VS Code / Pycharm
+.vscode/
+.idea
+
+# Virtual environment
+.env
+.venv/
+venv/
+
+# CI
+.github/
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Pipelines
+vertex/deployment/compiled_pipelines

@@ -1,0 +1,33 @@
+name: Check pipelines
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  workflow_call:
+
+env:
+  PYTHON_VERSION: "3.10"
+
+jobs:
+  check-pipelines:
+    name: Check Vertex Pipelines
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install requirements
+        run: |
+          python3 -m pip install -r requirements.txt
+
+      - name: Check pipelines
+        run: |
+          export PYTHONPATH=.
+          vertex-deployer check --all
