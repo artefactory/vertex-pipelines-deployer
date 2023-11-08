@@ -18,5 +18,5 @@ COPY requirements.txt .
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install -r requirements.txt
 
-ENV PYTHONPATH "${PYTHONPATH}:."
 COPY vertex .
+ENV PYTHONPATH "${PYTHONPATH}:."

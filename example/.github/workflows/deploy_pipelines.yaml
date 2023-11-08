@@ -44,6 +44,7 @@ jobs:
     name: Deploy pipelines
     needs: check-pipelines
     runs-on: ubuntu-latest
+    concurrency: deploy-pipelines
     permissions:
       id-token: write
       contents: write
