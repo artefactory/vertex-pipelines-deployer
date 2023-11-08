@@ -2,9 +2,8 @@ import importlib
 import warnings
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Mapping, Optional
+from typing import Any, Callable, Dict, List, Mapping, Optional, Protocol
 
-from kfp.components import graph_component
 from loguru import logger
 from pydantic import ValidationError
 from rich.table import Table
@@ -24,7 +23,21 @@ def make_enum_from_python_package_dir(dir_path: Path, raise_if_not_found: bool =
     return FileNamesEnum
 
 
-def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_component.GraphComponent:
+class GraphComponentType(Protocol):
+    """Protocol for a kfp.dsl.graph_component.GraphComponent"""
+
+    component_spec: Any
+    pipeline_func: Callable
+    name: str
+    description: str
+
+    def __call__(  # noqa: D102
+        self, component_spec: Any, pipeline_func: Callable, display_name: Optional[str] = None
+    ):
+        ...
+
+
+def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> GraphComponentType:
     """Import a pipeline from a directory."""
     if dirpath.startswith("."):
         dirpath = dirpath[1:]
@@ -41,8 +54,7 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> graph_compone
         ) from e
 
     try:
-        pipeline: Optional[graph_component.GraphComponent]
-        pipeline = getattr(pipeline_module, pipeline_name, None)
+        pipeline: GraphComponentType = getattr(pipeline_module, pipeline_name, None)
         if pipeline is None:
             pipeline = pipeline_module.pipeline
             warnings.warn(

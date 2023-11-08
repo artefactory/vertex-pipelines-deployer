@@ -11,31 +11,31 @@ vertex-deployer = "deployer.cli:app"
 
 [tool.poetry.dependencies]
 python = ">=3.8, <3.11.0"
-kfp = ">=2.0.1, <2.1.0"
-google-cloud-aiplatform = "^1.26.1"
-requests = "^2.31.0"
-typer = "^0.9.0"
-rich = "^13.5.3"
-loguru = "^0.7.2"
-pydantic-settings = "^2.0.3"
-pydantic = "^2.3.0"
-pyinstrument = { version = "^4.5.3", optional = true }
-toml = "^0.10.2"
+kfp = "^2.0,>=2.0.1"
+google-cloud-aiplatform = "^1.26"
+requests = "^2.31"
+typer = "^0.9"
+rich = "^13.5"
+loguru = "^0.7"
+pydantic-settings = "^2.0"
+pydantic = "^2.3"
+pyinstrument = { version = "^4.5", optional = true }
+toml = "^0.10"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.7.0"
-isort = "^5.12.0"
-pytest = "^7.4.0"
-pre-commit = "^3.3.3"
-ipykernel = "6.9.1"
-nbstripout = "^0.6.1"
-ruff = "^0.0.289"
-pytest-cov = "^4.1.0"
+black = "^23.7"
+isort = "^5.12"
+pytest = "^7.4"
+pre-commit = "^3.3"
+ipykernel = "^6.9"
+nbstripout = "^0.6"
+ruff = "^0.1"
+pytest-cov = "^4.1"
 
 
 [tool.poetry.group.docs.dependencies]
-mkdocs = "^1.5.3"
-mkdocs-techdocs-core = "^1.2.3"
+mkdocs = "^1.5"
+mkdocs-techdocs-core = "^1.2"
 
 [tool.poetry.extras]
 profiling = ["pyinstrument"]

@@ -1,14 +1,13 @@
 ??? abstract "TL;DR"
-    Install from GCS:
+    Install using pip:
     ```bash
-    export VERSION=0.2.1
-    gsutil -m cp  gs://vertex-pipelines-deployer/vertex_deployer-$VERSION.tar.gz .
-    pip install ./vertex_deployer-$VERSION.tar.gz
+    pip install --extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple vertex-deployer
     ```
 
     In your requirements:
-    ```bash
-    file:my/path/to/vertex_deployer-$VERSION.tar.gz
+    ```txt
+    --extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple
+    vertex-deployer==0.3.1
     ```
 
 --8<-- "README.md:installation"

@@ -10,8 +10,8 @@ nav:
     - Welcome: index.md
     - Installation: install.md
     - Prerequisites & Setup: setup.md
-    - Usage: usage.md
+    - Basic Usage: usage.md
+  - Advanced User Guide: advanced_user_guide.md
   - CLI Reference: CLI_REFERENCE.md
-  - 🚧 Example: example.md
   - Contributing: contributing.md
   - Changelog: changelog.md

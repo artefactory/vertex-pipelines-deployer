@@ -1,0 +1,77 @@
+# This workflow deploys a pipeline to Vertex AI Pipelines.
+#
+# Workflow Steps:
+#
+# 1. Check pipelines and config integrity
+# 2. Authenticate to Google Cloud using Workload Identity Federation (WIF)
+# 3. Submit cloud build job to build docker image and deploy pipeline
+#
+# For more details on setting up Workload Identity Federation for GitHub, visit https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
+#
+# Your WIF service account must have the following IAM roles:
+# - roles/artifactregistry.writer
+# - roles/storage.admin
+# - roles/cloudbuild.builds.builder
+
+name: Deploy pipelines
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  PYTHON_VERSION: "3.10"
+  PROJECT_ID: "my-project"
+  GCP_REGION: "europe-west1"
+  TAG: "latest"
+  # Google Artifact Registry
+  GAR_LOCATION: "europe-west1"
+  GAR_DOCKER_REPO_ID: "demo-docker"
+  GAR_PIPELINES_REPO_ID: "test-pipelines"
+  GAR_VERTEX_BASE_IMAGE_NAME: "base-image"
+  # Vertex AI
+  VERTEX_STAGING_BUCKET_NAME: "my-project-vertex-staging"
+  VERTEX_SERVICE_ACCOUNT: "my-service-account@my-project.iam.gserviceaccount.com"
+
+jobs:
+  check-pipelines:
+      name: Check Pipelines
+      uses: ./.github/workflows/check_pipelines.yaml
+
+  deploy-pipelines:
+    name: Deploy pipelines
+    needs: check-pipelines
+    runs-on: ubuntu-latest
+    concurrency: deploy-pipelines
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
+    - name: Install requirements
+      run: |
+        python3 -m pip install --upgrade pip
+        python3 -m pip install -r requirements.txt
+
+    - name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        token_format: 'access_token'
+        workload_identity_provider: '${{ secrets.WIF_PROVIDER }}' # e.g. - projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider
+        service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
+
+    - name: Trigger Cloud Build
+      run: |
+        export PROJECT_ID=vertex-deployer-sandbox-3a8a
+        make deploy-pipeline

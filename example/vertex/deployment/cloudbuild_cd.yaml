@@ -1,0 +1,40 @@
+steps:
+  # Build base image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '-t', '${_GAR_IMAGE_PATH}',
+      '-f', 'vertex/deployment/Dockerfile',
+      '--build-arg', 'PROJECT_ID=${PROJECT_ID}',
+      '--build-arg', 'GCP_REGION=${_GCP_REGION}',
+      '--build-arg', 'GAR_LOCATION=${_GAR_LOCATION}',
+      '--build-arg', 'GAR_PIPELINES_REPO_ID=${_GAR_PIPELINES_REPO_ID}',
+      '--build-arg', 'VERTEX_STAGING_BUCKET_NAME=${_VERTEX_STAGING_BUCKET_NAME}',
+      '--build-arg', 'VERTEX_SERVICE_ACCOUNT=${_VERTEX_SERVICE_ACCOUNT}',
+      '.',
+    ]
+    id: build-base-image
+
+  # schedule pipeline: compile, upload, schedule
+  - name: '${_GAR_IMAGE_PATH}'
+    entrypoint: 'bash'
+    args: [
+      '-c',
+      'vertex-deployer -log DEBUG deploy dummy_pipeline --compile --upload --run -ec --tags ${_TAG} --schedule --delete-last-schedule --cron *-*-19-*-* --config-name config_test.json'
+    ]
+    dir: '.'
+    id: schedule-dummy-pipeline
+    waitFor: ['build-base-image']
+
+substitutions:
+  _GAR_IMAGE_PATH: '${_GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_GAR_DOCKER_REPO_ID}/${_GAR_VERTEX_BASE_IMAGE_NAME}:${_TAG}'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  dynamic_substitutions: true
+
+images:
+- '${_GAR_IMAGE_PATH}'
+
+tags:
+  - vertex-${_GAR_DOCKER_REPO_ID}-deployment-example-${_TAG}

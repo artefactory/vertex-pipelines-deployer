@@ -2,18 +2,24 @@ import shutil
 from pathlib import Path
 from typing import Any, Dict, Generic, List, TypeVar
 
+import kfp.dsl
 from loguru import logger
 from pydantic import Field, ValidationError, computed_field, model_validator
 from pydantic.functional_validators import ModelWrapValidatorHandler
 from pydantic_core import PydanticCustomError
-from typing_extensions import Annotated
+from typing_extensions import Annotated, _AnnotatedAlias
+
+try:
+    from kfp.dsl import graph_component  # since 2.1
+except ImportError:
+    from kfp.components import graph_component  # until 2.0.1
 
 from deployer.constants import TEMP_LOCAL_PACKAGE_PATH
 from deployer.pipeline_deployer import VertexPipelineDeployer
 from deployer.utils.config import list_config_filepaths, load_config
 from deployer.utils.exceptions import BadConfigError
 from deployer.utils.logging import disable_logger
-from deployer.utils.models import CustomBaseModel, create_model_from_pipeline
+from deployer.utils.models import CustomBaseModel, create_model_from_func
 from deployer.utils.utils import import_pipeline_from_dir
 
 PipelineConfigT = TypeVar("PipelineConfigT")
@@ -63,7 +69,7 @@ class Pipeline(CustomBaseModel):
         return data
 
     @computed_field
-    def pipeline(self) -> Any:
+    def pipeline(self) -> graph_component.GraphComponent:
         """Import pipeline"""
         if getattr(self, "_pipeline", None) is None:
             with disable_logger("deployer.utils.utils"):
@@ -101,7 +107,9 @@ class Pipeline(CustomBaseModel):
     def validate_configs(self):
         """Validate configs against pipeline parameters definition"""
         logger.debug(f"Validating configs for pipeline {self.pipeline_name}")
-        PipelineDynamicModel = create_model_from_pipeline(self.pipeline)
+        PipelineDynamicModel = create_model_from_func(
+            self.pipeline.pipeline_func, type_converter=_convert_artifact_type_to_str
+        )
         ConfigsModel = ConfigsDynamicModel[PipelineDynamicModel]
         ConfigsModel.model_validate(
             {"configs": {x.name: {"config_path": x} for x in self.config_paths}}
@@ -127,3 +135,16 @@ class Pipelines(CustomBaseModel):
             shutil.rmtree(TEMP_LOCAL_PACKAGE_PATH)
 
         return validated_self
+
+
+def _convert_artifact_type_to_str(annotation: type) -> type:
+    """Convert a kfp.dsl.Artifact type to a string.
+
+    This is mandatory for type checking, as kfp.dsl.Artifact types should be passed as strings
+    to VertexAI. See https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob
+    for details.
+    """  # noqa: E501
+    if isinstance(annotation, _AnnotatedAlias):
+        if issubclass(annotation.__origin__, kfp.dsl.Artifact):
+            return str
+    return annotation

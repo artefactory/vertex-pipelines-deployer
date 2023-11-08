@@ -187,10 +187,22 @@ class VertexPipelineDeployer:
             input_artifacts=input_artifacts,
         )
 
-        job.submit(
-            experiment=experiment_name,
-            service_account=self.service_account,
-        )
+        try:
+            job.submit(
+                experiment=experiment_name,
+                service_account=self.service_account,
+            )
+        except RuntimeError as e:  # HACK: This is a temporary fix
+            if "could not be associated with Experiment" in str(e):
+                logger.warning(
+                    f"Encountered an error while linking your job {job.job_id}"
+                    f" with experiment {experiment_name}."
+                    " This is likely due to a bug in the AI Platform Pipelines client."
+                    " You job should be running anyway. Try to link it manually."
+                )
+            else:
+                raise e
+
         return self
 
     def compile_upload_run(
