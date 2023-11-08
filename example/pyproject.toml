@@ -13,3 +13,6 @@ dependencies = [
     "kfp",
     "google-cloud-aiplatform",
 ]
+
+[tool.vertex_deployer.list]
+with_configs = true

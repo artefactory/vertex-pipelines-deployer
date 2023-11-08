@@ -1,6 +1,3 @@
-# This config file is meant to be used from a local dev machine to submit a vertex base image build to Cloud Build.
-# This generic image will then be used in all the Vertex components of your pipeline.
-
 steps:
   # Build base image
   - name: 'gcr.io/cloud-builders/docker'
@@ -18,6 +15,17 @@ steps:
     ]
     id: build-base-image
 
+  # schedule pipeline: compile, upload, schedule
+  - name: '${_GAR_IMAGE_PATH}'
+    entrypoint: 'bash'
+    args: [
+      '-c',
+      'vertex-deployer -log DEBUG deploy dummy_pipeline --compile --upload --run -ec --tags ${_TAG} --schedule --delete-last-schedule --cron *-*-19-*-* --config-name config_test.json'
+    ]
+    dir: '.'
+    id: schedule-dummy-pipeline
+    waitFor: ['build-base-image']
+
 substitutions:
   _GAR_IMAGE_PATH: '${_GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_GAR_DOCKER_REPO_ID}/${_GAR_VERTEX_BASE_IMAGE_NAME}:${_TAG}'
 
@@ -29,4 +37,4 @@ images:
 - '${_GAR_IMAGE_PATH}'
 
 tags:
-  - vertex-${_GAR_DOCKER_REPO_ID}-base-image-local-${_TAG}
+  - vertex-${_GAR_DOCKER_REPO_ID}-deployment-example-${_TAG}
