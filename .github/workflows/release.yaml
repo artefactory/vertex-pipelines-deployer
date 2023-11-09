@@ -24,7 +24,9 @@ jobs:
 
   Release:
     runs-on: ubuntu-latest
-    concurrency: Release
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     needs: CI
     permissions:
       id-token: write
