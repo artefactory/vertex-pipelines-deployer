@@ -24,7 +24,9 @@ jobs:
 
   Release:
     runs-on: ubuntu-latest
-    concurrency: Release
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     needs: CI
     permissions:
       id-token: write
@@ -34,11 +36,12 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        token: ${{ secrets.RELEASE_ACCESS_TOKEN }}
 
     - name: Python Semantic Release
       uses: python-semantic-release/python-semantic-release@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.RELEASE_ACCESS_TOKEN }}
 
     - name: 'Authenticate to Google Cloud'
       uses: 'google-github-actions/auth@v1'
