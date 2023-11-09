@@ -2,7 +2,31 @@ site_name: Vertex Pipelines Deployer
 repo_name: artefactory/vertex-pipelines-deployer
 repo_url: https://github.com/artefactory/vertex-pipelines-deployer
 
+theme:
+  name: material
+  palette:
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    primary: teal
+    accent: amber
+    toggle:
+      icon: material/lightbulb
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    primary: teal
+    accent: amber
+    toggle:
+      icon: material/lightbulb-outline
+      name: Switch to light mode
+  features:
+  - search.suggest
+  - search.highlight
+  - content.tooltips
+  - navigation.tabs
+
 plugins:
+  - search
   - techdocs-core
 
 nav:
