@@ -19,7 +19,6 @@
 [![License](https://img.shields.io/github/license/artefactory/vertex-pipelines-deployer)](https://github.com/artefactory/vertex-pipelines-deployer/blob/main/LICENSE)
 
 [![CI](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?branch%3Amain&event%3Apush)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?query=branch%3Amain)
-
 [![Release](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml/badge.svg?branch%3Amain&event%3Apush)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml/badge.svg?query=branch%3Amain)
 
 </div>
