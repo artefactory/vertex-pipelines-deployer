@@ -1,5 +1,5 @@
 !!! tip
-    Add code provided in this page is available in the [repo example](./example).
+    Add code provided in this page is available in the [repo example](https://github.com/artefactory/vertex-pipelines-deployer/tree/main/example).
 
 
 
@@ -7,12 +7,14 @@
 
 
 When developing a vertex pipeline locally, you may want to iterate quickly. The process is often the following:
+
 1. write new code and test its integration in the pipeline workflow code in a notebook
 2. script this new code in vertex/lib/
 3. modify associated component(s) in `vertex/components` and pipelines in `vertex/pipelines`
 4. run the pipeline with dev settings to test the new code on Vertex
 
 The latest may include:
+
 - rebuilding the base image
 - compiling the pipeline
 - running the pipeline
@@ -28,7 +30,7 @@ You can use this generic Dockerfile:
 --8<-- "example/vertex/deployment/Dockerfile:16:"
 ```
 
-Then build it with docker or Cloud Build. For the latest, here is a sample [cloudbuild.yaml](../example/vertex/deployment/cloudbuild_local.yaml):
+Then build it with docker or Cloud Build. For the latest, here is a sample [cloudbuild.yaml](https://github.com/artefactory/vertex-pipelines-deployer/tree/main/example/vertex/deployment/cloudbuild_local.yaml):
 
 ```yaml
 --8<-- "example/vertex/deployment/cloudbuild_local.yaml"
@@ -86,9 +88,10 @@ You can add a pre-commit hook checking your pipelines integrity using a local ho
 ## 🚀 CD: Deploy your pipelines in a standardized manner
 
 Once you have a valid pipeline, you want to deploy it on Vertex. To automate deployment when merging to `develop` or `main`, you have multiple options.
-- [use CloudBuild and CloudBuild triggers](#-cloudbuild-trigger))
-- [use Github Action to trigger CloudBuild job](#-github-action--cloudbuild)
-- [🚧 use Github Action only](#-github-action)
+
+- [use CloudBuild and CloudBuild triggers](#use-cloudbuild-trigger-preferred-option)
+- [use Github Action to trigger CloudBuild job](#github-action-cloudbuild)
+- [🚧 use Github Action only](#github-action-only)
 
 
 !!! note
@@ -101,7 +104,7 @@ Once you have a valid pipeline, you want to deploy it on Vertex. To automate dep
 
 ### ☁️ CloudBuild
 
-You can use the following [cloudbuild.yaml](../example/vertex/deployment/cloudbuild_cd.yaml) to trigger a deployment on Vertex when merging to `develop` or `main`:
+You can use the following [cloudbuild.yaml](https://github.com/artefactory/vertex-pipelines-deployer/tree/main/example/vertex/deployment/cloudbuild_cd.yaml) to trigger a deployment on Vertex when merging to `develop` or `main`:
 
 ```yaml
 --8<-- "example/vertex/deployment/cloudbuild_cd.yaml"
@@ -112,7 +115,7 @@ You can use the following [cloudbuild.yaml](../example/vertex/deployment/cloudbu
 Then, you'll need to link your repo to CloudBuild and create a trigger for each branch you want to deploy on Vertex.
 The documentation to link your repo is available [here](https://cloud.google.com/build/docs/automating-builds/github/connect-repo-github?generation=2nd-gen#console).
 
-Then, you can create create a triiger using this make command:
+Then, you can create create a trigger using this make command:
 
 ```bash
 export $(cat .env | xargs)
