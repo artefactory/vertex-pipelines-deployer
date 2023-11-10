@@ -1,4 +1,4 @@
-name: Deploy MkDocs to GitHub Pages
+name: Deploy doc to GitHub Pages
 
 on:
   workflow_run:
@@ -9,8 +9,8 @@ env:
     python-version: "3.10"
 
 jobs:
-  Deploy-docs:
-    name: Deploy docs
+  deploy-doc:
+    name: Deploy Documentation
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

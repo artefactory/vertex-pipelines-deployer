@@ -10,7 +10,7 @@ on:
   workflow_call:
 
 jobs:
-  CI:
+  ci:
     name: Launching CI
     runs-on: ubuntu-latest
     strategy:
@@ -49,7 +49,7 @@ jobs:
       - name: Run tests
         run: make run-tests
 
-  CLI-Integration-Tests:
+  cli-integration-tests:
     name: Launching CLI Integration Tests
     runs-on: ubuntu-latest
     strategy:
