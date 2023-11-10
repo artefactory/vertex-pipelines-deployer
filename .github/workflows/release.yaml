@@ -60,6 +60,6 @@ jobs:
     - name: Upload dist to Google Artifact Registry
       run: |
         python3 -m twine upload \
-          --repository-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer \
+          --repository-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory \
           --verbose \
           dist/*
