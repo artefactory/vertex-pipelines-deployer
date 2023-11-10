@@ -1,4 +1,5 @@
-# This workflow triggers the CI, updates the version, and uploads the release to GitHub and Google Cloud Storage when a push is made to either the 'main' or 'develop' branch.
+# This workflow triggers the CI, updates the version, and uploads the release to GitHub and
+# Google Artifact Registry when a push is made to either the 'main' or 'develop' branch.
 #
 # Workflow Steps:
 #
@@ -8,7 +9,8 @@
 # 5. Authentication to Google Cloud is achieved using Workload Identity Federation
 # 6. The release is uploaded to Google Artifact Registry
 #
-# For more details on setting up Workload Identity Federation for GitHub, visit https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
+# For more details on setting up Workload Identity Federation for GitHub,
+# visit https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
 # WIF service account must have roles/artifactregistry.write access to the Artifact Registry repository
 
 name: CI and Release on main
@@ -19,15 +21,17 @@ on:
       - main
 
 jobs:
-  CI:
+  ci:
+    name: CI
     uses: ./.github/workflows/ci.yaml
 
-  Release:
+  release:
+    name: Release
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
-    needs: CI
+    needs: ci
     permissions:
       id-token: write
       contents: write
