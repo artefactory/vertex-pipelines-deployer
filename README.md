@@ -24,24 +24,35 @@
 </div>
 
 
-## 📚 Table of Contents
-- [Why this tool?](#❓-why-this-tool)
-- [Prerequisites](#📋-prerequisites)
-- [Installation](#📦-installation)
-    - [From git repo](#from-git-repo)
-    - [From GCS (not available in PyPI yet)](#from-gcs-not-available-in-pypi-yet)
-    - [Add to requirements](#add-to-requirements)
-- [Usage](#🚀-usage)
-  - [Setup](#🛠️-setup)
-  - [Folder Structure](#📁-folder-structure)
-  - [CLI: Deploying a Pipeline with `deploy`](#🚀-cli-deploying-a-pipeline-with-deploy)
-  - [CLI: Checking Pipelines are valid with `check`](#✅-cli-checking-pipelines-are-valid-with-check)
-  - [CLI: Other commands](#🛠️-cli-other-commands)
-    - [`create`](#create)
-    - [`list`](#list)
-    - [`config`](#config)
-  - [CLI: Options](#cli-options)
-- [Configuration](#configuration)
+<details>
+  <summary>📚 Table of Contents</summary>
+  <ul>
+    <li><a href="#-why-this-tool">Why this tool?</a></li>
+    <li><a href="#-prerequisites">Prerequisites</a></li>
+    <li><a href="#-installation">Installation</a></li>
+        <ul>
+            <li><a href="#from-git-repo">From git repo</a></li>
+            <li><a href="#from-artifact-registry-not-available-in-pypi-yet">From Artifact Registry (not available in PyPI yet)</a></li>
+            <li><a href="#add-to-requirements">Add to requirements</a></li>
+        </ul>
+    <li><a href="#-usage">Usage</a></li>
+        <ul>
+            <li><a href="#-setup">Setup</a></li>
+            <li><a href="#-folder-structure">Folder Structure</a></li>
+            <li><a href="#-cli-deploying-a-pipeline-with-deploy">CLI: Deploying a Pipeline with `deploy`</a></li>
+            <li><a href="#-cli-checking-pipelines-are-valid-with-check">CLI: Checking Pipelines are valid with `check`</a></li>
+            <li><a href="#-cli-other-commands">CLI: Other commands</a></li>
+                <ul>
+                    <li><a href="#create">`create`</a></li>
+                    <li><a href="#list">`list`</a></li>
+                    <li><a href="#config">`config`</a></li>
+                </ul>
+        </ul>
+    <li><a href="#cli-options">CLI: Options</a></li>
+    <li><a href="#configuration">Configuration</a></li>
+  </ul>
+</details>
+
 
 [Full CLI documentation](docs/CLI_REFERENCE.md)
 
