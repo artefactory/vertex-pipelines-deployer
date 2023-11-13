@@ -48,6 +48,7 @@ jobs:
         github_token: ${{ secrets.RELEASE_ACCESS_TOKEN }}
 
     - name: 'Authenticate to Google Cloud'
+      if: steps.python-semantic-release.outputs.release == true
       uses: 'google-github-actions/auth@v1'
       with:
         token_format: 'access_token'
@@ -55,9 +56,11 @@ jobs:
         service_account: '${{ secrets.WIF_SERVICE_ACCOUNT }}' # e.g. - my-service-account@my-project.iam.gserviceaccount.com
 
     - name: Install twine
+      if: steps.python-semantic-release.outputs.release == true
       run: pip install twine keyrings.google-artifactregistry-auth
 
     - name: Upload dist to Google Artifact Registry
+      if: steps.python-semantic-release.outputs.release == true
       run: |
         python3 -m twine upload \
           --repository-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory \
