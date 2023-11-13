@@ -113,12 +113,12 @@ The package is available on a public Google Artifact Registry repo. You need to 
 
 Install latest version:
 ```bash
-pip install --extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple vertex-deployer
+pip install --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
 ```
 
 List available versions:
 ```bash
-pip index versions --extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple vertex-deployer
+pip index versions --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
 ```
 
 ### Add to requirements
@@ -127,7 +127,7 @@ It's better to get the .tar.gz archive from gcs, and version it.
 
 Then add the following lines to your `requirements.in` file:
 ```bash
---extra-index-url https://europe-west1-python.pkg.dev/vertex-deployer-sandbox-3a8a/vertex-deployer/simple
+--extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
 
 vertex-deployer==0.3.1
 ```
