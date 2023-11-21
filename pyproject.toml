@@ -59,7 +59,18 @@ ignore = [
     "D415",
 ]
 line-length = 99
-select = ["B", "C", "D", "E", "F", "W"]
+select = [
+    "B",    # bugbear
+    "C4",   # comprehensions
+    "C90",  # mccabe
+    "D",    # docstrings
+    "E",    # flake8
+    "F",    # flake8
+    "W",    # flake8
+    "S",    # bandit
+    "N",    # pep8-naming
+    "RUF"   # ruff
+]
 
 [tool.ruff.pydocstyle]
 convention = "google"

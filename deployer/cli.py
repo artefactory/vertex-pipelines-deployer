@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import rich.traceback
 import typer
@@ -100,7 +100,7 @@ def deploy(  # noqa: C901
         PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
     ],
     env_file: Annotated[
-        Path,
+        Optional[Path],
         typer.Option(
             help="The environment file to use.",
             exists=True,
@@ -133,7 +133,7 @@ def deploy(  # noqa: C901
         ),
     ] = False,
     cron: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             help="Cron expression for scheduling the pipeline."
             " To pass it to the CLI, use hyphens e.g. '0-10-*-*-*'."
@@ -158,7 +158,7 @@ def deploy(  # noqa: C901
         List[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
     config_filepath: Annotated[
-        Path,
+        Optional[Path],
         typer.Option(
             "--config-filepath",
             "-cfp",
@@ -170,7 +170,7 @@ def deploy(  # noqa: C901
         ),
     ] = None,
     config_name: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             "--config-name",
             "-cn",
@@ -186,7 +186,7 @@ def deploy(  # noqa: C901
         ),
     ] = False,
     experiment_name: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             "--experiment-name",
             "-en",
@@ -290,7 +290,7 @@ def check(
         bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
     ] = False,
     config_filepath: Annotated[
-        Path,
+        Optional[Path],
         typer.Option(
             "--config-filepath",
             "-cfp",

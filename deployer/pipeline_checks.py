@@ -18,7 +18,7 @@ from deployer.constants import TEMP_LOCAL_PACKAGE_PATH
 from deployer.pipeline_deployer import VertexPipelineDeployer
 from deployer.utils.config import list_config_filepaths, load_config
 from deployer.utils.exceptions import BadConfigError
-from deployer.utils.logging import disable_logger
+from deployer.utils.logging import DisableLogger
 from deployer.utils.models import CustomBaseModel, create_model_from_func
 from deployer.utils.utils import import_pipeline_from_dir
 
@@ -72,7 +72,7 @@ class Pipeline(CustomBaseModel):
     def pipeline(self) -> graph_component.GraphComponent:
         """Import pipeline"""
         if getattr(self, "_pipeline", None) is None:
-            with disable_logger("deployer.utils.utils"):
+            with DisableLogger("deployer.utils.utils"):
                 self._pipeline = import_pipeline_from_dir(
                     str(self.pipelines_root_path), self.pipeline_name
                 )
@@ -93,7 +93,7 @@ class Pipeline(CustomBaseModel):
         """Validate that the pipeline can be compiled"""
         logger.debug(f"Compiling pipeline {self.pipeline_name}")
         try:
-            with disable_logger("deployer.pipeline_deployer"):
+            with DisableLogger("deployer.pipeline_deployer"):
                 VertexPipelineDeployer(
                     pipeline_name=self.pipeline_name,
                     pipeline_func=self.pipeline,
@@ -107,11 +107,11 @@ class Pipeline(CustomBaseModel):
     def validate_configs(self):
         """Validate configs against pipeline parameters definition"""
         logger.debug(f"Validating configs for pipeline {self.pipeline_name}")
-        PipelineDynamicModel = create_model_from_func(
+        pipelines_dynamic_model = create_model_from_func(
             self.pipeline.pipeline_func, type_converter=_convert_artifact_type_to_str
         )
-        ConfigsModel = ConfigsDynamicModel[PipelineDynamicModel]
-        ConfigsModel.model_validate(
+        config_model = ConfigsDynamicModel[pipelines_dynamic_model]
+        config_model.model_validate(
             {"configs": {x.name: {"config_path": x} for x in self.config_paths}}
         )
         return self
@@ -143,7 +143,7 @@ def _convert_artifact_type_to_str(annotation: type) -> type:
     This is mandatory for type checking, as kfp.dsl.Artifact types should be passed as strings
     to VertexAI. See https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob
     for details.
-    """  # noqa: E501
+    """
     if isinstance(annotation, _AnnotatedAlias):
         if issubclass(annotation.__origin__, kfp.dsl.Artifact):
             return str

@@ -19,8 +19,8 @@ def make_enum_from_python_package_dir(dir_path: Path, raise_if_not_found: bool =
         raise FileNotFoundError(f"Directory {dir_path_} not found.")
     file_paths = dir_path_.glob("*.py")
     enum_dict = {x.stem: x.stem for x in file_paths if x.stem != "__init__"}
-    FileNamesEnum = Enum(dir_path_.stem, enum_dict)
-    return FileNamesEnum
+    file_names_enum = Enum(dir_path_.stem, enum_dict)
+    return file_names_enum
 
 
 class GraphComponentType(Protocol):
@@ -76,7 +76,9 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> GraphComponen
     return pipeline
 
 
-def dict_to_repr(dict_: dict, subdict: dict = None, depth: int = 0, indent: int = 2) -> List[str]:
+def dict_to_repr(
+    dict_: dict, subdict: Optional[dict] = None, depth: int = 0, indent: int = 2
+) -> List[str]:
     """Convert a dictionary to a list of strings for printing, recursively.
 
     Args:
