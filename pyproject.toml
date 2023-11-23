@@ -87,7 +87,7 @@ convention = "google"
     "D106",
     "D107",
 ]
-"tests/*" = ["D"]
+"tests/*" = ["D", "S101"]
 
 [tool.semantic_release]
 version_variables = ["deployer/__init__.py:__version__"]
