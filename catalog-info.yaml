@@ -12,8 +12,14 @@ metadata:
     - vertex
     - mlops
     - python
+  labels:
+    technical: "1"
+  links:
+    - url: https://github.com/artefactory/vertex-pipelines-deployer
+      title: Vertex Pipelines Deployer
+      type: repo
 
 spec:
   type: service
-  owner: julesbertrand
-  lifecycle: experimental
+  owner: user:julesbertrand
+  lifecycle: production
