@@ -14,7 +14,7 @@ class LoguruLevel(str, Enum):  # noqa: D101
     CRITICAL = "CRITICAL"
 
 
-class disable_logger(object):
+class DisableLogger(object):
     """Context manager to disable a loguru logger."""
 
     def __init__(self, name: str) -> None:  # noqa: D107
