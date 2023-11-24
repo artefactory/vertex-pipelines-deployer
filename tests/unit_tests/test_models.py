@@ -25,16 +25,16 @@ class TestCreateModelFromPipeline:
         assert result.__name__ == "func"
         assert result.model_json_schema()["properties"] == expected_properties
 
-    def test_create_model_from_pipeline_success(self, dummy_pipeline_fixture):
+    def test_create_model_from_pipeline_success(self, test_pipeline_fixture):
         # Given
-        pipeline = dummy_pipeline_fixture
+        pipeline = test_pipeline_fixture
 
         # When
         result = create_model_from_func(pipeline.pipeline_func)
 
         # Then
         assert issubclass(result, CustomBaseModel)
-        assert result.__name__ == "dummy_pipeline"
+        assert result.__name__ == "test_pipeline"
 
     def test_create_model_from_func_none_pipeline(self):
         # Given
@@ -44,18 +44,18 @@ class TestCreateModelFromPipeline:
         with pytest.raises(AttributeError):
             create_model_from_func(pipeline)
 
-    def test_create_model_from_func_none_pipeline_func(self, dummy_pipeline_fixture):
+    def test_create_model_from_func_none_pipeline_func(self, test_pipeline_fixture):
         # Given
-        pipeline = dummy_pipeline_fixture
+        pipeline = test_pipeline_fixture
         pipeline.pipeline_func = None
 
         # When / Then
         with pytest.raises(TypeError):
             create_model_from_func(pipeline.pipeline_func, name="dummy_pipeline")
 
-    def test_create_model_from_func_types_are_good(self, dummy_pipeline_fixture):
+    def test_create_model_from_func_types_are_good(self, test_pipeline_fixture):
         # Given
-        pipeline = dummy_pipeline_fixture
+        pipeline = test_pipeline_fixture
         expected_properties = {
             "name": {"title": "Name", "type": "string"},
             "artifact": {"title": "Artifact", "type": "string"},
