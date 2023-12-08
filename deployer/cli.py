@@ -72,28 +72,6 @@ def main(
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
 
 
-@app.command()
-def config(
-    all: Annotated[
-        bool, typer.Option("--all", "-a", help="Whether to display all configuration values.")
-    ] = False,
-):
-    """Display the configuration from pyproject.toml."""
-
-    if all:
-        config_repr = dict_to_repr(
-            dict_=deployer_settings.model_dump(),
-            subdict=deployer_settings.model_dump(exclude_unset=True),
-        )
-        config_str = "[italic]'*' means the value was set in config file[/italic]\n\n"
-        config_str += "\n".join(config_repr)
-    else:
-        config_repr = dict_to_repr(dict_=deployer_settings.model_dump(exclude_unset=True))
-        config_str = "\n".join(config_repr)
-
-    console.print(config_str)
-
-
 @app.command(no_args_is_help=True)
 def deploy(  # noqa: C901
     pipeline_name: Annotated[
@@ -373,6 +351,74 @@ def check(
         sys.exit(1)
     else:
         print_check_results_table(to_check)
+
+
+@app.command()
+def config(
+    key: Annotated[
+        Optional[str],
+        typer.Argument(
+            help="The key of the configuration value to display. "
+            "If not specified, all values will be displayed.",
+        ),
+    ] = None,
+    value: Annotated[
+        Optional[str],
+        typer.Argument(
+            help="The value to set for the configuration key. "
+            "If not specified, the value will be unset.",
+        ),
+    ] = None,
+    list: Annotated[
+        bool,
+        typer.Option(
+            "--list",
+            "-l",
+            help="Whether to display the configuration as a list of key-value pairs.",
+        ),
+    ] = False,
+    all: Annotated[
+        bool, typer.Option("--all", "-a", help="Whether to display all configuration values.")
+    ] = False,
+    unset: Annotated[
+        bool,
+        typer.Option(
+            "--unset",
+            "-u",
+            help="Whether to unset the configuration value for the specified key.",
+        ),
+    ] = False,
+):
+    """Display the configuration from pyproject.toml."""
+
+    if list:
+        if all:
+            config_repr = dict_to_repr(
+                dict_=deployer_settings.model_dump(),
+                subdict=deployer_settings.model_dump(exclude_unset=True),
+            )
+            config_str = "[italic]'*' means the value was set in config file[/italic]\n\n"
+            config_str += "\n".join(config_repr)
+        else:
+            config_repr = dict_to_repr(dict_=deployer_settings.model_dump(exclude_unset=True))
+            config_str = "\n".join(config_repr)
+
+        console.print(config_str)
+
+    if key is None:
+        return 0
+
+    if value and unset:
+        raise typer.BadParameter("Please specify either 'value' or --unset, not both.")
+
+    if not value and not unset:
+        raise typer.BadParameter("Please specify either 'value' or --unset.")
+
+    if value:
+        print("setting ", key, value)
+
+    if unset:
+        print("unsetting", key)
 
 
 @app.command()
