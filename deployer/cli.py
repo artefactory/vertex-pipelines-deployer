@@ -1,4 +1,5 @@
 import sys
+from enum import Enum
 from pathlib import Path
 from typing import List, Optional
 
@@ -15,7 +16,7 @@ from deployer.constants import (
     PIPELINE_MINIMAL_TEMPLATE,
     PYTHON_CONFIG_TEMPLATE,
 )
-from deployer.settings import load_deployer_settings
+from deployer.settings import DeployerSettings, load_deployer_settings
 from deployer.utils.config import (
     ConfigType,
     list_config_filepaths,
@@ -33,10 +34,6 @@ from deployer.utils.utils import (
 
 rich.traceback.install()
 
-deployer_settings = load_deployer_settings()
-
-PipelineName = make_enum_from_python_package_dir(deployer_settings.pipelines_root_path)
-
 
 def display_version_and_exit(value: bool):
     if value:
@@ -50,12 +47,12 @@ app = typer.Typer(
     no_args_is_help=True,
     rich_help_panel="rich",
     rich_markup_mode="markdown",
-    context_settings={"default_map": deployer_settings.model_dump()},
 )
 
 
 @app.callback(invoke_without_command=True)
 def main(
+    ctx: typer.Context,
     log_level: Annotated[
         LoguruLevel, typer.Option("--log-level", "-log", help="Set the logging level.")
     ] = LoguruLevel.INFO,
@@ -71,11 +68,42 @@ def main(
 ):
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
 
+    deployer_settings = load_deployer_settings()
+    ctx.obj = {
+        "settings": deployer_settings,
+        "pipeline_names": make_enum_from_python_package_dir(deployer_settings.pipelines_root_path),
+    }
+    ctx.default_map = deployer_settings.model_dump(exclude_unset=True)
+
+
+def pipeline_name_callback(ctx: typer.Context, value: str) -> str:
+    if value is None:  # None is allowed for optional arguments
+        return value
+
+    pipeline_names: Enum = ctx.obj["pipeline_names"]
+
+    if len(pipeline_names.__members__) == 0:
+        raise ValueError(
+            "No pipelines found. Please check that the pipeline root path is correct: "
+            f"'{ctx.obj['config'].pipelines_root_path}'"
+        )
+
+    if value not in pipeline_names.__members__:
+        raise typer.BadParameter(
+            f"Pipeline '{value}' not found at '{ctx.obj['config'].pipelines_root_path}'."
+            f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
+        )
+    return value
+
 
 @app.command(no_args_is_help=True)
 def deploy(  # noqa: C901
+    ctx: typer.Context,
     pipeline_name: Annotated[
-        PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
+        str,
+        typer.Argument(
+            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+        ),
     ],
     env_file: Annotated[
         Optional[Path],
@@ -202,6 +230,8 @@ def deploy(  # noqa: C901
                 " Please specify only one to run or schedule a pipeline."
             )
 
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
+
     pipeline_func = import_pipeline_from_dir(
         deployer_settings.pipelines_root_path, pipeline_name.value
     )
@@ -260,9 +290,12 @@ def deploy(  # noqa: C901
 
 @app.command(no_args_is_help=True)
 def check(
+    ctx: typer.Context,
     pipeline_name: Annotated[
-        PipelineName,
-        typer.Argument(..., help="The name of the pipeline to run."),
+        Optional[str],
+        typer.Argument(
+            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+        ),
     ] = None,
     all: Annotated[
         bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
@@ -307,23 +340,17 @@ def check(
     if all and pipeline_name is not None:
         raise typer.BadParameter("Please specify either --all or a pipeline name")
 
-    if len(PipelineName.__members__) == 0:
-        raise ValueError(
-            "No pipeline found. Please check that the pipeline root path is correct"
-            f" ('{deployer_settings.pipelines_root_path}')"
-        )
-
     from deployer.pipeline_checks import Pipelines
 
     if all:
         logger.info("Checking all pipelines")
-        pipelines_to_check = PipelineName.__members__.values()
+        pipelines_to_check = ctx.obj["pipeline_names"].__members__.values()
     elif pipeline_name is not None:
         logger.info(f"Checking pipeline {pipeline_name}")
         pipelines_to_check = [pipeline_name]
     if config_filepath is None:
         to_check = {
-            p.value: list_config_filepaths(deployer_settings.config_root_path, p.value)
+            p.value: list_config_filepaths(ctx.obj["settings"].config_root_path, p.value)
             for p in pipelines_to_check
         }
     else:
@@ -337,8 +364,8 @@ def check(
                         p: {
                             "pipeline_name": p,
                             "config_paths": config_filepaths,
-                            "pipelines_root_path": deployer_settings.pipelines_root_path,
-                            "config_root_path": deployer_settings.config_root_path,
+                            "pipelines_root_path": ctx.obj["settings"].pipelines_root_path,
+                            "config_root_path": ctx.obj["settings"].config_root_path,
                         }
                         for p, config_filepaths in to_check.items()
                     }
@@ -355,6 +382,7 @@ def check(
 
 @app.command()
 def config(
+    ctx: typer.Context,
     key: Annotated[
         Optional[str],
         typer.Argument(
@@ -390,6 +418,7 @@ def config(
     ] = False,
 ):
     """Display the configuration from pyproject.toml."""
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
 
     if list:
         if all:
@@ -421,36 +450,31 @@ def config(
         print("unsetting", key)
 
 
-@app.command()
-def list(
+@app.command(name="list")
+def list_pipelines(
+    ctx: typer.Context,
     with_configs: Annotated[
         bool,
         typer.Option(
             "--with-configs / --no-configs", "-wc / -nc ", help="Whether to list config files."
         ),
-    ] = False
+    ] = False,
 ):
     """List all pipelines."""
-    if len(PipelineName.__members__) == 0:
-        logger.warning(
-            "No pipeline found. Please check that the pipeline root path is"
-            f" correct (current: '{deployer_settings.pipelines_root_path}')"
-        )
-        raise typer.Exit()
-
     if with_configs:
         pipelines_dict = {
-            p.name: list_config_filepaths(deployer_settings.config_root_path, p.name)
-            for p in PipelineName.__members__.values()
+            p.name: list_config_filepaths(ctx.obj["settings"].config_root_path, p.name)
+            for p in ctx.obj["pipeline_names"].__members__.values()
         }
     else:
-        pipelines_dict = {p.name: [] for p in PipelineName.__members__.values()}
+        pipelines_dict = {p.name: [] for p in ctx.obj["pipeline_names"].__members__.values()}
 
     print_pipelines_list(pipelines_dict, with_configs)
 
 
 @app.command(no_args_is_help=True)
 def create(
+    ctx: typer.Context,
     pipeline_name: Annotated[
         str,
         typer.Argument(..., help="The name of the pipeline to create."),
@@ -463,12 +487,15 @@ def create(
     """Create files structure for a new pipeline."""
     logger.info(f"Creating pipeline {pipeline_name}")
 
-    if not Path(deployer_settings.pipelines_root_path).is_dir():
-        raise FileNotFoundError(
-            f"Pipeline root path '{deployer_settings.pipelines_root_path}' does not exist."
-            " Please check that the pipeline root path is correct"
-            f" or create it with `mkdir -p {deployer_settings.pipelines_root_path}`."
-        )
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
+
+    for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
+        if not Path(path).is_dir():
+            raise FileNotFoundError(
+                f"Path '{path}' does not exist."
+                " Please check that the root path is correct"
+                f" or create it with 'mkdir -p {path}'."
+            )
 
     pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
