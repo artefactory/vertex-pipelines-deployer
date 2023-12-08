@@ -12,7 +12,7 @@ PIPELINE_MINIMAL_TEMPLATE = """import kfp.dsl
 
 
 @kfp.dsl.pipeline(name="{pipeline_name}")
-def pipeline():
+def {pipeline_name}():
     pass
 
 """
