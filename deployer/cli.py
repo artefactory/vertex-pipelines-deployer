@@ -442,8 +442,8 @@ def create(
     logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
 
 
-@app.command()
-def config(
+@app.command(name="config")
+def configure_deployer(
     ctx: typer.Context,
     key: Annotated[
         Optional[str],
