@@ -380,6 +380,68 @@ def check(
         print_check_results_table(to_check)
 
 
+@app.command(name="list")
+def list_pipelines(
+    ctx: typer.Context,
+    with_configs: Annotated[
+        bool,
+        typer.Option(
+            "--with-configs / --no-configs", "-wc / -nc ", help="Whether to list config files."
+        ),
+    ] = False,
+):
+    """List all pipelines."""
+    if with_configs:
+        pipelines_dict = {
+            p.name: list_config_filepaths(ctx.obj["config"].config_root_path, p.name)
+            for p in ctx.obj["pipeline_names"].__members__.values()
+        }
+    else:
+        pipelines_dict = {p.name: [] for p in ctx.obj["pipeline_names"].__members__.values()}
+
+    print_pipelines_list(pipelines_dict, with_configs)
+
+
+@app.command(no_args_is_help=True)
+def create(
+    ctx: typer.Context,
+    pipeline_name: Annotated[
+        str,
+        typer.Argument(..., help="The name of the pipeline to create."),
+    ],
+    config_type: Annotated[
+        ConfigType,
+        typer.Option("--config-type", "-ct", help="The type of the config to create."),
+    ] = ConfigType.json,
+):
+    """Create files structure for a new pipeline."""
+    logger.info(f"Creating pipeline {pipeline_name}")
+
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
+
+    for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
+        if not Path(path).is_dir():
+            raise FileNotFoundError(
+                f"Path '{path}' does not exist."
+                " Please check that the root path is correct"
+                f" or create it with 'mkdir -p {path}'."
+            )
+
+    pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
+    pipeline_filepath.touch(exist_ok=False)
+    pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
+
+    config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
+    config_dirpath.mkdir(exist_ok=False)
+    for config_name in ["test", "dev", "prod"]:
+        config_filepath = config_dirpath / f"{config_name}.{config_type}"
+        config_filepath.touch(exist_ok=False)
+        if config_type == ConfigType.py:
+            config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+
+    logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+
+
 @app.command()
 def config(
     ctx: typer.Context,
@@ -448,65 +510,3 @@ def config(
 
     if unset:
         print("unsetting", key)
-
-
-@app.command(name="list")
-def list_pipelines(
-    ctx: typer.Context,
-    with_configs: Annotated[
-        bool,
-        typer.Option(
-            "--with-configs / --no-configs", "-wc / -nc ", help="Whether to list config files."
-        ),
-    ] = False,
-):
-    """List all pipelines."""
-    if with_configs:
-        pipelines_dict = {
-            p.name: list_config_filepaths(ctx.obj["settings"].config_root_path, p.name)
-            for p in ctx.obj["pipeline_names"].__members__.values()
-        }
-    else:
-        pipelines_dict = {p.name: [] for p in ctx.obj["pipeline_names"].__members__.values()}
-
-    print_pipelines_list(pipelines_dict, with_configs)
-
-
-@app.command(no_args_is_help=True)
-def create(
-    ctx: typer.Context,
-    pipeline_name: Annotated[
-        str,
-        typer.Argument(..., help="The name of the pipeline to create."),
-    ],
-    config_type: Annotated[
-        ConfigType,
-        typer.Option("--config-type", "-ct", help="The type of the config to create."),
-    ] = ConfigType.json,
-):
-    """Create files structure for a new pipeline."""
-    logger.info(f"Creating pipeline {pipeline_name}")
-
-    deployer_settings: DeployerSettings = ctx.obj["settings"]
-
-    for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
-        if not Path(path).is_dir():
-            raise FileNotFoundError(
-                f"Path '{path}' does not exist."
-                " Please check that the root path is correct"
-                f" or create it with 'mkdir -p {path}'."
-            )
-
-    pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
-    pipeline_filepath.touch(exist_ok=False)
-    pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
-
-    config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
-    config_dirpath.mkdir(exist_ok=False)
-    for config_name in ["test", "dev", "prod"]:
-        config_filepath = config_dirpath / f"{config_name}.{config_type}"
-        config_filepath.touch(exist_ok=False)
-        if config_type == ConfigType.py:
-            config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
-
-    logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
