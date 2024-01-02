@@ -49,10 +49,20 @@ format-code:
 	@poetry run pre-commit run -a
 
 
-.PHONY: run-tests
+.PHONY: run-unit-tests
 ## Run unit tests
-run-tests:
-	@poetry run pytest tests --cov=deployer --cov-report=term-missing -s -vv -W ignore:::pkg_resources
+run-unit-tests:
+	@poetry run pytest tests/unit_tests --cov=deployer --cov-report=term-missing -s -vv -W ignore:::pkg_resources
+
+.PHONY: run-integration-tests
+## Run integration tests
+run-integration-tests:
+	@poetry run pytest tests/integration_tests -s -vv -W ignore:::pkg_resources
+
+
+.PHONY: run-tests
+## Run all tests
+run-tests: run-unit-tests run-integration-tests
 
 
 .PHONY: profile-cli
