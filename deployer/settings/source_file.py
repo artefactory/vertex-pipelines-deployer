@@ -16,8 +16,8 @@ class ConfigFileSource:
     """Base class for config file sources."""
 
     def __init__(self, filepath: Path) -> None:
-        self._file = TOMLFile(Path(filepath))
         self.__path = Path(filepath)
+        self._file = TOMLFile(self.__path)
 
     @property
     def file(self) -> TOMLFile:
