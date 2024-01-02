@@ -393,7 +393,7 @@ def list_pipelines(
     """List all pipelines."""
     if with_configs:
         pipelines_dict = {
-            p.name: list_config_filepaths(ctx.obj["config"].config_root_path, p.name)
+            p.name: list_config_filepaths(ctx.obj["settings"].config_root_path, p.name)
             for p in ctx.obj["pipeline_names"].__members__.values()
         }
     else:
