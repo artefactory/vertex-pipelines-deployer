@@ -121,8 +121,8 @@ class DeployerSettingsSource(ConfigFileSource):
         """Adds a property to the configuration file."""
         keys = key.split(".")
         config = {keys.pop(): value}
-        for key in reversed(keys):
-            config = {key: config}
+        for k in reversed(keys):
+            config = {k: config}
 
         DeployerSettings(**config)
 
