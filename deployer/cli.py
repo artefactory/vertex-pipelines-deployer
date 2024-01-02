@@ -491,13 +491,15 @@ def configure_deployer(
         console.print(config_str)
 
     if key is None:
-        return 0
+        raise typer.BadParameter("Please specify a key.")
 
     if value and unset:
-        raise typer.BadParameter("Please specify either 'value' or --unset, not both.")
+        raise typer.BadParameter(
+            f"Please specify either a value for '{key}' or --unset, not both."
+        )
 
     if not value and not unset:
-        raise typer.BadParameter("Please specify either 'value' or --unset.")
+        raise typer.BadParameter(f"Please specify either a value for '{key}' or --unset.")
 
     if value:
         print("setting ", key, value)

@@ -2,7 +2,7 @@ import importlib
 import warnings
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Mapping, Optional, Protocol
+from typing import Any, Callable, Dict, List, MutableMapping, Optional, Protocol
 
 from loguru import logger
 from pydantic import ValidationError
@@ -96,7 +96,7 @@ def dict_to_repr(
 
     dict_repr = []
     for k, v in dict_.items():
-        if isinstance(v, Mapping):
+        if isinstance(v, MutableMapping):
             v_ref = subdict.get(k, {})
             dict_repr.append(" " * indent * depth + f"{k}")
             dict_repr.extend(dict_to_repr(v, v_ref, depth=depth + 1, indent=indent))
