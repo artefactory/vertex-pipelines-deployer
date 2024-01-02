@@ -1,7 +1,7 @@
 import sys
 from enum import Enum
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import rich.traceback
 import typer
@@ -70,7 +70,7 @@ def main(
     ctx.default_map = deployer_settings.model_dump(exclude_unset=True)
 
 
-def pipeline_name_callback(ctx: typer.Context, value: str | bool) -> str:
+def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union[str, bool]:
     """Callback to check that the pipeline name is valid. Also used for 'all' option."""
     if value is None:  # None is allowed for optional arguments
         return value
