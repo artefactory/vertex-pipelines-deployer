@@ -9,13 +9,7 @@ from loguru import logger
 from pydantic import ValidationError
 from typing_extensions import Annotated
 
-from deployer.constants import (
-    DEFAULT_LOCAL_PACKAGE_PATH,
-    DEFAULT_SCHEDULER_TIMEZONE,
-    DEFAULT_TAGS,
-    PIPELINE_MINIMAL_TEMPLATE,
-    PYTHON_CONFIG_TEMPLATE,
-)
+from deployer import constants
 from deployer.settings import DeployerSettings, load_deployer_settings
 from deployer.utils.config import (
     ConfigType,
@@ -55,7 +49,7 @@ def main(
     ctx: typer.Context,
     log_level: Annotated[
         LoguruLevel, typer.Option("--log-level", "-log", help="Set the logging level.")
-    ] = LoguruLevel.INFO,
+    ] = constants.DEFAULT_LOG_LEVEL,
     version: Annotated[
         bool,
         typer.Option(
@@ -159,10 +153,10 @@ def deploy(  # noqa: C901
             help="Timezone for scheduling the pipeline."
             " Must be a valid string from IANA time zone database",
         ),
-    ] = DEFAULT_SCHEDULER_TIMEZONE,
+    ] = constants.DEFAULT_SCHEDULER_TIMEZONE,
     tags: Annotated[
         List[str], typer.Option(help="The tags to use when uploading the pipeline.")
-    ] = DEFAULT_TAGS,
+    ] = constants.DEFAULT_TAGS,
     config_filepath: Annotated[
         Optional[Path],
         typer.Option(
@@ -210,7 +204,7 @@ def deploy(  # noqa: C901
             file_okay=False,
             resolve_path=True,
         ),
-    ] = DEFAULT_LOCAL_PACKAGE_PATH,
+    ] = constants.DEFAULT_LOCAL_PACKAGE_PATH,
 ):
     """Compile, upload, run and schedule pipelines."""
     vertex_settings = load_vertex_settings(env_file=env_file)
@@ -427,7 +421,9 @@ def create(
 
     pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
-    pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
+    pipeline_filepath.write_text(
+        constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
+    )
 
     config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
     config_dirpath.mkdir(exist_ok=True)
@@ -435,7 +431,7 @@ def create(
         config_filepath = config_dirpath / f"{config_name}.{config_type}"
         config_filepath.touch(exist_ok=False)
         if config_type == ConfigType.py:
-            config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+            config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
 
     logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
 
