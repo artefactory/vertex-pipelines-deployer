@@ -52,6 +52,12 @@ class DeployerCreateConfig(CustomBaseModel):
 
 
 class DeployerConfig(CustomBaseModel):
+    """Configuration for Vertex Deployer `config` command."""
+
+    all: bool = False
+
+
+class DeployerConfig(CustomBaseModel):
     """Configuration for Vertex Deployer."""
 
     pipelines_root_path: Path = constants.PIPELINE_ROOT_PATH
@@ -61,6 +67,7 @@ class DeployerConfig(CustomBaseModel):
     check: DeployerCheckConfig = DeployerCheckConfig()
     list: DeployerListConfig = DeployerListConfig()
     create: DeployerCreateConfig = DeployerCreateConfig()
+    config: DeployerConfig = DeployerConfig()
 
 
 def find_pyproject_toml(path_project_root: Path) -> Optional[str]:
