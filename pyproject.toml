@@ -21,6 +21,7 @@ pydantic-settings = "^2.0"
 pydantic = "^2.3"
 pyinstrument = { version = "^4.5", optional = true }
 toml = "^0.10"
+tomlkit = "^0.12"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7"
