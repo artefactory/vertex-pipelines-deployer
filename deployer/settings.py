@@ -54,7 +54,9 @@ class _DeployerCreateSettings(CustomBaseModel):
 class _DeployerConfigSettings(CustomBaseModel):
     """Settings for Vertex Deployer `config` command."""
 
+    list: bool = False
     all: bool = False
+    unset: bool = False
 
 
 class DeployerSettings(CustomBaseModel):
