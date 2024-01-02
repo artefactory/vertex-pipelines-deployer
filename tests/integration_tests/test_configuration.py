@@ -2,14 +2,14 @@ import difflib
 from collections import defaultdict
 from inspect import signature
 from typing import Type
+from unittest.mock import patch
 
 import typer
 from pydantic import BaseModel
 from rich.pretty import pretty_repr
 from typing_extensions import _AnnotatedAlias
 
-from deployer.cli import app
-from deployer.configuration import DeployerConfig
+from deployer.settings import DeployerSettings
 
 
 def get_model_recursive_signature(model: Type[BaseModel]):
@@ -55,11 +55,17 @@ def compare_dicts(d1, d2):
     )
 
 
-def test_cli_parameters_are_available_in_config():
+def test_deployer_cli_and_settings_consistency():
     # Given
+
+    # patch deployer.settings:load_deployer_settings
+    with patch("deployer.settings.load_deployer_settings") as mock:
+        mock.return_value = DeployerSettings()
+        from deployer.cli import app
+
     configured_parameters = {
         k: v
-        for k, v in get_model_recursive_signature(DeployerConfig).items()
+        for k, v in get_model_recursive_signature(DeployerSettings).items()
         if k not in ["pipelines_root_path", "config_root_path", "log_level"]
     }
     cli_parameters = get_typer_app_signature(app)
