@@ -232,9 +232,7 @@ def deploy(  # noqa: C901
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
-    pipeline_func = import_pipeline_from_dir(
-        deployer_settings.pipelines_root_path, pipeline_name.value
-    )
+    pipeline_func = import_pipeline_from_dir(deployer_settings.pipelines_root_path, pipeline_name)
 
     from deployer.pipeline_deployer import VertexPipelineDeployer
 
@@ -243,7 +241,7 @@ def deploy(  # noqa: C901
         region=vertex_settings.GCP_REGION,
         staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
         service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
-        pipeline_name=pipeline_name.value,
+        pipeline_name=pipeline_name,
         pipeline_func=pipeline_func,
         gar_location=vertex_settings.GAR_LOCATION,
         gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
@@ -253,7 +251,7 @@ def deploy(  # noqa: C901
     if run or schedule:
         if config_name is not None:
             config_filepath = (
-                Path(deployer_settings.config_root_path) / pipeline_name.value / config_name
+                Path(deployer_settings.config_root_path) / pipeline_name / config_name
             )
         parameter_values, input_artifacts = load_config(config_filepath)
 
