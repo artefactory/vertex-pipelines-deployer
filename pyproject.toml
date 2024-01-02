@@ -87,6 +87,7 @@ convention = "google"
     "D106",
     "D107",
 ]
+"deployer/settings/source_file.py" = ["D107", "D102"]
 "tests/*" = ["D", "S101"]
 
 [tool.semantic_release]

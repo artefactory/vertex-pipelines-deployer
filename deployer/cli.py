@@ -10,7 +10,7 @@ from pydantic import ValidationError
 from typing_extensions import Annotated
 
 from deployer import constants
-from deployer.settings import DeployerSettings, load_deployer_settings
+from deployer.settings import DeployerSettings, DeployerSettingsSource
 from deployer.utils.config import (
     ConfigType,
     list_config_filepaths,
@@ -62,7 +62,7 @@ def main(
 ):
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
 
-    deployer_settings = load_deployer_settings()
+    deployer_settings = DeployerSettingsSource().load_settings()
     ctx.obj = {
         "settings": deployer_settings,
         "pipeline_names": make_enum_from_python_package_dir(deployer_settings.pipelines_root_path),
@@ -70,7 +70,8 @@ def main(
     ctx.default_map = deployer_settings.model_dump(exclude_unset=True)
 
 
-def pipeline_name_callback(ctx: typer.Context, value: str) -> str:
+def pipeline_name_callback(ctx: typer.Context, value: str | bool) -> str:
+    """Callback to check that the pipeline name is valid. Also used for 'all' option."""
     if value is None:  # None is allowed for optional arguments
         return value
 
@@ -79,14 +80,15 @@ def pipeline_name_callback(ctx: typer.Context, value: str) -> str:
     if len(pipeline_names.__members__) == 0:
         raise ValueError(
             "No pipelines found. Please check that the pipeline root path is correct: "
-            f"'{ctx.obj['config'].pipelines_root_path}'"
+            f"'{ctx.obj['settings'].pipelines_root_path}'"
         )
 
-    if value not in pipeline_names.__members__:
-        raise typer.BadParameter(
-            f"Pipeline '{value}' not found at '{ctx.obj['config'].pipelines_root_path}'."
-            f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
-        )
+    if isinstance(value, str):
+        if value not in pipeline_names.__members__:
+            raise typer.BadParameter(
+                f"Pipeline '{value}' not found at '{ctx.obj['settings'].pipelines_root_path}'."
+                f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
+            )
     return value
 
 
@@ -290,7 +292,10 @@ def check(
         ),
     ] = None,
     all: Annotated[
-        bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
+        bool,
+        typer.Option(
+            "--all", "-a", help="Whether to check all pipelines.", callback=pipeline_name_callback
+        ),
     ] = False,
     config_filepath: Annotated[
         Optional[Path],
@@ -490,19 +495,20 @@ def configure_deployer(
 
         console.print(config_str)
 
-    if key is None:
-        raise typer.BadParameter("Please specify a key.")
+    if not list and key is None:
+        raise typer.BadParameter("Please specify a key or --list.")
 
-    if value and unset:
-        raise typer.BadParameter(
-            f"Please specify either a value for '{key}' or --unset, not both."
-        )
+    if key:
+        if value and unset:
+            raise typer.BadParameter(
+                f"Please specify either a value for '{key}' or --unset, not both."
+            )
 
-    if not value and not unset:
-        raise typer.BadParameter(f"Please specify either a value for '{key}' or --unset.")
+        if not value and not unset:
+            raise typer.BadParameter(f"Please specify either a value for '{key}' or --unset.")
 
-    if value:
-        print("setting ", key, value)
+        if value:
+            DeployerSettingsSource().add_property(key, value)
 
-    if unset:
-        print("unsetting", key)
+        if unset:
+            DeployerSettingsSource().remove_property(key)
