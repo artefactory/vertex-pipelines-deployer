@@ -34,7 +34,7 @@ def get_typer_app_signature(app: typer.Typer):
     for cmd in registered_commands:
         cmd_func = cmd.callback
         cmd_parameters = signature(cmd_func).parameters
-        cmd_name = cmd_func.__name__
+        cmd_name = cmd.name or cmd_func.__name__
 
         for param in cmd_parameters.values():
             annotation = param.annotation
