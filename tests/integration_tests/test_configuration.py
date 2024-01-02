@@ -59,7 +59,7 @@ def test_deployer_cli_and_settings_consistency():
     # Given
 
     # patch deployer.settings:load_deployer_settings
-    with patch("deployer.settings.load_deployer_settings") as mock:
+    with patch("deployer.settings.DeployerSettingsSource.load_settings") as mock:
         mock.return_value = DeployerSettings()
         from deployer.cli import app
 
