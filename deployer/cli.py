@@ -432,7 +432,7 @@ def create(
     pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
 
     config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
-    config_dirpath.mkdir(exist_ok=False)
+    config_dirpath.mkdir(exist_ok=True)
     for config_name in ["test", "dev", "prod"]:
         config_filepath = config_dirpath / f"{config_name}.{config_type}"
         config_filepath.touch(exist_ok=False)
