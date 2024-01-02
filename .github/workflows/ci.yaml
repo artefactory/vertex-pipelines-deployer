@@ -90,7 +90,9 @@ jobs:
       - name: Test config command
         run: |
           cd example
-          poetry run -C .. vertex-deployer config --all
+          poetry run -C .. vertex-deployer config --list --all
+          poetry run -C .. vertex-deployer config deploy.enable_caching true
+          poetry run -C .. vertex-deployer config deploy.enable_caching --unset
 
       - name: Test list command
         run: |
