@@ -154,7 +154,9 @@ def _load_config_toml(config_filepath: Path) -> dict:
     """
 
     def flatten_toml_document(
-        d_: TOMLDocument, parent_key: Optional[str] = None, sep: str = "."
+        d_: Union[TOMLDocument, tomlkit.items.Table],
+        parent_key: Optional[str] = None,
+        sep: str = ".",
     ) -> dict:
         """Flatten a tomlkit.TOMLDocument. Inline tables are not flattened"""
         items = []
@@ -168,7 +170,13 @@ def _load_config_toml(config_filepath: Path) -> dict:
         return dict(items)
 
     config_file = TOMLFile(config_filepath)
-    config = config_file.read()
-    parameter_values = flatten_toml_document(config, sep="_")
+
+    try:
+        config = config_file.read()
+        parameter_values = flatten_toml_document(config, sep="_")
+    except Exception as e:
+        raise BadConfigError(
+            f"{config_filepath}: invalid TOML config file.\n{e.__class__.__name__}: {e}"
+        ) from e
 
     return parameter_values

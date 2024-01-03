@@ -270,7 +270,9 @@ It also adds flexibility to the user and allows you to use teh deployer with alm
     See [Vertex Documentation](https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob) for more information.
 
 - `.json` files must be valid json files containing only one dict of key: value representing parameter values.
-- `.toml` files must be the same. Please note that TOML sections will be flattened, except fot inline tables. Example:
+- `.toml` files must be the same. Please note that TOML sections will be flattened, except fot inline tables.
+    Section names will be joined using `"_"` separator and this is not configurable at the moment.
+    Example:
 
 === "TOML file"
     ```toml
