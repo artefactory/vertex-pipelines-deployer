@@ -417,23 +417,28 @@ def create(
     """Create files structure for a new pipeline."""
     logger.info(f"Creating pipeline {pipeline_name}")
 
-    if not Path(deployer_settings.pipelines_root_path).is_dir():
-        raise FileNotFoundError(
-            f"Pipeline root path '{deployer_settings.pipelines_root_path}' does not exist."
-            " Please check that the pipeline root path is correct"
-            f" or create it with `mkdir -p {deployer_settings.pipelines_root_path}`."
-        )
+    for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
+        if not Path(path).is_dir():
+            raise FileNotFoundError(
+                f"Path '{path}' does not exist."
+                " Please check that the root path is correct"
+                f" or create it with 'mkdir -p {path}'."
+            )
 
     pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
     pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
 
-    config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
-    config_dirpath.mkdir(exist_ok=False)
-    for config_name in ["test", "dev", "prod"]:
-        config_filepath = config_dirpath / f"{config_name}.{config_type}"
-        config_filepath.touch(exist_ok=False)
-        if config_type == ConfigType.py:
-            config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+    try:
+        config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
+        config_dirpath.mkdir(exist_ok=True)
+        for config_name in ["test", "dev", "prod"]:
+            config_filepath = config_dirpath / f"{config_name}.{config_type}"
+            config_filepath.touch(exist_ok=False)
+            if config_type == ConfigType.py:
+                config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+    except Exception as e:
+        pipeline_filepath.unlink()
+        raise e
 
-    logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+    logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
