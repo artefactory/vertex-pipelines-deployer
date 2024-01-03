@@ -116,20 +116,20 @@ Install latest version:
 pip install --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
 ```
 
+!!! tip "Add to requirements"
+    You can add the extra index URL to your `requirements.in` or `requirements.txt` file to avoid having to specify it every time.
+    ```txt title="requirements.txt"
+    --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
+
+    vertex-deployer==0.3.3
+    ```
+
+??? info "About extra index URL"
+    You can add the extra index URL to your `pip.conf` file to avoid having to specify it every time.
+
 List available versions:
 ```bash
 pip index versions --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
-```
-
-### Add to requirements
-
-It's better to get the .tar.gz archive from GCS, and version it.
-
-Then add the following lines to your `requirements.in` file:
-```bash
---extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
-
-vertex-deployer==0.3.1
 ```
 <!-- --8<-- [end:installation] -->
 
@@ -204,11 +204,12 @@ gcloud artifacts repositories add-iam-policy-binding ${GAR_PIPELINES_REPO_ID} \
    --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
    --role="roles/artifactregistry.admin"
 ```
-
+<!-- --8<-- [end:setup] -->
 You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/pipeline_deployer.py) in your code (try it yourself).
 
 ### 📁 Folder Structure
 
+<!-- --8<-- [start:folder_structure] -->
 You must respect the following folder structure. If you already follow the
 [Vertex Pipelines Starter Kit folder structure](https://github.com/artefactory/vertex-pipeline-starter-kit), it should be pretty smooth to use this tool:
 
@@ -323,7 +324,7 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
     No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
     An [`example.env`](./example/example.env) file is provided in this repo.
     This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
-<!-- --8<-- [end:setup] -->
+<!-- --8<-- [end:folder_structure] -->
 
 <!-- --8<-- [start:usage] -->
 ### 🚀 CLI: Deploying a Pipeline with `deploy`
