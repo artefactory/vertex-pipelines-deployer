@@ -2,6 +2,56 @@
 
 
 
+## 0.3.3 (2024-01-03)
+
+### Build
+
+* build(deps): bump actions/setup-python from 4 to 5 (#118) ([`3d48df3`](https://github.com/artefactory/vertex-pipelines-deployer/commit/3d48df38892a263a6a6e1e08a2132c0f63e0a6f2))
+
+* build(deps): bump google-github-actions/auth from 1 to 2 (#114)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`d98a54e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d98a54e5e378f29f015849d04d0c160d58b7509d))
+
+* build(deps): bump vertex-deployer from 0.3.1 to 0.3.2 (#107) ([`9af430b`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9af430b01e3baf990d69b2229a84f95251faf8de))
+
+### Chore
+
+* chore: update artifact registry url (#106) ([`226f200`](https://github.com/artefactory/vertex-pipelines-deployer/commit/226f20085f1c6f19396abb6db79adc3b6e443003))
+
+### Ci
+
+* ci: add pep-8 compliance and bandit ruff checks (#110) ([`c87685b`](https://github.com/artefactory/vertex-pipelines-deployer/commit/c87685b324b7c53046885a895cb1a7c128a5e5bf))
+
+* ci: upload to gar only if release (#109) ([`38a8c79`](https://github.com/artefactory/vertex-pipelines-deployer/commit/38a8c7931d656e3bcb406c2d88118851956004fb))
+
+* ci: update workflows names (#104) ([`66ffd4d`](https://github.com/artefactory/vertex-pipelines-deployer/commit/66ffd4d45cfc2e939d174514d133c5277c4f7e7e))
+
+* ci: add branch protection rules to main (#102) ([`97f8a2e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/97f8a2e8e1e895c2107adb27f505022d2300f186))
+
+### Documentation
+
+* docs: clean documentation (#124) ([`cdf1db0`](https://github.com/artefactory/vertex-pipelines-deployer/commit/cdf1db0b970f843f43f2c7046057e3f6579c0809))
+
+* docs: update catalog info (#111) ([`53b9004`](https://github.com/artefactory/vertex-pipelines-deployer/commit/53b9004293c0fe0f6a2f814f667d3a124383a5e7))
+
+* docs: fix hyperlinks and toc (#105) ([`b229c28`](https://github.com/artefactory/vertex-pipelines-deployer/commit/b229c283a9798f9836b30da2ea89c54e01d61ed3))
+
+* docs: update badges and doc index (#101) ([`a17ec3c`](https://github.com/artefactory/vertex-pipelines-deployer/commit/a17ec3c2e89a287c5969fd123facecbf5b78fbb8))
+
+* docs: update doc build trigger (#100) ([`9560b70`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9560b70a675ab582bd2e5c8183bf0bf6454fcd2a))
+
+### Fix
+
+* fix: toml config files cannot have sections (#122) ([`013e2ba`](https://github.com/artefactory/vertex-pipelines-deployer/commit/013e2baa7b94477824a874bb735be903ab43e436))
+
+* fix: multiple issues when using vertex deployer create (#123) ([`b98b14e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/b98b14e25b444f92ac4369573adf4a6b66784a37))
+
+### Test
+
+* test: add integration test to ensure config and cli params are iso (#121) ([`440b51e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/440b51e1e848cc63bec24515a6dc3ca2985d3852))
+
+
 ## 0.3.2 (2023-11-08)
 
 ### Build
