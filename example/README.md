@@ -2,7 +2,7 @@
 
 This folder can be used as a template repo.
 
-You can either copy paste snippets from differents parts, or push it and test it with your own GCP project.
+You can either copy paste snippets from different parts, or push it and test it with your own GCP project.
 
 To do so, setup your gcp project and create your own repo from this folder:
 ```bash

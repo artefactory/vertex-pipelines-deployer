@@ -408,7 +408,7 @@ vertex-deployer --log-level DEBUG deploy ...
 ## Configuration
 
 You can configure the deployer using the `pyproject.toml` file to better fit your needs.
-This will overwrite default values. It can be usefull if you always use the same options, e.g. always the same `--scheduler-timezone`
+This will overwrite default values. It can be useful if you always use the same options, e.g. always the same `--scheduler-timezone`
 
 ```toml
 [tool.vertex-deployer]
