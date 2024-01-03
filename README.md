@@ -117,7 +117,7 @@ pip install --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-f
 ```
 
 !!! tip "Add to requirements"
-    You can add the extra index URL to your `requirements.in` or `requirements.txt` file to avoid having to specify it every time.
+    You can add the extra index URL to your `requirements.in` or `requirements.txt` file.
     ```txt title="requirements.txt"
     --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
 
