@@ -40,6 +40,7 @@ nav:
     - Basic Usage: usage.md
   - Advanced User Guide:
     - Vertex DevOps: advanced_user_guide.md
+    - Undestand settings and configurations: configuration.md
   - CLI Reference: CLI_REFERENCE.md
   - Contributing: contributing.md
   - Changelog: changelog.md
