@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 import rich.traceback
 import typer
@@ -8,7 +8,6 @@ from loguru import logger
 from pydantic import ValidationError
 from typing_extensions import Annotated
 
-from deployer.configuration import load_configuration
 from deployer.constants import (
     DEFAULT_LOCAL_PACKAGE_PATH,
     DEFAULT_SCHEDULER_TIMEZONE,
@@ -16,6 +15,7 @@ from deployer.constants import (
     PIPELINE_MINIMAL_TEMPLATE,
     PYTHON_CONFIG_TEMPLATE,
 )
+from deployer.settings import load_deployer_settings
 from deployer.utils.config import (
     ConfigType,
     list_config_filepaths,
@@ -33,9 +33,9 @@ from deployer.utils.utils import (
 
 rich.traceback.install()
 
-deployer_config = load_configuration()
+deployer_settings = load_deployer_settings()
 
-PipelineName = make_enum_from_python_package_dir(deployer_config.pipelines_root_path)
+PipelineName = make_enum_from_python_package_dir(deployer_settings.pipelines_root_path)
 
 
 def display_version_and_exit(value: bool):
@@ -50,7 +50,7 @@ app = typer.Typer(
     no_args_is_help=True,
     rich_help_panel="rich",
     rich_markup_mode="markdown",
-    context_settings={"default_map": deployer_config.model_dump()},
+    context_settings={"default_map": deployer_settings.model_dump()},
 )
 
 
@@ -82,13 +82,13 @@ def config(
 
     if all:
         config_repr = dict_to_repr(
-            dict_=deployer_config.model_dump(),
-            subdict=deployer_config.model_dump(exclude_unset=True),
+            dict_=deployer_settings.model_dump(),
+            subdict=deployer_settings.model_dump(exclude_unset=True),
         )
         config_str = "[italic]'*' means the value was set in config file[/italic]\n\n"
         config_str += "\n".join(config_repr)
     else:
-        config_repr = dict_to_repr(dict_=deployer_config.model_dump(exclude_unset=True))
+        config_repr = dict_to_repr(dict_=deployer_settings.model_dump(exclude_unset=True))
         config_str = "\n".join(config_repr)
 
     console.print(config_str)
@@ -97,10 +97,10 @@ def config(
 @app.command(no_args_is_help=True)
 def deploy(  # noqa: C901
     pipeline_name: Annotated[
-        PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
+        PipelineName, typer.Argument(..., help="The name of the pipeline to deploy.")
     ],
     env_file: Annotated[
-        Path,
+        Optional[Path],
         typer.Option(
             help="The environment file to use.",
             exists=True,
@@ -133,7 +133,7 @@ def deploy(  # noqa: C901
         ),
     ] = False,
     cron: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             help="Cron expression for scheduling the pipeline."
             " To pass it to the CLI, use hyphens e.g. '0-10-*-*-*'."
@@ -158,7 +158,7 @@ def deploy(  # noqa: C901
         List[str], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = DEFAULT_TAGS,
     config_filepath: Annotated[
-        Path,
+        Optional[Path],
         typer.Option(
             "--config-filepath",
             "-cfp",
@@ -170,7 +170,7 @@ def deploy(  # noqa: C901
         ),
     ] = None,
     config_name: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             "--config-name",
             "-cn",
@@ -186,7 +186,7 @@ def deploy(  # noqa: C901
         ),
     ] = False,
     experiment_name: Annotated[
-        str,
+        Optional[str],
         typer.Option(
             "--experiment-name",
             "-en",
@@ -225,7 +225,7 @@ def deploy(  # noqa: C901
             )
 
     pipeline_func = import_pipeline_from_dir(
-        deployer_config.pipelines_root_path, pipeline_name.value
+        deployer_settings.pipelines_root_path, pipeline_name.value
     )
 
     from deployer.pipeline_deployer import VertexPipelineDeployer
@@ -245,7 +245,7 @@ def deploy(  # noqa: C901
     if run or schedule:
         if config_name is not None:
             config_filepath = (
-                Path(deployer_config.config_root_path) / pipeline_name.value / config_name
+                Path(deployer_settings.config_root_path) / pipeline_name.value / config_name
             )
         parameter_values, input_artifacts = load_config(config_filepath)
 
@@ -290,7 +290,7 @@ def check(
         bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
     ] = False,
     config_filepath: Annotated[
-        Path,
+        Optional[Path],
         typer.Option(
             "--config-filepath",
             "-cfp",
@@ -332,7 +332,7 @@ def check(
     if len(PipelineName.__members__) == 0:
         raise ValueError(
             "No pipeline found. Please check that the pipeline root path is correct"
-            f" ('{deployer_config.pipelines_root_path}')"
+            f" ('{deployer_settings.pipelines_root_path}')"
         )
 
     from deployer.pipeline_checks import Pipelines
@@ -345,7 +345,7 @@ def check(
         pipelines_to_check = [pipeline_name]
     if config_filepath is None:
         to_check = {
-            p.value: list_config_filepaths(deployer_config.config_root_path, p.value)
+            p.value: list_config_filepaths(deployer_settings.config_root_path, p.value)
             for p in pipelines_to_check
         }
     else:
@@ -359,8 +359,8 @@ def check(
                         p: {
                             "pipeline_name": p,
                             "config_paths": config_filepaths,
-                            "pipelines_root_path": deployer_config.pipelines_root_path,
-                            "config_root_path": deployer_config.config_root_path,
+                            "pipelines_root_path": deployer_settings.pipelines_root_path,
+                            "config_root_path": deployer_settings.config_root_path,
                         }
                         for p, config_filepaths in to_check.items()
                     }
@@ -388,13 +388,13 @@ def list(
     if len(PipelineName.__members__) == 0:
         logger.warning(
             "No pipeline found. Please check that the pipeline root path is"
-            f" correct (current: '{deployer_config.pipelines_root_path}')"
+            f" correct (current: '{deployer_settings.pipelines_root_path}')"
         )
         raise typer.Exit()
 
     if with_configs:
         pipelines_dict = {
-            p.name: list_config_filepaths(deployer_config.config_root_path, p.name)
+            p.name: list_config_filepaths(deployer_settings.config_root_path, p.name)
             for p in PipelineName.__members__.values()
         }
     else:
@@ -417,23 +417,28 @@ def create(
     """Create files structure for a new pipeline."""
     logger.info(f"Creating pipeline {pipeline_name}")
 
-    if not Path(deployer_config.pipelines_root_path).is_dir():
-        raise FileNotFoundError(
-            f"Pipeline root path '{deployer_config.pipelines_root_path}' does not exist."
-            " Please check that the pipeline root path is correct"
-            f" or create it with `mkdir -p {deployer_config.pipelines_root_path}`."
-        )
+    for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
+        if not Path(path).is_dir():
+            raise FileNotFoundError(
+                f"Path '{path}' does not exist."
+                " Please check that the root path is correct"
+                f" or create it with 'mkdir -p {path}'."
+            )
 
-    pipeline_filepath = Path(deployer_config.pipelines_root_path) / f"{pipeline_name}.py"
+    pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
     pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
 
-    config_dirpath = Path(deployer_config.config_root_path) / pipeline_name
-    config_dirpath.mkdir(exist_ok=False)
-    for config_name in ["test", "dev", "prod"]:
-        config_filepath = config_dirpath / f"{config_name}.{config_type}"
-        config_filepath.touch(exist_ok=False)
-        if config_type == ConfigType.py:
-            config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+    try:
+        config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
+        config_dirpath.mkdir(exist_ok=True)
+        for config_name in ["test", "dev", "prod"]:
+            config_filepath = config_dirpath / f"{config_name}.{config_type}"
+            config_filepath.touch(exist_ok=False)
+            if config_type == ConfigType.py:
+                config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+    except Exception as e:
+        pipeline_filepath.unlink()
+        raise e
 
-    logger.info(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+    logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")

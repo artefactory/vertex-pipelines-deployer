@@ -21,6 +21,7 @@ pydantic-settings = "^2.0"
 pydantic = "^2.3"
 pyinstrument = { version = "^4.5", optional = true }
 toml = "^0.10"
+tomlkit = "^0.12"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7"
@@ -31,6 +32,7 @@ ipykernel = "^6.9"
 nbstripout = "^0.6"
 ruff = "^0.1"
 pytest-cov = "^4.1"
+codespell = "^2.2"
 
 
 [tool.poetry.group.docs.dependencies]
@@ -59,7 +61,18 @@ ignore = [
     "D415",
 ]
 line-length = 99
-select = ["B", "C", "D", "E", "F", "W"]
+select = [
+    "B",    # bugbear
+    "C4",   # comprehensions
+    "C90",  # mccabe
+    "D",    # docstrings
+    "E",    # flake8
+    "F",    # flake8
+    "W",    # flake8
+    "S",    # bandit
+    "N",    # pep8-naming
+    "RUF"   # ruff
+]
 
 [tool.ruff.pydocstyle]
 convention = "google"
@@ -76,7 +89,7 @@ convention = "google"
     "D106",
     "D107",
 ]
-"tests/*" = ["D"]
+"tests/*" = ["D", "S101"]
 
 [tool.semantic_release]
 version_variables = ["deployer/__init__.py:__version__"]

@@ -4,9 +4,11 @@ from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
-import toml
+import tomlkit.items
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from tomlkit import TOMLDocument
+from tomlkit.toml_file import TOMLFile
 
 from deployer.utils.exceptions import BadConfigError, UnsupportedConfigFileError
 
@@ -88,7 +90,7 @@ def load_config(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
         return parameter_values, None
 
     if config_filepath.suffix == ".toml":
-        parameter_values = toml.load(config_filepath)
+        parameter_values = _load_config_toml(config_filepath)
         return parameter_values, None
 
     if config_filepath.suffix == ".py":
@@ -108,7 +110,7 @@ def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional
         config_filepath (Path): A `Path` object representing the path to the config file.
 
     Returns:
-        Tuple[Optional[dict], Optional[dict]]:: A tuple containing the loaded parameter values
+        Tuple[Optional[dict], Optional[dict]]: A tuple containing the loaded parameter values
             (or `None` if not available) and input artifacts (or `None` if not available).
 
     Raises:
@@ -139,3 +141,42 @@ def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional
             )
 
     return parameter_values, input_artifacts
+
+
+def _load_config_toml(config_filepath: Path) -> dict:
+    """Load the parameter values from a TOML config file.
+
+    Args:
+        config_filepath (Path): A `Path` object representing the path to the config file.
+
+    Returns:
+        dict: The loaded parameter values.
+    """
+
+    def flatten_toml_document(
+        d_: Union[TOMLDocument, tomlkit.items.Table],
+        parent_key: Optional[str] = None,
+        sep: str = ".",
+    ) -> dict:
+        """Flatten a tomlkit.TOMLDocument. Inline tables are not flattened"""
+        items = []
+        for k, v in d_.items():
+            child_key = f"{parent_key}{sep}{k}" if parent_key else k
+            if isinstance(v, tomlkit.items.Table):
+                # inline tables will not be flattened
+                items.extend(flatten_toml_document(v, child_key, sep=sep).items())
+            else:
+                items.append((child_key, v))
+        return dict(items)
+
+    config_file = TOMLFile(config_filepath)
+
+    try:
+        config = config_file.read()
+        parameter_values = flatten_toml_document(config, sep="_")
+    except Exception as e:
+        raise BadConfigError(
+            f"{config_filepath}: invalid TOML config file.\n{e.__class__.__name__}: {e}"
+        ) from e
+
+    return parameter_values
