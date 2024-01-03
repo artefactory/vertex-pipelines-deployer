@@ -20,7 +20,7 @@ The latest may include:
 - running the pipeline
 
 
-### 🏗️ Build base image
+### Build base image
 
 You can use this generic Dockerfile:
 
@@ -48,7 +48,7 @@ This command includes the following:
 --8<-- "example/Makefile:build-base-image"
 ```
 
-### 🚀 Compile and run
+### Compile and run
 
 Now that you have a base image, you can compile your pipeline and trigger a run that will use the latest version of your docker base image
 
@@ -56,9 +56,9 @@ Now that you have a base image, you can compile your pipeline and trigger a run 
 vertex-deployer deploy --compile --run --env-file .env --config-name my_config.json
 ```
 
-## 🧪 CI: Check your pipelines and config integrity
+## ✅ CI: Check your pipelines and config integrity
 
-### 💻 Check your pipelines locally
+### Check your pipelines locally
 
 You can check pipelines integrity and config integrity using the following command:
 
@@ -71,14 +71,14 @@ To check a specific pipeline:
 vertex-deployer check my_pipeline
 ```
 
-### ➕ Add to CI
+### Add to CI
 
 You can add a github workflow checking your pipelines integrity using the following file:
 ```yaml
 --8<-- "example/.github/workflows/check_pipelines.yaml"
 ```
 
-### ➕ Add to pre-commit hooks
+### Add to pre-commit hooks
 
 You can add a pre-commit hook checking your pipelines integrity using a local hook:
 ```yaml
@@ -102,7 +102,7 @@ Once you have a valid pipeline, you want to deploy it on Vertex. To automate dep
     --8<-- "example/vertex/deployment/Dockerfile"
     ```
 
-### ☁️ CloudBuild
+### CloudBuild
 
 You can use the following [cloudbuild.yaml](https://github.com/artefactory/vertex-pipelines-deployer/tree/main/example/vertex/deployment/cloudbuild_cd.yaml) to trigger a deployment on Vertex when merging to `develop` or `main`:
 
@@ -110,7 +110,7 @@ You can use the following [cloudbuild.yaml](https://github.com/artefactory/verte
 --8<-- "example/vertex/deployment/cloudbuild_cd.yaml"
 ```
 
-#### 🎯 Use CloudBuild trigger \[PREFERRED OPTION\]
+#### Use CloudBuild trigger \[PREFERRED OPTION\]
 
 Then, you'll need to link your repo to CloudBuild and create a trigger for each branch you want to deploy on Vertex.
 The documentation to link your repo is available [here](https://cloud.google.com/build/docs/automating-builds/github/connect-repo-github?generation=2nd-gen#console).
@@ -127,7 +127,7 @@ This command includes the following:
 --8<-- "example/Makefile:create-trigger-cd"
 ```
 
-#### 🐙 Github Action + CloudBuild
+#### Github Action + CloudBuild
 
 You can also use Github Action to trigger CloudBuild job. You'll need to setup GCp authentication from your repo using Workload Identity Federation.
 

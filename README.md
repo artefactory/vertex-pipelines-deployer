@@ -60,10 +60,10 @@
 ## ❓ Why this tool?
 
 
-Three uses cases:
+Three use cases:
 
 1. **CI:** check pipeline validity.
-1. **Dev mode:** duickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
+1. **Dev mode:** quickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
 2. **CD:** deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
 
 
@@ -116,20 +116,20 @@ Install latest version:
 pip install --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
 ```
 
+!!! tip "Add to requirements"
+    You can add the extra index URL to your `requirements.in` or `requirements.txt` file.
+    ```txt title="requirements.txt"
+    --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
+
+    vertex-deployer==0.3.3
+    ```
+
+??? info "About extra index URL"
+    You can add the extra index URL to your `pip.conf` file to avoid having to specify it every time.
+
 List available versions:
 ```bash
 pip index versions --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
-```
-
-### Add to requirements
-
-It's better to get the .tar.gz archive from gcs, and version it.
-
-Then add the following lines to your `requirements.in` file:
-```bash
---extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
-
-vertex-deployer==0.3.1
 ```
 <!-- --8<-- [end:installation] -->
 
@@ -204,11 +204,12 @@ gcloud artifacts repositories add-iam-policy-binding ${GAR_PIPELINES_REPO_ID} \
    --member="serviceAccount:${VERTEX_SERVICE_ACCOUNT}" \
    --role="roles/artifactregistry.admin"
 ```
-
+<!-- --8<-- [end:setup] -->
 You can use the deployer CLI (see example below) or import [`VertexPipelineDeployer`](deployer/pipeline_deployer.py) in your code (try it yourself).
 
 ### 📁 Folder Structure
 
+<!-- --8<-- [start:folder_structure] -->
 You must respect the following folder structure. If you already follow the
 [Vertex Pipelines Starter Kit folder structure](https://github.com/artefactory/vertex-pipeline-starter-kit), it should be pretty smooth to use this tool:
 
@@ -230,7 +231,7 @@ vertex
 
 #### Pipelines
 
-You file `{pipeline_name}.py` must contain a function called `{pipeline_name}` decorated using `kfp.dsl.pipeline`.
+Your file `{pipeline_name}.py` must contain a function called `{pipeline_name}` decorated using `kfp.dsl.pipeline`.
 In previous versions, the functions / object used to be called `pipeline` but it was changed to `{pipeline_name}` to avoid confusion with the `kfp.dsl.pipeline` decorator.
 
 ```python
@@ -259,7 +260,7 @@ They must be located in the `config/{pipeline_name}` folder.
 **Why multiple formats?**
 
 `.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` files are useful to define simple configs (e.g. a string).
-It also adds flexibility to the user and allows you to use teh deployer with almost no migration cost.
+It also adds flexibility to the user and allows you to use the deployer with almost no migration cost.
 
 **How to format them?**
 
@@ -270,7 +271,7 @@ It also adds flexibility to the user and allows you to use teh deployer with alm
     See [Vertex Documentation](https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob) for more information.
 
 - `.json` files must be valid json files containing only one dict of key: value representing parameter values.
-- `.toml` files must be the same. Please note that TOML sections will be flattened, except fot inline tables.
+- `.toml` files must be the same. Please note that TOML sections will be flattened, except for inline tables.
     Section names will be joined using `"_"` separator and this is not configurable at the moment.
     Example:
 
@@ -290,9 +291,9 @@ It also adds flexibility to the user and allows you to use teh deployer with alm
     ```
 ??? question "Why are sections flattened when using TOML config files?"
     Vertex Pipelines parameter validation and parameter logging to Vertex Experiments are based on the parameter name.
-    I you do not flatten your sections, you'll only be able to validate section names and that tey should be of type `dict`.
+    If you do not flatten your sections, you'll only be able to validate section names and that they should be of type `dict`.
 
-    Not very usefull.
+    Not very useful.
 
 ??? question "Why aren't `input_artifacts` supported in TOML / JSON config files?"
     Because it's low on the priority list. Feel free to open a PR if you want to add it.
@@ -323,12 +324,12 @@ VERTEX_SERVICE_ACCOUNT=YOUR_VERTEX_SERVICE_ACCOUNT  # Vertex Pipelines Service A
     No default value for `--env-file` argument is provided to ensure that you don't accidentally deploy to the wrong project.
     An [`example.env`](./example/example.env) file is provided in this repo.
     This also allows you to work with multiple environments thanks to env files (`test.env`, `dev.env`, `prod.env`, etc)
-<!-- --8<-- [end:setup] -->
+<!-- --8<-- [end:folder_structure] -->
 
 <!-- --8<-- [start:usage] -->
 ### 🚀 CLI: Deploying a Pipeline with `deploy`
 
-Let's say you defines a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
+Let's say you defined a pipeline in `dummy_pipeline.py` and a config file named `config_test.json`. You can deploy your pipeline using the following command:
 ```bash
 vertex-deployer deploy dummy_pipeline \
     --compile \
@@ -369,7 +370,7 @@ You can create all files needed for a pipeline using the `create` command:
 vertex-deployer create my_new_pipeline --config-type py
 ```
 
-This will create a `my_new_pipeline.py` file in the `vertex/pipelines` folder and a `vertex/config/my_new_pipeline/` folder with mutliple config files in it.
+This will create a `my_new_pipeline.py` file in the `vertex/pipelines` folder and a `vertex/config/my_new_pipeline/` folder with multiple config files in it.
 
 #### `list`
 
@@ -407,7 +408,7 @@ vertex-deployer --log-level DEBUG deploy ...
 ## Configuration
 
 You can configure the deployer using the `pyproject.toml` file to better fit your needs.
-This will overwrite default values. It can be usefull if you always use the same options, e.g. always the same `--scheduler-timezone`
+This will overwrite default values. It can be useful if you always use the same options, e.g. always the same `--scheduler-timezone`
 
 ```toml
 [tool.vertex-deployer]
@@ -466,10 +467,10 @@ create
 ├─ deployer                                     # Source code
 │  ├─ __init__.py
 │  ├─ cli.py
-│  ├─ configuration.py
 │  ├─ constants.py
 │  ├─ pipeline_checks.py
 │  ├─ pipeline_deployer.py
+│  ├─ settings.py
 │  └─ utils
 │     ├─ config.py
 │     ├─ exceptions.py

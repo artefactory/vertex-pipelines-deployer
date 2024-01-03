@@ -97,7 +97,7 @@ def config(
 @app.command(no_args_is_help=True)
 def deploy(  # noqa: C901
     pipeline_name: Annotated[
-        PipelineName, typer.Argument(..., help="The name of the pipeline to run.")
+        PipelineName, typer.Argument(..., help="The name of the pipeline to deploy.")
     ],
     env_file: Annotated[
         Optional[Path],

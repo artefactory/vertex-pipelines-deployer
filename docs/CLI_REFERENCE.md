@@ -8,8 +8,8 @@ $ vertex-deployer [OPTIONS] COMMAND [ARGS]...
 
 **Options**:
 
-* `--log-level, -log [TRACE|DEBUG|INFO|SUCCESS|WARNING|ERROR|CRITICAL]`: Set the logging level. [default: LoguruLevel.INFO]
-* `--version, -v / --no-version`: Display the version number and exit. [default: no-version]
+* `--log-level, -log [TRACE|DEBUG|INFO|SUCCESS|WARNING|ERROR|CRITICAL]`: Set the logging level. [default: INFO]
+* `--version, -v`: Display the version number and exit.
 * `--install-completion`: Install completion for the current shell.
 * `--show-completion`: Show completion for the current shell, to copy it or customize the installation.
 * `--help`: Show this message and exit.
@@ -17,6 +17,7 @@ $ vertex-deployer [OPTIONS] COMMAND [ARGS]...
 **Commands**:
 
 * `check`: Check that pipelines are valid.
+* `config`: Display the configuration from pyproject.toml.
 * `create`: Create files structure for a new pipeline.
 * `deploy`: Compile, upload, run and schedule pipelines.
 * `list`: List all pipelines.
@@ -65,7 +66,7 @@ $ vertex-deployer config [OPTIONS]
 
 **Options**:
 
-* `-a, --all`: Whether to display all configuration values.
+* `--all, -a`: Whether to display all configuration values.
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer create`
@@ -84,7 +85,7 @@ $ vertex-deployer create [OPTIONS] PIPELINE_NAME
 
 **Options**:
 
-* `--config-type, -ct [json|py|toml]`: The type of the config to create. [default: ConfigType.json]
+* `--config-type, -ct [json|py|toml]`: The type of the config to create. [default: json]
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer deploy`
@@ -94,12 +95,12 @@ Compile, upload, run and schedule pipelines.
 **Usage**:
 
 ```console
-$ vertex-deployer deploy [OPTIONS] PIPELINE_NAME:{}
+$ vertex-deployer deploy [OPTIONS] PIPELINE_NAME
 ```
 
 **Arguments**:
 
-* `PIPELINE_NAME:{}`: The name of the pipeline to run. [required]
+* `PIPELINE_NAME`: The name of the pipeline to deploy. [required]
 
 **Options**:
 

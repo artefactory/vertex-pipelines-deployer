@@ -39,3 +39,9 @@ repos:
       files: (.ipynb)$
       language: system
       stages: [commit, push]
+    - id: codespell
+      name: codespell markdown
+      entry: poetry run codespell -S CHANGELOG.md
+      types: [markdown]
+      language: system
+      stages: [commit, push]
