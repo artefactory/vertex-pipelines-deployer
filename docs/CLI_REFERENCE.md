@@ -20,6 +20,7 @@ $ vertex-deployer [OPTIONS] COMMAND [ARGS]...
 * `config`: Display the configuration from pyproject.toml.
 * `create`: Create files structure for a new pipeline.
 * `deploy`: Compile, upload, run and schedule pipelines.
+* `init`: Initialize the deployer with default settings and folder structure.
 * `list`: List all pipelines.
 
 ## `vertex-deployer check`
@@ -117,6 +118,20 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAME
 * `--enable-caching, -ec / --no-enable-caching`: Whether to enable caching when running the pipeline. [default: no-enable-caching]
 * `--experiment-name, -en TEXT`: The name of the experiment to run the pipeline in. Defaults to '{pipeline_name}-experiment'.
 * `--local-package-path, -lpp PATH`: Local dir path where pipelines will be compiled. [default: vertex/pipelines/compiled_pipelines]
+* `--help`: Show this message and exit.
+
+## `vertex-deployer init`
+
+Initialize the deployer with default settings and folder structure.
+
+**Usage**:
+
+```console
+$ vertex-deployer init
+```
+
+**Options**:
+
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer list`
