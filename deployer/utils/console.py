@@ -32,11 +32,14 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
             if isclass(annotation) and issubclass(annotation, Enum):
                 choices = list(annotation.__members__)
 
-            if isinstance(default, bool):
+            if isinstance(field_info.default, bool):
                 choices = ["y", "n"]
                 default = "y" if field_info.default else "n"
 
             answer = Prompt.ask(field_name, default=default, choices=choices)
+
+            if isinstance(field_info.default, bool):
+                answer = answer == "y"
 
             if answer != field_info.default:
                 set_fields[field_name] = answer
