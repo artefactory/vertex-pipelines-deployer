@@ -30,7 +30,7 @@ class _DeployerDeploySettings(CustomBaseModel):
     config_name: Optional[str] = None
     enable_caching: bool = False
     experiment_name: Optional[str] = None
-    local_package_path: Path = constants.DEFAULT_LOCAL_PACKAGE_PATH
+    local_package_path: Path = Path(constants.DEFAULT_LOCAL_PACKAGE_PATH)
 
 
 class _DeployerCheckSettings(CustomBaseModel):
