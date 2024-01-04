@@ -6,6 +6,7 @@ import rich.traceback
 import typer
 from loguru import logger
 from pydantic import ValidationError
+from rich.prompt import Prompt
 from typing_extensions import Annotated
 
 from deployer.constants import (
@@ -15,13 +16,20 @@ from deployer.constants import (
     PIPELINE_MINIMAL_TEMPLATE,
     PYTHON_CONFIG_TEMPLATE,
 )
-from deployer.settings import load_deployer_settings
+from deployer.settings import (
+    DeployerSettings,
+    find_pyproject_toml,
+    load_deployer_settings,
+    update_pyproject_toml,
+)
 from deployer.utils.config import (
     ConfigType,
+    VertexPipelinesSettings,
     list_config_filepaths,
     load_config,
     load_vertex_settings,
 )
+from deployer.utils.console import ask_user_for_model_fields
 from deployer.utils.logging import LoguruLevel, console
 from deployer.utils.utils import (
     dict_to_repr,
@@ -280,7 +288,7 @@ def deploy(  # noqa: C901
             )
 
 
-@app.command(no_args_is_help=True)
+@app.command()
 def check(
     pipeline_name: Annotated[
         PipelineName,
@@ -403,8 +411,8 @@ def list(
     print_pipelines_list(pipelines_dict, with_configs)
 
 
-@app.command(no_args_is_help=True)
-def create(
+@app.command(name="create")
+def create_pipeline(
     pipeline_name: Annotated[
         str,
         typer.Argument(..., help="The name of the pipeline to create."),
@@ -442,3 +450,61 @@ def create(
         raise e
 
     logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+
+
+@app.command(name="init")
+def init_deployer():
+    console.print("Welcome to Vertex Deployer!", style="blue")
+    console.print("This command will help you getting fired up.", style="blue")
+
+    if Prompt.ask("Do you want to configure the deployer?", choices=["y", "n"]) == "y":
+        pyproject_toml_filepath = find_pyproject_toml(Path.cwd().resolve())
+
+        if pyproject_toml_filepath is None:
+            console.print(
+                "No pyproject.toml file found. Creating one in current directory.",
+                style="yellow",
+            )
+            pyproject_toml_filepath = Path("./pyproject.toml")
+            pyproject_toml_filepath.touch()
+
+        set_fields = ask_user_for_model_fields(DeployerSettings)
+
+        new_deployer_settings = DeployerSettings(**set_fields)
+
+        update_pyproject_toml(pyproject_toml_filepath, new_deployer_settings)
+        console.print("Configuration saved in pyproject.toml :sparkles:", style="blue")
+
+    if Prompt.ask("Do you want to build default folder structure", choices=["y", "n"]) == "y":
+        Path(deployer_settings.pipelines_root_path).mkdir(exist_ok=True, parents=True)
+        Path(deployer_settings.config_root_path).mkdir(exist_ok=True, parents=True)
+        if Path("./.env").exists():
+            console.print(
+                "A .env file already exists. Skipping creation of .env file.", style="yellow"
+            )
+        else:
+            Path("./.env").touch(exist_ok=True)
+            Path("./.env").write_text(
+                "=\n".join(VertexPipelinesSettings.model_json_schema()["required"])
+            )
+
+    if Prompt.ask("Do you want to create a pipeline?", choices=["y", "n"]) == "y":
+        name_already_exists = True
+        while name_already_exists:
+            pipeline_name = Prompt.ask("What is the name of the pipeline?")
+            pipeline_path = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
+            try:
+                create_pipeline(pipeline_name=pipeline_name)
+            except FileExistsError:
+                console.print(
+                    f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
+                    style="yellow",
+                )
+            else:
+                name_already_exists = False
+                console.print(
+                    f"Pipeline '{pipeline_name}' created at '{pipeline_path}'. :sparkles:",
+                    style="blue",
+                )
+
+    console.print("All done :sparkles:", style="blue")

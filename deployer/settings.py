@@ -3,8 +3,10 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import toml
+import tomlkit
 from loguru import logger
 from pydantic import ValidationError
+from tomlkit.toml_file import TOMLFile
 
 from deployer import constants
 from deployer.utils.config import ConfigType
@@ -85,6 +87,35 @@ def parse_pyproject_toml(path_pyproject_toml: str) -> Dict[str, Any]:
     settings: dict[str, Any] = pyproject_toml.get("tool", {}).get("vertex_deployer", {})
     settings = {k.replace("--", "").replace("-", "_"): v for k, v in settings.items()}
     return settings
+
+
+def update_pyproject_toml(path_pyproject_toml: str, deployer_settings: DeployerSettings) -> None:
+    """Update the pyproject.toml file with the non-default fields from the deployer configuration.
+
+    Args:
+        path_pyproject_toml (str): The file path to the pyproject.toml file.
+        deployer_settings (DeployerSettings): The deployer configuration instance with potential
+            updates.
+    """
+    toml_file = TOMLFile(path_pyproject_toml)
+    toml_document = toml_file.read()
+
+    non_default_fields = deployer_settings.model_dump(mode="json", exclude_unset=True)
+
+    root_keys = ["tool", "vertex_deployer"]
+
+    section = toml_document
+    for key in root_keys:
+        if key not in section:
+            # if section is OutOfOrderTableProxy, no append method is available
+            # Then it can mess up the order of the keys
+            # But no other solution found
+            section[key] = tomlkit.table(is_super_table=True)
+        section = section[key]
+
+    section.update(non_default_fields)
+
+    toml_file.write(toml_document)
 
 
 @lru_cache()
