@@ -22,7 +22,7 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
                 f"Do you want to configure command {field_name}?", choices=["y", "n"], default="n"
             )
             if answer == "y":
-                set_fields[field_name] = ask_user_for_model_fields(field_info.default)
+                set_fields[field_name] = ask_user_for_model_fields(field_info.annotation)
 
         else:
             annotation = field_info.annotation
@@ -32,13 +32,13 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
             if isclass(annotation) and issubclass(annotation, Enum):
                 choices = list(annotation.__members__)
 
-            if isinstance(field_info.default, bool):
+            if isclass(annotation) and annotation == bool:
                 choices = ["y", "n"]
                 default = "y" if field_info.default else "n"
 
             answer = Prompt.ask(field_name, default=default, choices=choices)
 
-            if isinstance(field_info.default, bool):
+            if isclass(annotation) and annotation == bool:
                 answer = answer == "y"
 
             if answer != field_info.default:
