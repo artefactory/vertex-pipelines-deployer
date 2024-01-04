@@ -30,7 +30,7 @@ class _DeployerDeploySettings(CustomBaseModel):
     config_name: Optional[str] = None
     enable_caching: bool = False
     experiment_name: Optional[str] = None
-    local_package_path: Path = Path(constants.DEFAULT_LOCAL_PACKAGE_PATH)
+    local_package_path: Path = constants.DEFAULT_LOCAL_PACKAGE_PATH
 
 
 class _DeployerCheckSettings(CustomBaseModel):
@@ -62,8 +62,8 @@ class _DeployerConfigSettings(CustomBaseModel):
 class DeployerSettings(CustomBaseModel):
     """Settings for Vertex Deployer."""
 
-    pipelines_root_path: Path = Path(constants.PIPELINE_ROOT_PATH)
-    config_root_path: Path = Path(constants.CONFIG_ROOT_PATH)
+    pipelines_root_path: Path = constants.PIPELINE_ROOT_PATH
+    config_root_path: Path = constants.CONFIG_ROOT_PATH
     log_level: str = "INFO"
     deploy: _DeployerDeploySettings = _DeployerDeploySettings()
     check: _DeployerCheckSettings = _DeployerCheckSettings()
