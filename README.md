@@ -43,9 +43,10 @@
             <li><a href="#-cli-checking-pipelines-are-valid-with-check">CLI: Checking Pipelines are valid with `check`</a></li>
             <li><a href="#-cli-other-commands">CLI: Other commands</a></li>
                 <ul>
-                    <li><a href="#create">`create`</a></li>
-                    <li><a href="#list">`list`</a></li>
                     <li><a href="#config">`config`</a></li>
+                    <li><a href="#create">`create`</a></li>
+                    <li><a href="#init">`init`</a></li>
+                    <li><a href="#list">`list`</a></li>
                 </ul>
         </ul>
     <li><a href="#cli-options">CLI: Options</a></li>
@@ -71,8 +72,11 @@ Four commands:
 
 - `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
 - `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
+- `config`: display the configuration from `pyproject.toml`.
 - `create`: create a new pipeline and config files.
+- `init`: initialize the project with necessary configuration files and directory structure.
 - `list`: list all pipelines in the `vertex/pipelines` folder.
+
 <!-- --8<-- [end:why] -->
 
 ## 📋 Prerequisites
@@ -363,6 +367,14 @@ vertex-deployer check --all
 
 ### 🛠️ CLI: Other commands
 
+#### `config`
+
+You can check your `vertex-deployer` configuration options using the `config` command.
+Fields set in `pyproject.toml` will overwrite default values and will be displayed differently:
+```bash
+vertex-deployer config --all
+```
+
 #### `create`
 
 You can create all files needed for a pipeline using the `create` command:
@@ -372,19 +384,28 @@ vertex-deployer create my_new_pipeline --config-type py
 
 This will create a `my_new_pipeline.py` file in the `vertex/pipelines` folder and a `vertex/config/my_new_pipeline/` folder with multiple config files in it.
 
+#### `init`
+
+To initialize the deployer with default settings and folder structure, use the `init` command:
+```bash
+vertex-deployer init
+```
+
+```bash
+$ vertex-deployer init
+Welcome to Vertex Deployer!
+This command will help you getting fired up.
+Do you want to configure the deployer? [y/n]: n
+Do you want to build default folder structure [y/n]: n
+Do you want to create a pipeline? [y/n]: n
+All done ✨
+```
+
 #### `list`
 
 You can list all pipelines in the `vertex/pipelines` folder using the `list` command:
 ```bash
 vertex-deployer list --with-configs
-```
-
-#### `config`
-
-You can check your `vertex-deployer` configuration options using the `config` command.
-Fields set in `pyproject.toml` will overwrite default values and will be displayed differently:
-```bash
-vertex-deployer config --all
 ```
 
 ### 🍭 CLI: Options
