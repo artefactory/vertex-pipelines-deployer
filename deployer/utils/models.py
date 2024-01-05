@@ -21,6 +21,11 @@ class TypeConverterType(Protocol):
         ...
 
 
+def _dummy_type_converter(annotation: type) -> type:
+    """Dummy type converter function."""
+    return annotation
+
+
 def create_model_from_func(
     func: Callable,
     model_name: Optional[str] = None,
@@ -31,9 +36,7 @@ def create_model_from_func(
         model_name = func.__name__
 
     if type_converter is None:
-
-        def type_converter(annotation: type) -> type:
-            return annotation
+        type_converter = _dummy_type_converter
 
     func_signature = signature(func)
     func_typing = {
