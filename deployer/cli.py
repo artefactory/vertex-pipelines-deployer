@@ -1,7 +1,8 @@
+import enum
 import re
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import rich.traceback
 import typer
@@ -36,10 +37,6 @@ from deployer.utils.utils import (
 
 rich.traceback.install()
 
-deployer_settings = load_deployer_settings()
-
-PipelineName = make_enum_from_python_package_dir(deployer_settings.pipelines_root_path)
-
 
 def display_version_and_exit(value: bool):
     if value:
@@ -53,15 +50,15 @@ app = typer.Typer(
     no_args_is_help=True,
     rich_help_panel="rich",
     rich_markup_mode="markdown",
-    context_settings={"default_map": deployer_settings.model_dump()},
 )
 
 
 @app.callback(invoke_without_command=True)
 def main(
+    ctx: typer.Context,
     log_level: Annotated[
         LoguruLevel, typer.Option("--log-level", "-log", help="Set the logging level.")
-    ] = LoguruLevel.INFO,
+    ] = constants.DEFAULT_LOG_LEVEL,
     version: Annotated[
         bool,
         typer.Option(
@@ -74,33 +71,44 @@ def main(
 ):
     logger.configure(handlers=[{"sink": sys.stderr, "level": log_level}])
 
+    deployer_settings = load_deployer_settings()
+    ctx.obj = {
+        "settings": deployer_settings,
+        "pipeline_name": make_enum_from_python_package_dir(deployer_settings.pipelines_root_path),
+    }
+    ctx.default_map = deployer_settings.model_dump(exclude_unset=True)
 
-@app.command()
-def config(
-    all: Annotated[
-        bool, typer.Option("--all", "-a", help="Whether to display all configuration values.")
-    ] = False,
-):
-    """Display the configuration from pyproject.toml."""
 
-    if all:
-        config_repr = dict_to_repr(
-            dict_=deployer_settings.model_dump(),
-            subdict=deployer_settings.model_dump(exclude_unset=True),
+def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union[str, bool]:
+    """Callback to check that the pipeline name is valid. Also used for 'all' option."""
+    if value is None:  # None is allowed for optional arguments
+        return value
+
+    pipeline_names: enum.Enum = ctx.obj["pipeline_names"]
+
+    if len(pipeline_names.__members__) == 0:
+        raise ValueError(
+            "No pipelines found. Please check that the pipeline root path is correct: "
+            f"'{ctx.obj['settings'].pipelines_root_path}'"
         )
-        config_str = "[italic]'*' means the value was set in config file[/italic]\n\n"
-        config_str += "\n".join(config_repr)
-    else:
-        config_repr = dict_to_repr(dict_=deployer_settings.model_dump(exclude_unset=True))
-        config_str = "\n".join(config_repr)
 
-    console.print(config_str)
+    if isinstance(value, str):
+        if value not in pipeline_names.__members__:
+            raise typer.BadParameter(
+                f"Pipeline '{value}' not found at '{ctx.obj['settings'].pipelines_root_path}'."
+                f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
+            )
+    return value
 
 
 @app.command(no_args_is_help=True)
 def deploy(  # noqa: C901
+    ctx: typer.Context,
     pipeline_name: Annotated[
-        PipelineName, typer.Argument(..., help="The name of the pipeline to deploy.")
+        str,
+        typer.Argument(
+            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+        ),
     ],
     env_file: Annotated[
         Optional[Path],
@@ -227,9 +235,9 @@ def deploy(  # noqa: C901
                 " Please specify only one to run or schedule a pipeline."
             )
 
-    pipeline_func = import_pipeline_from_dir(
-        deployer_settings.pipelines_root_path, pipeline_name.value
-    )
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
+
+    pipeline_func = import_pipeline_from_dir(deployer_settings.pipelines_root_path, pipeline_name)
 
     from deployer.pipeline_deployer import VertexPipelineDeployer
 
@@ -238,7 +246,7 @@ def deploy(  # noqa: C901
         region=vertex_settings.GCP_REGION,
         staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
         service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
-        pipeline_name=pipeline_name.value,
+        pipeline_name=pipeline_name,
         pipeline_func=pipeline_func,
         gar_location=vertex_settings.GAR_LOCATION,
         gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
@@ -248,7 +256,7 @@ def deploy(  # noqa: C901
     if run or schedule:
         if config_name is not None:
             config_filepath = (
-                Path(deployer_settings.config_root_path) / pipeline_name.value / config_name
+                Path(deployer_settings.config_root_path) / pipeline_name / config_name
             )
         parameter_values, input_artifacts = load_config(config_filepath)
 
@@ -285,12 +293,18 @@ def deploy(  # noqa: C901
 
 @app.command()
 def check(
+    ctx: typer.Context,
     pipeline_name: Annotated[
-        PipelineName,
-        typer.Argument(..., help="The name of the pipeline to run."),
+        Optional[str],
+        typer.Argument(
+            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+        ),
     ] = None,
     all: Annotated[
-        bool, typer.Option("--all", "-a", help="Whether to check all pipelines.")
+        bool,
+        typer.Option(
+            "--all", "-a", help="Whether to check all pipelines.", callback=pipeline_name_callback
+        ),
     ] = False,
     config_filepath: Annotated[
         Optional[Path],
@@ -332,17 +346,13 @@ def check(
     if all and pipeline_name is not None:
         raise typer.BadParameter("Please specify either --all or a pipeline name")
 
-    if len(PipelineName.__members__) == 0:
-        raise ValueError(
-            "No pipeline found. Please check that the pipeline root path is correct"
-            f" ('{deployer_settings.pipelines_root_path}')"
-        )
-
     from deployer.pipeline_checks import Pipelines
+
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
 
     if all:
         logger.info("Checking all pipelines")
-        pipelines_to_check = PipelineName.__members__.values()
+        pipelines_to_check = ctx.obj["pipeline_names"].__members__.values()
     elif pipeline_name is not None:
         logger.info(f"Checking pipeline {pipeline_name}")
         pipelines_to_check = [pipeline_name]
@@ -378,36 +388,31 @@ def check(
         print_check_results_table(to_check)
 
 
-@app.command()
-def list(
+@app.command(name="list")
+def list_pipelines(
+    ctx: typer.Context,
     with_configs: Annotated[
         bool,
         typer.Option(
             "--with-configs / --no-configs", "-wc / -nc ", help="Whether to list config files."
         ),
-    ] = False
+    ] = False,
 ):
     """List all pipelines."""
-    if len(PipelineName.__members__) == 0:
-        logger.warning(
-            "No pipeline found. Please check that the pipeline root path is"
-            f" correct (current: '{deployer_settings.pipelines_root_path}')"
-        )
-        raise typer.Exit()
-
     if with_configs:
         pipelines_dict = {
-            p.name: list_config_filepaths(deployer_settings.config_root_path, p.name)
-            for p in PipelineName.__members__.values()
+            p.name: list_config_filepaths(ctx.obj["settings"].config_root_path, p.name)
+            for p in ctx.obj["pipeline_names"].__members__.values()
         }
     else:
-        pipelines_dict = {p.name: [] for p in PipelineName.__members__.values()}
+        pipelines_dict = {p.name: [] for p in ctx.obj["pipeline_names"].__members__.values()}
 
     print_pipelines_list(pipelines_dict, with_configs)
 
 
 @app.command(name="create")
 def create_pipeline(
+    ctx: typer.Context,
     pipeline_name: Annotated[
         str,
         typer.Argument(..., help="The name of the pipeline to create."),
@@ -425,6 +430,8 @@ def create_pipeline(
         )
 
     logger.info(f"Creating pipeline {pipeline_name}")
+
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
 
     for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
         if not Path(path).is_dir():
@@ -456,7 +463,9 @@ def create_pipeline(
 
 
 @app.command(name="init")
-def init_deployer():  # noqa: C901
+def init_deployer(ctx: typer.Context):  # noqa: C901
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
+
     console.print("Welcome to Vertex Deployer!", style="blue")
     console.print("This command will help you getting fired up.", style="blue")
 
@@ -522,3 +531,27 @@ def init_deployer():  # noqa: C901
                 )
 
     console.print("All done :sparkles:", style="blue")
+
+
+@app.command(name="config")
+def list_deployer_settings(
+    ctx: typer.Context,
+    all: Annotated[
+        bool, typer.Option("--all", "-a", help="Whether to display all configuration values.")
+    ] = False,
+):
+    """Display the configuration from pyproject.toml."""
+    deployer_settings: DeployerSettings = ctx.obj["settings"]
+
+    if all:
+        config_repr = dict_to_repr(
+            dict_=deployer_settings.model_dump(),
+            subdict=deployer_settings.model_dump(exclude_unset=True),
+        )
+        config_str = "[italic]'*' means the value was set in config file[/italic]\n\n"
+        config_str += "\n".join(config_repr)
+    else:
+        config_repr = dict_to_repr(dict_=deployer_settings.model_dump(exclude_unset=True))
+        config_str = "\n".join(config_repr)
+
+    console.print(config_str)

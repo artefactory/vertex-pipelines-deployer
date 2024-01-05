@@ -2,6 +2,7 @@ from pathlib import Path
 
 DEFAULT_PIPELINE_ROOT_PATH = Path("vertex/pipelines")
 DEFAULT_CONFIG_ROOT_PATH = Path("vertex/configs")
+DEFAULT_LOG_LEVEL = "INFO"
 
 DEFAULT_SCHEDULER_TIMEZONE = "Europe/Paris"
 DEFAULT_LOCAL_PACKAGE_PATH = Path("vertex/pipelines/compiled_pipelines")
