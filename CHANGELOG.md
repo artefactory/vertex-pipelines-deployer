@@ -2,6 +2,25 @@
 
 
 
+## 0.4.0 (2024-01-05)
+
+### Build
+
+* build(release): fix release to gcp (#126) ([`9b4e619`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9b4e61932260ceca12460dbb43d65e65ce1a0877))
+
+### Chore
+
+* chore: switch to apache 2.0 licence (#128) ([`ea3a67d`](https://github.com/artefactory/vertex-pipelines-deployer/commit/ea3a67dacbce6fafb558896d7d8225dee414472d))
+
+### Feature
+
+* feat: add init command to configure deployer (#127) ([`5ac7022`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5ac702220255c5c9460eac474d7afdb822cae425))
+
+### Performance
+
+* perf: improve cli with context and callbacks (#129) ([`d99c007`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d99c007451e70847636161b000477093433cdb08))
+
+
 ## 0.3.3 (2024-01-03)
 
 ### Build
