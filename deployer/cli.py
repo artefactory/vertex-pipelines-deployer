@@ -10,13 +10,7 @@ from pydantic import ValidationError
 from rich.prompt import Prompt
 from typing_extensions import Annotated
 
-from deployer.constants import (
-    DEFAULT_LOCAL_PACKAGE_PATH,
-    DEFAULT_SCHEDULER_TIMEZONE,
-    DEFAULT_TAGS,
-    PIPELINE_MINIMAL_TEMPLATE,
-    PYTHON_CONFIG_TEMPLATE,
-)
+from deployer import constants
 from deployer.settings import (
     DeployerSettings,
     find_pyproject_toml,
@@ -162,10 +156,10 @@ def deploy(  # noqa: C901
             help="Timezone for scheduling the pipeline."
             " Must be a valid string from IANA time zone database",
         ),
-    ] = DEFAULT_SCHEDULER_TIMEZONE,
+    ] = constants.DEFAULT_SCHEDULER_TIMEZONE,
     tags: Annotated[
         List[str], typer.Option(help="The tags to use when uploading the pipeline.")
-    ] = DEFAULT_TAGS,
+    ] = constants.DEFAULT_TAGS,
     config_filepath: Annotated[
         Optional[Path],
         typer.Option(
@@ -213,7 +207,7 @@ def deploy(  # noqa: C901
             file_okay=False,
             resolve_path=True,
         ),
-    ] = DEFAULT_LOCAL_PACKAGE_PATH,
+    ] = constants.DEFAULT_LOCAL_PACKAGE_PATH,
 ):
     """Compile, upload, run and schedule pipelines."""
     vertex_settings = load_vertex_settings(env_file=env_file)
@@ -328,7 +322,7 @@ def check(
 
     * Checking that the pipeline can be compiled using `kfp.compiler.Compiler`.
 
-    * Checking that config files in `{CONFIG_ROOT_PATH}/{pipeline_name}` are corresponding to the
+    * Checking that config files in `{config_root_path}/{pipeline_name}` are corresponding to the
     pipeline parameters definition, using Pydantic.
 
     ---
@@ -442,7 +436,9 @@ def create_pipeline(
 
     pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
     pipeline_filepath.touch(exist_ok=False)
-    pipeline_filepath.write_text(PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name))
+    pipeline_filepath.write_text(
+        constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
+    )
 
     try:
         config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
@@ -451,7 +447,7 @@ def create_pipeline(
             config_filepath = config_dirpath / f"{config_name}.{config_type}"
             config_filepath.touch(exist_ok=False)
             if config_type == ConfigType.py:
-                config_filepath.write_text(PYTHON_CONFIG_TEMPLATE)
+                config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
     except Exception as e:
         pipeline_filepath.unlink()
         raise e

@@ -62,8 +62,8 @@ class _DeployerConfigSettings(CustomBaseModel):
 class DeployerSettings(CustomBaseModel):
     """Settings for Vertex Deployer."""
 
-    pipelines_root_path: Path = constants.PIPELINE_ROOT_PATH
-    config_root_path: Path = constants.CONFIG_ROOT_PATH
+    pipelines_root_path: Path = constants.DEFAULT_PIPELINE_ROOT_PATH
+    config_root_path: Path = constants.DEFAULT_CONFIG_ROOT_PATH
     log_level: str = "INFO"
     deploy: _DeployerDeploySettings = _DeployerDeploySettings()
     check: _DeployerCheckSettings = _DeployerCheckSettings()

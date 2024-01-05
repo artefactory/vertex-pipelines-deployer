@@ -1,7 +1,7 @@
 from pathlib import Path
 
-PIPELINE_ROOT_PATH = Path("vertex/pipelines")
-CONFIG_ROOT_PATH = Path("vertex/configs")
+DEFAULT_PIPELINE_ROOT_PATH = Path("vertex/pipelines")
+DEFAULT_CONFIG_ROOT_PATH = Path("vertex/configs")
 
 DEFAULT_SCHEDULER_TIMEZONE = "Europe/Paris"
 DEFAULT_LOCAL_PACKAGE_PATH = Path("vertex/pipelines/compiled_pipelines")
