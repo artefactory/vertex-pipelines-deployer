@@ -74,7 +74,7 @@ def main(
     deployer_settings = load_deployer_settings()
     ctx.obj = {
         "settings": deployer_settings,
-        "pipeline_name": make_enum_from_python_package_dir(deployer_settings.pipelines_root_path),
+        "pipeline_names": make_enum_from_python_package_dir(deployer_settings.pipelines_root_path),
     }
     ctx.default_map = deployer_settings.model_dump(exclude_unset=True)
 
