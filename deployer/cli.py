@@ -352,17 +352,18 @@ def check(
 
     if all:
         logger.info("Checking all pipelines")
-        pipelines_to_check = ctx.obj["pipeline_names"].__members__.values()
+        # unpack enum to get list of pipeline names
+        pipelines_to_check = [x.value for x in ctx.obj["pipeline_names"].__members__.values()]
     elif pipeline_name is not None:
         logger.info(f"Checking pipeline {pipeline_name}")
         pipelines_to_check = [pipeline_name]
     if config_filepath is None:
         to_check = {
-            p.value: list_config_filepaths(deployer_settings.config_root_path, p.value)
+            p: list_config_filepaths(deployer_settings.config_root_path, p)
             for p in pipelines_to_check
         }
     else:
-        to_check = {p.value: [config_filepath] for p in pipelines_to_check}
+        to_check = {p: [config_filepath] for p in pipelines_to_check}
 
     try:
         with console.status("Checking pipelines..."):
