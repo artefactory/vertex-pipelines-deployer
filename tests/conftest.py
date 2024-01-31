@@ -14,3 +14,9 @@ def dummy_pipeline_fixture():
         dummy_component(name=name, artifact=artifact)
 
     return dummy_pipeline
+
+
+try:
+    raise Exception("This is an exception.")
+except Exception as e:
+    exception_traceback = e.__traceback__
