@@ -2,8 +2,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
+from conftest import exception_traceback
 
-from deployer.utils.utils import make_enum_from_python_package_dir
+from deployer.utils.utils import filter_lines_from, make_enum_from_python_package_dir
 
 
 class TestMakeEnumFromPythonPackageDir:
@@ -63,3 +64,53 @@ class TestMakeEnumFromPythonPackageDir:
             make_enum_from_python_package_dir(dir_path, raise_if_not_found=True)
 
         mock_glob.assert_not_called()
+
+
+class TestFilterLinesFrom:
+    try:
+        raise Exception("This is an exception.")
+    except Exception as e:
+        traceback = e.__traceback__
+
+    def test_pathlib_input(self):
+        # Given
+        internal_path = Path(__file__)
+        external_path = Path("tests/conftest.py")
+
+        # When
+        internal_output = filter_lines_from(self.traceback, internal_path)
+        external_output = filter_lines_from(exception_traceback, external_path)
+        assert internal_output == (
+            f'  File "{internal_path}", line 71, in TestFilterLinesFrom\n'
+            '    raise Exception("This is an exception.")\n'
+        )
+        assert external_output == (
+            f'  File "{external_path.resolve()}", line 19, in <module>\n'
+            '    raise Exception("This is an exception.")\n'
+        )
+
+    def test_string_input(self):
+        # Given
+        internal_path = str(Path(__file__))
+        external_path = "tests/conftest.py"
+
+        # When
+        internal_output = filter_lines_from(self.traceback, internal_path)
+        external_output = filter_lines_from(exception_traceback, external_path)
+        print(internal_output)
+        assert internal_output == (
+            f'  File "{internal_path}", line 71, in TestFilterLinesFrom\n'
+            '    raise Exception("This is an exception.")\n'
+        )
+        assert external_output == (
+            f'  File "{Path(external_path).resolve()}", line 19, in <module>\n'
+            '    raise Exception("This is an exception.")\n'
+        )
+
+    def test_empty_result(self):
+        # Given
+        path = Path(__file__)
+
+        # When
+        output = filter_lines_from(exception_traceback, path)
+        assert output == "Could not find potential source of error."
