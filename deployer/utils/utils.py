@@ -100,8 +100,8 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> GraphComponen
         raise e
     except Exception as e:
         raise ImportError(
-            f"Error while importing pipeline from {module_import_path}: \n    {e.__repr__()}. \n\n"
-            "Potential sources of error:\n"
+            f"Error while importing pipeline from {module_import_path}: \n    {type(e).__name__}:"
+            f"{e} \n\nPotential sources of error:\n"
             f"{filter_lines_from(e.__traceback__, module_folder_path)}"
         ) from e
 
