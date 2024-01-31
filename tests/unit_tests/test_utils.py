@@ -85,7 +85,7 @@ class TestFilterLinesFrom:
             '    raise Exception("This is an exception.")\n'
         )
         assert external_output == (
-            f'  File "{external_path.resolve()}", line 19, in <module>\n'
+            f'  File "{external_path.resolve()}", line 20, in <module>\n'
             '    raise Exception("This is an exception.")\n'
         )
 
@@ -103,7 +103,7 @@ class TestFilterLinesFrom:
             '    raise Exception("This is an exception.")\n'
         )
         assert external_output == (
-            f'  File "{Path(external_path).resolve()}", line 19, in <module>\n'
+            f'  File "{Path(external_path).resolve()}", line 20, in <module>\n'
             '    raise Exception("This is an exception.")\n'
         )
 
