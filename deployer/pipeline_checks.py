@@ -85,7 +85,7 @@ class Pipeline(CustomBaseModel):
         try:
             _ = self.pipeline
         except (ImportError, ModuleNotFoundError) as e:
-            raise (ValueError(f"Pipeline import failed: {e}")) from e
+            raise ValueError(f"Pipeline import failed: {e}") from e
         return self
 
     @model_validator(mode="after")
