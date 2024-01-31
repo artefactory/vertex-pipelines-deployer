@@ -353,7 +353,7 @@ def check(
     if all:
         logger.info("Checking all pipelines")
         # unpack enum to get list of pipeline names
-        pipelines_to_check = [x.value for x in ctx.obj["pipeline_names"].__members__.values()]
+        pipelines_to_check = [x.value for x in ctx.obj["pipeline_names"]]
     elif pipeline_name is not None:
         logger.info(f"Checking pipeline {pipeline_name}")
         pipelines_to_check = [pipeline_name]
