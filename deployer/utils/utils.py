@@ -1,7 +1,9 @@
 import importlib
+import traceback
 import warnings
 from enum import Enum
 from pathlib import Path
+from types import TracebackType
 from typing import Any, Callable, Dict, List, Mapping, Optional, Protocol
 
 from loguru import logger
@@ -37,19 +39,70 @@ class GraphComponentType(Protocol):
         ...
 
 
+def filter_lines_from(tb: TracebackType, target_file: Path | str) -> str:
+    """Filters a traceback object to only show the lines from a specific file.
+
+    Traceback objects can contain lines from multiple files (e.g. when a function is called from a
+    different module).This function removes all the lines that are not related to the target file.
+
+    Example:
+        >>> traceback.print_tb(tb)
+            File "path/to/file3.py", line 30, in <module>
+                call_function_from_file2()
+            File "path/to/file2.py", line 20, in call_function_from_file2
+                call_function_from_file1()
+            File "path/to/file1.py", line 10, in call_function_from_file1
+                raise ValueError("Something went wrong.")
+        >>> filter_lines_from(tb, "path/to/file2.py")
+            File "path/to/file2.py", line 20, in call_function_from_file2
+                call_function_from_file1()
+
+    Args:
+        tb (TracebackType): the traceback object to be filtered.
+        target_file (Path | str): the file from which to show the traceback lines.
+
+    Raises:
+        TypeError: if target_file is not a Path or a str.
+
+    Returns:
+        str: a string containing the filtered traceback.
+    """
+    # ensure that the path is absolute
+    if isinstance(target_file, Path):
+        target_file = str(target_file.resolve())
+    elif isinstance(target_file, str):
+        target_file = str(Path(target_file).resolve())
+    else:
+        raise TypeError(f"target_file should be a Path or a str, but got {type(target_file)}.")
+
+    filtered_traceback: list[traceback.FrameSummary] = [
+        frame for frame in traceback.extract_tb(tb) if target_file in frame.filename
+    ]
+
+    if filtered_traceback:
+        string_filtered_traceback = "".join(traceback.format_list(filtered_traceback))
+    else:
+        string_filtered_traceback = "Could not find potential source of error."
+
+    return string_filtered_traceback
+
+
 def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> GraphComponentType:
     """Import a pipeline from a directory."""
     dirpath_ = Path(dirpath).resolve().relative_to(Path.cwd())
     parent_module = ".".join(dirpath_.parts)
-    module_path = f"{parent_module}.{pipeline_name}"
+    module_import_path = f"{parent_module}.{pipeline_name}"  # used with import statements
+    module_folder_path = dirpath_ / f"{pipeline_name}.py"  # used as a path to a file
 
     try:
-        pipeline_module = importlib.import_module(module_path)
+        pipeline_module = importlib.import_module(module_import_path)
     except ModuleNotFoundError as e:
         raise e
     except Exception as e:
         raise ImportError(
-            f"Error while importing pipeline from {module_path}: {e.__repr__()}"
+            f"Error while importing pipeline from {module_import_path}: \n    {e.__repr__()}. \n\n"
+            "Potential sources of error:\n"
+            f"{filter_lines_from(e.__traceback__, module_folder_path)}"
         ) from e
 
     try:
@@ -57,20 +110,20 @@ def import_pipeline_from_dir(dirpath: Path, pipeline_name: str) -> GraphComponen
         if pipeline is None:
             pipeline = pipeline_module.pipeline
             warnings.warn(
-                f"Pipeline in `{module_path}` is named `pipeline` instead of `{pipeline_name}`. "
-                "This is deprecated and will be removed in a future version. "
+                f"Pipeline in `{module_import_path}` is named `pipeline` instead of "
+                f"`{pipeline_name}`. This is deprecated and will be removed in a future version. "
                 f"Please rename your pipeline to `{pipeline_name}`.",
                 FutureWarning,
                 stacklevel=1,
             )
     except AttributeError as e:
         raise ImportError(
-            f"Pipeline object not found in `{module_path}`. "
+            f"Pipeline object not found in `{module_import_path}`. "
             "Please check that the pipeline is correctly defined and named."
             f"It should be named `{pipeline_name}` or `pipeline` (deprecated)."
         ) from e
 
-    logger.debug(f"Pipeline {module_path} imported successfully.")
+    logger.debug(f"Pipeline {module_import_path} imported successfully.")
 
     return pipeline
 
