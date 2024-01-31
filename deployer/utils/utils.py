@@ -4,7 +4,7 @@ import warnings
 from enum import Enum
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Mapping, Optional, Protocol
+from typing import Any, Callable, Dict, List, Mapping, Optional, Protocol, Union
 
 from loguru import logger
 from pydantic import ValidationError
@@ -39,7 +39,7 @@ class GraphComponentType(Protocol):
         ...
 
 
-def filter_lines_from(tb: TracebackType, target_file: Path | str) -> str:
+def filter_lines_from(tb: TracebackType, target_file: Union[Path, str]) -> str:
     """Filters a traceback object to only show the lines from a specific file.
 
     Traceback objects can contain lines from multiple files (e.g. when a function is called from a
