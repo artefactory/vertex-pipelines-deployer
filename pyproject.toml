@@ -24,7 +24,7 @@ toml = "^0.10"
 tomlkit = "^0.12"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.7"
+black = "^24.1"
 isort = "^5.12"
 pytest = "^8.0"
 pre-commit = "^3.3"
