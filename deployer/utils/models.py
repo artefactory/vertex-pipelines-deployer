@@ -46,7 +46,7 @@ def create_model_from_func(
     func_model = create_model(
         __model_name=model_name,
         __base__=CustomBaseModel,
-        **{name: (annotation, ...) for name, annotation in func_typing.items()}
+        **{name: (annotation, ...) for name, annotation in func_typing.items()},
     )
 
     return func_model
