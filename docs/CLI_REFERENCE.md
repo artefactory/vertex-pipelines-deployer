@@ -118,6 +118,7 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAME
 * `--enable-caching, -ec / --no-enable-caching`: Whether to enable caching when running the pipeline. [default: no-enable-caching]
 * `--experiment-name, -en TEXT`: The name of the experiment to run the pipeline in. Defaults to '{pipeline_name}-experiment'.
 * `--local-package-path, -lpp PATH`: Local dir path where pipelines will be compiled. [default: vertex/pipelines/compiled_pipelines]
+* `-y / -n`: Whether to skip the confirmation prompt. [default: no]
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer init`

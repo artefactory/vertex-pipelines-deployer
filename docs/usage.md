@@ -10,7 +10,8 @@
         --tags my-tag \
         --config-filepath vertex/configs/dummy_pipeline/config_test.json \
         --experiment-name my-experiment \
-        --enable-caching
+        --enable-caching \
+        -y
     ```
 
     Check pipelines:
