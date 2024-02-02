@@ -5,11 +5,14 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import tomlkit.items
+from loguru import logger
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from rich.table import Table
 from tomlkit import TOMLDocument
 from tomlkit.toml_file import TOMLFile
 
+from deployer.utils.console import console
 from deployer.utils.exceptions import BadConfigError, UnsupportedConfigFileError
 
 
@@ -24,7 +27,9 @@ class VertexPipelinesSettings(BaseSettings):  # noqa: D101
     VERTEX_SERVICE_ACCOUNT: str
 
 
-def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSettings:
+def load_vertex_settings(
+    env_file: Optional[Path] = None, user_validation: bool = True
+) -> VertexPipelinesSettings:
     """Load the settings from the environment."""
     try:
         settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
@@ -36,6 +41,31 @@ def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSett
             msg += "No `.env` file provided. Please check your environment variables"
         msg += f"\n{e}"
         raise ValueError(msg) from e
+
+    msg = "Loaded settings from environment"
+    if env_file is not None:
+        msg += f" and `.env` file: `{env_file}`."
+
+    if not user_validation:
+        msg += "\nLoaded settings for Vertex:"
+        msg += "\n" + "\n".join(f"  {k:<30} {v:<30}" for k, v in settings.model_dump().items())
+        logger.debug(msg)
+    else:
+        table = Table(show_header=True, header_style="bold", show_lines=True)
+        table.add_column("Setting Name")
+        table.add_column("Value")
+        for k, v in settings.model_dump().items():
+            table.add_row(k, v)
+
+        console.print(msg)
+        console.print(table)
+        continue_with_settings = console.input(
+            "Do you want to continue with these settings? "
+            "[Only 'y' will continue, any other key will exit]"
+        )
+        if continue_with_settings.lower() != "y":
+            raise ValueError("User chose to exit")
+
     return settings
 
 
