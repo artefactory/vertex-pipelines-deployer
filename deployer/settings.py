@@ -31,6 +31,7 @@ class _DeployerDeploySettings(CustomBaseModel):
     enable_caching: bool = False
     experiment_name: Optional[str] = None
     local_package_path: Path = constants.DEFAULT_LOCAL_PACKAGE_PATH
+    continue_without_validation: bool = False
 
 
 class _DeployerCheckSettings(CustomBaseModel):
