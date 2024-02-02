@@ -28,7 +28,7 @@ class VertexPipelinesSettings(BaseSettings):  # noqa: D101
 
 
 def load_vertex_settings(
-    env_file: Optional[Path] = None, user_validation: bool = True
+    env_file: Optional[Path] = None, skip_validation: bool = True
 ) -> VertexPipelinesSettings:
     """Load the settings from the environment."""
     try:
@@ -46,7 +46,7 @@ def load_vertex_settings(
     if env_file is not None:
         msg += f" and `.env` file: `{env_file}`."
 
-    if not user_validation:
+    if skip_validation:
         msg += "\nLoaded settings for Vertex:"
         msg += "\n" + "\n".join(f"  {k:<30} {v:<30}" for k, v in settings.model_dump().items())
         logger.debug(msg)

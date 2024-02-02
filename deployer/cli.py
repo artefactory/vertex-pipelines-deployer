@@ -216,17 +216,17 @@ def deploy(  # noqa: C901
             resolve_path=True,
         ),
     ] = constants.DEFAULT_LOCAL_PACKAGE_PATH,
-    continue_without_validation: Annotated[
+    skip_validation: Annotated[
         bool,
         typer.Option(
+            "--skip-validation / --no-skip",
             "-y / -n",
             help="Whether to continue without user validation of the settings.",
         ),
     ] = False,
 ):
     """Compile, upload, run and schedule pipelines."""
-    user_validation = not continue_without_validation
-    vertex_settings = load_vertex_settings(env_file=env_file, user_validation=user_validation)
+    vertex_settings = load_vertex_settings(env_file=env_file, skip_validation=skip_validation)
 
     if schedule:
         if cron is None or cron == "":
