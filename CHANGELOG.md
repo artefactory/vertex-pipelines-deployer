@@ -2,6 +2,29 @@
 
 
 
+## 0.4.1 (2024-02-14)
+
+### Build
+
+* build(deps-dev): update black requirement from ^23.7 to ^24.1 (#138) ([`ae8ee8c`](https://github.com/artefactory/vertex-pipelines-deployer/commit/ae8ee8c4fd7217970e35736ff26a75237a166948))
+
+* build(deps): bump actions/cache from 3.3.2 to 4.0.0 (#135) ([`3584598`](https://github.com/artefactory/vertex-pipelines-deployer/commit/358459899b2e6bad402eddc18af9c985244a0086))
+
+* build(deps): bump vertex-deployer from 0.3.2 to 0.4.0 (#131) ([`bd2c1b5`](https://github.com/artefactory/vertex-pipelines-deployer/commit/bd2c1b58dee9ac5d8f1087c711c4e0ae04af9606))
+
+* build(deps-dev): update pytest requirement from ^7.4 to ^8.0 (#137) ([`9d5a148`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9d5a148ffe21c16bdfa0e45f8d88e86d853f1d93))
+
+### Ci
+
+* ci: use ruff for formatting (#144) ([`ba554c3`](https://github.com/artefactory/vertex-pipelines-deployer/commit/ba554c3e88fdaeceaeb892966886a1ea80b229bd))
+
+### Fix
+
+* fix: print vertex settings and ask for validation (#141) ([`668aaad`](https://github.com/artefactory/vertex-pipelines-deployer/commit/668aaad4d5ab72bf026b8ae151508efc36e7795f))
+
+* fix: traceback enhancement (#139) ([`f71f443`](https://github.com/artefactory/vertex-pipelines-deployer/commit/f71f443b0eda4ebacddb9caf8b2f75ff2176f8e5))
+
+
 ## 0.4.0 (2024-01-05)
 
 ### Build
