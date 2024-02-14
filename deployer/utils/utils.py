@@ -10,7 +10,7 @@ from loguru import logger
 from pydantic import ValidationError
 from rich.table import Table
 
-from deployer.utils.logging import console
+from deployer.utils.console import console
 from deployer.utils.models import ChecksTableRow
 
 

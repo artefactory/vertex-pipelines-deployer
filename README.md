@@ -3,10 +3,10 @@
     <h1 align="center">Vertex Pipelines Deployer</h1>
     <h3 align="center">Deploy Vertex Pipelines within minutes</h3>
         <p align="center">
-        This tool is a wrapper around <a href="https://www.kubeflow.org/docs/components/pipelines/v2/hello-world/">kfp</a> and <a href="https://cloud.google.com/python/docs/reference/aiplatform/latest">google-cloud-aiplatform</a> that allows you to check, compile, upload, run and schedule Vertex Pipelines in a standardized manner.
+        This tool is a wrapper around <a href="https://www.kubeflow.org/docs/components/pipelines/v2/hello-world/">kfp</a> and <a href="https://cloud.google.com/python/docs/reference/aiplatform/latest">google-cloud-aiplatform</a> that allows you to check, compile, upload, run, and schedule Vertex Pipelines in a standardized manner.
         </p>
 </div>
-</br>
+<br />
 
 <!-- PROJECT SHIELDS -->
 <div align="center">
@@ -18,40 +18,40 @@
 [![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-informational?logo=pre-commit&logoColor=white)](https://github.com/ornikar/vertex-eduscore/blob/develop/.pre-commit-config.yaml)
 [![License](https://img.shields.io/github/license/artefactory/vertex-pipelines-deployer)](https://github.com/artefactory/vertex-pipelines-deployer/blob/main/LICENSE)
 
-[![CI](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?branch%3Amain&event%3Apush)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?query=branch%3Amain)
-[![Release](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml/badge.svg?branch%3Amain&event%3Apush)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml/badge.svg?query=branch%3Amain)
+[![CI](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml)
+[![Release](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml/badge.svg?branch=main&event=push)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml)
 
 </div>
 
 
 <details>
   <summary>📚 Table of Contents</summary>
-  <ul>
+  <ol>
     <li><a href="#-why-this-tool">Why this tool?</a></li>
     <li><a href="#-prerequisites">Prerequisites</a></li>
     <li><a href="#-installation">Installation</a></li>
-        <ul>
+        <ol>
             <li><a href="#from-git-repo">From git repo</a></li>
             <li><a href="#from-artifact-registry-not-available-in-pypi-yet">From Artifact Registry (not available in PyPI yet)</a></li>
             <li><a href="#add-to-requirements">Add to requirements</a></li>
-        </ul>
+        </ol>
     <li><a href="#-usage">Usage</a></li>
-        <ul>
+        <ol>
             <li><a href="#-setup">Setup</a></li>
             <li><a href="#-folder-structure">Folder Structure</a></li>
             <li><a href="#-cli-deploying-a-pipeline-with-deploy">CLI: Deploying a Pipeline with `deploy`</a></li>
             <li><a href="#-cli-checking-pipelines-are-valid-with-check">CLI: Checking Pipelines are valid with `check`</a></li>
             <li><a href="#-cli-other-commands">CLI: Other commands</a></li>
-                <ul>
+                <ol>
                     <li><a href="#config">`config`</a></li>
                     <li><a href="#create">`create`</a></li>
                     <li><a href="#init">`init`</a></li>
                     <li><a href="#list">`list`</a></li>
-                </ul>
-        </ul>
+                </ol>
+        </ol>
     <li><a href="#cli-options">CLI: Options</a></li>
     <li><a href="#configuration">Configuration</a></li>
-  </ul>
+  </ol>
 </details>
 
 
@@ -63,26 +63,22 @@
 
 Three use cases:
 
-1. **CI:** check pipeline validity.
-1. **Dev mode:** quickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc) without duplicating code or looking for the right kfp / aiplatform snippet.
-2. **CD:** deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
+1. **CI:** Check pipeline validity.
+2. **Dev mode:** Quickly iterate over your pipelines by compiling and running them in multiple environments (test, dev, staging, etc.) without duplicating code or searching for the right kfp/aiplatform snippet.
+3. **CD:** Deploy your pipelines to Vertex Pipelines in a standardized manner in your CD with Cloud Build or GitHub Actions.
 
 
-Four commands:
+Two main commands:
 
-- `check`: check your pipelines (imports, compile, check configs validity against pipeline definition).
-- `deploy`: compile, upload to Artifact Registry, run and schedule your pipelines.
-- `config`: display the configuration from `pyproject.toml`.
-- `create`: create a new pipeline and config files.
-- `init`: initialize the project with necessary configuration files and directory structure.
-- `list`: list all pipelines in the `vertex/pipelines` folder.
+- `check`: Check your pipelines (imports, compile, check configs validity against pipeline definition).
+- `deploy`: Compile, upload to Artifact Registry, run, and schedule your pipelines.
 
 <!-- --8<-- [end:why] -->
 
 ## 📋 Prerequisites
 <!-- --8<-- [start:prerequisites] -->
 
-- Unix-like environment (Linux, macOS, WSL, etc...)
+- Unix-like environment (Linux, macOS, WSL, etc.)
 - Python 3.8 to 3.10
 - Google Cloud SDK
 - A GCP project with Vertex Pipelines enabled
@@ -344,7 +340,8 @@ vertex-deployer deploy dummy_pipeline \
     --tags my-tag \
     --config-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
-    --enable-caching
+    --enable-caching \
+    --skip-validation
 ```
 
 ### ✅ CLI: Checking Pipelines are valid with `check`

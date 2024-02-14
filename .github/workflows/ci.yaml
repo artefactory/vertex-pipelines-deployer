@@ -106,7 +106,7 @@ jobs:
       # Cannot check more than compile action here, need GCP environment for upload, run, schedule
         run: |
           cd example
-          poetry run -C .. vertex-deployer -log DEBUG deploy dummy_pipeline --compile --env-file example.env
+          poetry run -C .. vertex-deployer -log DEBUG deploy dummy_pipeline --compile --env-file example.env --skip-validation
 
       - name: Test create command
         run: |

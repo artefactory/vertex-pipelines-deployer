@@ -24,9 +24,10 @@ from deployer.utils.config import (
     list_config_filepaths,
     load_config,
     load_vertex_settings,
+    validate_or_log_settings,
 )
-from deployer.utils.console import ask_user_for_model_fields
-from deployer.utils.logging import LoguruLevel, console
+from deployer.utils.console import ask_user_for_model_fields, console
+from deployer.utils.logging import LoguruLevel
 from deployer.utils.utils import (
     dict_to_repr,
     import_pipeline_from_dir,
@@ -216,9 +217,18 @@ def deploy(  # noqa: C901
             resolve_path=True,
         ),
     ] = constants.DEFAULT_LOCAL_PACKAGE_PATH,
+    skip_validation: Annotated[
+        bool,
+        typer.Option(
+            "--skip-validation / --no-skip",
+            "-y / -n",
+            help="Whether to continue without user validation of the settings.",
+        ),
+    ] = True,
 ):
     """Compile, upload, run and schedule pipelines."""
     vertex_settings = load_vertex_settings(env_file=env_file)
+    validate_or_log_settings(vertex_settings, skip_validation=skip_validation, env_file=env_file)
 
     if schedule:
         if cron is None or cron == "":
