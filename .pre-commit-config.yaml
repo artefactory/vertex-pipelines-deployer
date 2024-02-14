@@ -14,20 +14,20 @@ repos:
     - id: check-added-large-files
   - repo: local
     hooks:
-    - id: isort
-      name: isort
-      entry: poetry run isort --settings-path pyproject.toml
+    - id: ruff-isort
+      name: ruff isort
+      entry: poetry run ruff check --fix --select I --config pyproject.toml
       types: [python]
       language: system
       stages: [commit, push]
-    - id: black
-      name: black
-      entry: poetry run black --config pyproject.toml
+    - id: ruff-format
+      name: ruff format
+      entry: poetry run ruff format --config pyproject.toml
       types: [python]
       language: system
       stages: [commit, push]
-    - id: ruff
-      name: ruff
+    - id: ruff-check
+      name: ruff check
       entry: poetry run ruff check --config pyproject.toml
       types: [python]
       language: system

@@ -35,7 +35,8 @@ class GraphComponentType(Protocol):
 
     def __call__(  # noqa: D102
         self, component_spec: Any, pipeline_func: Callable, display_name: Optional[str] = None
-    ): ...
+    ):
+        ...
 
 
 def filter_lines_from(tb: TracebackType, target_file: Union[Path, str]) -> str:

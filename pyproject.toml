@@ -24,8 +24,6 @@ toml = "^0.10"
 tomlkit = "^0.12"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1"
-isort = "^5.12"
 pytest = "^8.0"
 pre-commit = "^3.3"
 ipykernel = "^6.9"
@@ -71,7 +69,8 @@ select = [
     "W",    # flake8
     "S",    # bandit
     "N",    # pep8-naming
-    "RUF"   # ruff
+    "RUF",  # ruff
+    "I",    # isort
 ]
 
 [tool.ruff.pydocstyle]
