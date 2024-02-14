@@ -24,6 +24,7 @@ from deployer.utils.config import (
     list_config_filepaths,
     load_config,
     load_vertex_settings,
+    validate_or_log_settings,
 )
 from deployer.utils.console import ask_user_for_model_fields, console
 from deployer.utils.logging import LoguruLevel
@@ -223,10 +224,11 @@ def deploy(  # noqa: C901
             "-y / -n",
             help="Whether to continue without user validation of the settings.",
         ),
-    ] = False,
+    ] = True,
 ):
     """Compile, upload, run and schedule pipelines."""
-    vertex_settings = load_vertex_settings(env_file=env_file, skip_validation=skip_validation)
+    vertex_settings = load_vertex_settings(env_file=env_file)
+    validate_or_log_settings(vertex_settings, skip_validation=skip_validation, env_file=env_file)
 
     if schedule:
         if cron is None or cron == "":

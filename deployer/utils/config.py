@@ -27,12 +27,11 @@ class VertexPipelinesSettings(BaseSettings):  # noqa: D101
     VERTEX_SERVICE_ACCOUNT: str
 
 
-def load_vertex_settings(
-    env_file: Optional[Path] = None, skip_validation: bool = True
-) -> VertexPipelinesSettings:
+def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSettings:
     """Load the settings from the environment."""
     try:
         settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
+        print(settings)
     except ValidationError as e:
         msg = "Validation failed for VertexPipelinesSettings. "
         if env_file is not None:
@@ -41,7 +40,24 @@ def load_vertex_settings(
             msg += "No `.env` file provided. Please check your environment variables"
         msg += f"\n{e}"
         raise ValueError(msg) from e
+    return settings
 
+
+def validate_or_log_settings(
+    settings: VertexPipelinesSettings,
+    skip_validation: bool,
+    env_file: Optional[Path] = None,
+) -> None:
+    """Validate the settings or log them if validation is skipped.
+
+    Args:
+        settings (VertexPipelinesSettings): The settings to validate or log.
+        skip_validation (bool): Whether to skip validation.
+        env_file (Optional[Path], optional): The path to the environment file. Defaults to None.
+
+    Raises:
+        ValueError: If the user chooses to exit.
+    """
     msg = "Loaded settings from environment"
     if env_file is not None:
         msg += f" and `.env` file: `{env_file}`."
@@ -65,8 +81,6 @@ def load_vertex_settings(
         )
         if continue_with_settings.lower() != "y":
             raise ValueError("User chose to exit")
-
-    return settings
 
 
 class ConfigType(str, Enum):  # noqa: D101
