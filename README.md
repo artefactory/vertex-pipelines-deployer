@@ -341,7 +341,7 @@ vertex-deployer deploy dummy_pipeline \
     --config-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
     --enable-caching \
-    -y
+    --skip-validation
 ```
 
 ### ✅ CLI: Checking Pipelines are valid with `check`

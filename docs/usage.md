@@ -11,7 +11,7 @@
         --config-filepath vertex/configs/dummy_pipeline/config_test.json \
         --experiment-name my-experiment \
         --enable-caching \
-        -y
+        --skip-validation
     ```
 
     Check pipelines:

@@ -53,7 +53,7 @@ This command includes the following:
 Now that you have a base image, you can compile your pipeline and trigger a run that will use the latest version of your docker base image
 
 ```bash
-vertex-deployer deploy --compile --run --env-file .env --config-name my_config.json -y
+vertex-deployer deploy --compile --run --env-file .env --config-name my_config.json --skip-validation
 ```
 
 ## ✅ CI: Check your pipelines and config integrity
