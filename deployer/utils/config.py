@@ -8,6 +8,7 @@ import tomlkit.items
 from loguru import logger
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from rich.prompt import Confirm
 from rich.table import Table
 from tomlkit import TOMLDocument
 from tomlkit.toml_file import TOMLFile
@@ -65,7 +66,7 @@ def validate_or_log_settings(
     if skip_validation:
         msg += "\nLoaded settings for Vertex:"
         msg += "\n" + "\n".join(f"  {k:<30} {v:<30}" for k, v in settings.model_dump().items())
-        logger.debug(msg)
+        logger.info(msg)
     else:
         table = Table(show_header=True, header_style="bold", show_lines=True)
         table.add_column("Setting Name")
@@ -75,11 +76,7 @@ def validate_or_log_settings(
 
         console.print(msg)
         console.print(table)
-        continue_with_settings = console.input(
-            "Do you want to continue with these settings? "
-            "[Only 'y' will continue, any other key will exit]"
-        )
-        if continue_with_settings.lower() != "y":
+        if not Confirm.ask("Do you want to continue with these settings? ", console=console):
             raise ValueError("User chose to exit")
 
 
