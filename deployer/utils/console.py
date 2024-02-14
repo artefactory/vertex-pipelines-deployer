@@ -3,7 +3,10 @@ from inspect import isclass
 from typing import Type
 
 from pydantic import BaseModel
+from rich.console import Console
 from rich.prompt import Prompt
+
+console = Console()
 
 
 def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:

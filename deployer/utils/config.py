@@ -5,11 +5,15 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import tomlkit.items
+from loguru import logger
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from rich.prompt import Confirm
+from rich.table import Table
 from tomlkit import TOMLDocument
 from tomlkit.toml_file import TOMLFile
 
+from deployer.utils.console import console
 from deployer.utils.exceptions import BadConfigError, UnsupportedConfigFileError
 
 
@@ -28,6 +32,7 @@ def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSett
     """Load the settings from the environment."""
     try:
         settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
+        print(settings)
     except ValidationError as e:
         msg = "Validation failed for VertexPipelinesSettings. "
         if env_file is not None:
@@ -37,6 +42,42 @@ def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSett
         msg += f"\n{e}"
         raise ValueError(msg) from e
     return settings
+
+
+def validate_or_log_settings(
+    settings: VertexPipelinesSettings,
+    skip_validation: bool,
+    env_file: Optional[Path] = None,
+) -> None:
+    """Validate the settings or log them if validation is skipped.
+
+    Args:
+        settings (VertexPipelinesSettings): The settings to validate or log.
+        skip_validation (bool): Whether to skip validation.
+        env_file (Optional[Path], optional): The path to the environment file. Defaults to None.
+
+    Raises:
+        ValueError: If the user chooses to exit.
+    """
+    msg = "Loaded settings from environment"
+    if env_file is not None:
+        msg += f" and `.env` file: `{env_file}`."
+
+    if skip_validation:
+        msg += "\nLoaded settings for Vertex:"
+        msg += "\n" + "\n".join(f"  {k:<30} {v:<30}" for k, v in settings.model_dump().items())
+        logger.info(msg)
+    else:
+        table = Table(show_header=True, header_style="bold", show_lines=True)
+        table.add_column("Setting Name")
+        table.add_column("Value")
+        for k, v in settings.model_dump().items():
+            table.add_row(k, v)
+
+        console.print(msg)
+        console.print(table)
+        if not Confirm.ask("Do you want to continue with these settings? ", console=console):
+            raise ValueError("User chose to exit")
 
 
 class ConfigType(str, Enum):  # noqa: D101
