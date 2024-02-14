@@ -24,12 +24,10 @@ toml = "^0.10"
 tomlkit = "^0.12"
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.1"
-isort = "^5.12"
 pytest = "^8.0"
 pre-commit = "^3.3"
 ipykernel = "^6.9"
-nbstripout = "^0.6"
+nbstripout = "^0.7"
 ruff = "^0.1"
 pytest-cov = "^4.1"
 codespell = "^2.2"
@@ -46,21 +44,14 @@ profiling = ["pyinstrument"]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.black]
-target_version = ["py38", "py39", "py310"]
-line-length = 99
-
-[tool.isort]
-profile = "black"
-known_first_party = ["vertex", "tests"]
-
 [tool.ruff]
+target-version = "py38"
+line-length = 99
 ignore = [
     "D100",
     "D205",
     "D415",
 ]
-line-length = 99
 select = [
     "B",    # bugbear
     "C4",   # comprehensions
@@ -71,11 +62,15 @@ select = [
     "W",    # flake8
     "S",    # bandit
     "N",    # pep8-naming
-    "RUF"   # ruff
+    "RUF",  # ruff
+    "I",    # isort
 ]
 
 [tool.ruff.pydocstyle]
 convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["vertex", "tests", "deployer"]
 
 [tool.ruff.per-file-ignores]
 "*cli.py" = ["D", "B008"]
