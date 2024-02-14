@@ -44,21 +44,14 @@ profiling = ["pyinstrument"]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.black]
-target_version = ["py38", "py39", "py310"]
-line-length = 99
-
-[tool.isort]
-profile = "black"
-known_first_party = ["vertex", "tests"]
-
 [tool.ruff]
+target-version = "py38"
+line-length = 99
 ignore = [
     "D100",
     "D205",
     "D415",
 ]
-line-length = 99
 select = [
     "B",    # bugbear
     "C4",   # comprehensions
