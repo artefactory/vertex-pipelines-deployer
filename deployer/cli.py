@@ -8,7 +8,7 @@ import rich.traceback
 import typer
 from loguru import logger
 from pydantic import ValidationError
-from rich.prompt import Prompt
+from rich.prompt import Confirm, Prompt
 from typing_extensions import Annotated
 
 from deployer import constants
@@ -493,7 +493,7 @@ def create_pipeline(
     if existing_pipelines:
         raise typer.BadParameter(f"Pipelines {existing_pipelines} already exist.")
 
-    logger.info(f"Creating pipeline {pipeline_names} with config type {config_type}")
+    console.print(f"Creating pipeline {pipeline_names} with config type: [bold]{config_type}[/bold]")
 
     for pipeline_name in pipeline_names:
         pipeline_filepath = deployer_settings.pipelines_root_path / f"{pipeline_name}.py"
@@ -514,7 +514,11 @@ def create_pipeline(
             pipeline_filepath.unlink()
             raise e
 
-        logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+        console.print(
+            f"Pipeline '{pipeline_name}' created at '{pipeline_filepath}'"
+            f" with config files: {[str(p) for p in config_dirpath.glob('*')]}. :sparkles:",
+            style="blue",
+        )
 
 
 @app.command(name="init")
@@ -524,7 +528,7 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
     console.print("Welcome to Vertex Deployer!", style="blue")
     console.print("This command will help you getting fired up.", style="blue")
 
-    if Prompt.ask("Do you want to configure the deployer?", choices=["y", "n"]) == "y":
+    if Confirm.ask("Do you want to configure the deployer?"):
         pyproject_toml_filepath = find_pyproject_toml(Path.cwd().resolve())
 
         if pyproject_toml_filepath is None:
@@ -542,7 +546,7 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
         update_pyproject_toml(pyproject_toml_filepath, new_deployer_settings)
         console.print("Configuration saved in pyproject.toml :sparkles:", style="blue")
 
-    if Prompt.ask("Do you want to build default folder structure", choices=["y", "n"]) == "y":
+    if Confirm.ask("Do you want to build default folder structure"):
 
         def create_file_or_dir(path: Path, text: str = ""):
             """Create a file (if text is provided) or a directory at path. Warn if path exists."""
@@ -563,14 +567,13 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
             Path("./.env"), "=\n".join(VertexPipelinesSettings.model_json_schema()["required"])
         )
 
-    if Prompt.ask("Do you want to create a pipeline?", choices=["y", "n"]) == "y":
+    if Confirm.ask("Do you want to create a pipeline?"):
         wrong_name = True
         while wrong_name:
             pipeline_name = Prompt.ask("What is the name of the pipeline?")
-            pipeline_path = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
 
             try:
-                create_pipeline(pipeline_name=pipeline_name)
+                create_pipeline(ctx, pipeline_name=pipeline_name)
             except typer.BadParameter as e:
                 console.print(e, style="red")
             except FileExistsError:
@@ -580,10 +583,6 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
                 )
             else:
                 wrong_name = False
-                console.print(
-                    f"Pipeline '{pipeline_name}' created at '{pipeline_path}'. :sparkles:",
-                    style="blue",
-                )
 
     console.print("All done :sparkles:", style="blue")
 
