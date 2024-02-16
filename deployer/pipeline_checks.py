@@ -69,6 +69,7 @@ class Pipeline(CustomBaseModel):
         return data
 
     @computed_field
+    @property
     def pipeline(self) -> graph_component.GraphComponent:
         """Import pipeline"""
         if getattr(self, "_pipeline", None) is None:

@@ -10,7 +10,11 @@ class CustomBaseModel(BaseModel):
     # FIXME: arbitrary_types_allowed is a workaround to allow to pass
     #        Vertex Pipelines Artifacts as parameters to a pipeline.
     model_config = ConfigDict(
-        extra="forbid", arbitrary_types_allowed=True, protected_namespaces=()
+        extra="forbid",
+        arbitrary_types_allowed=True,
+        protected_namespaces=(),
+        validate_default=True,
+        strict=True,
     )
 
 
@@ -39,14 +43,14 @@ def create_model_from_func(
         type_converter = _dummy_type_converter
 
     func_signature = signature(func)
-    func_typing = {
-        p.name: type_converter(p.annotation) for p in func_signature.parameters.values()
-    }
 
     func_model = create_model(
         __model_name=model_name,
         __base__=CustomBaseModel,
-        **{name: (annotation, ...) for name, annotation in func_typing.items()},
+        **{
+            p.name: (type_converter(p.annotation), p.default)
+            for p in func_signature.parameters.values()
+        },
     )
 
     return func_model
@@ -57,8 +61,8 @@ class ChecksTableRow(CustomBaseModel):
 
     status: Literal["✅", "⚠️", "❌"]
     pipeline: str
-    pipeline_error_message: str = None
+    pipeline_error_message: Optional[str] = None
     config_file: str
-    attribute: str = None
-    config_error_type: str = None
-    config_error_message: str = None
+    attribute: Optional[str] = None
+    config_error_type: Optional[str] = None
+    config_error_message: Optional[str] = None
