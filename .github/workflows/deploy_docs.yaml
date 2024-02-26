@@ -1,9 +1,9 @@
 name: Deploy doc to GitHub Pages
 
 on:
-  workflow_run:
-    workflows: ["CI and Release on main"]
-    types: [completed]
+  push:
+    branches:
+      - 'main'
 
 env:
     python-version: "3.10"
