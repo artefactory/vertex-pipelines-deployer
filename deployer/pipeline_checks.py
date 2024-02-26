@@ -1,6 +1,6 @@
 import shutil
 from pathlib import Path
-from typing import Any, Dict, Generic, List, TypeVar
+from typing import Any, Dict, Generic, List, Optional, TypeVar
 
 import kfp.dsl
 from loguru import logger
@@ -57,6 +57,7 @@ class Pipeline(CustomBaseModel):
     config_paths: Annotated[List[Path], Field(validate_default=True)] = None
     pipelines_root_path: Path
     config_root_path: Path
+    configs: Optional[Dict[str, ConfigDynamicModel]] = None  # Optional because populated after
 
     @model_validator(mode="before")
     @classmethod
@@ -112,7 +113,7 @@ class Pipeline(CustomBaseModel):
             self.pipeline.pipeline_func, type_converter=_convert_artifact_type_to_str
         )
         config_model = ConfigsDynamicModel[pipelines_dynamic_model]
-        config_model.model_validate(
+        self.configs = config_model.model_validate(
             {"configs": {x.name: {"config_path": x} for x in self.config_paths}}
         )
         return self

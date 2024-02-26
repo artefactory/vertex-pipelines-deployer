@@ -26,3 +26,13 @@ parameter_values = {}
 input_artifacts = {}
 
 """
+
+PIPELINE_CHECKS_TABLE_COLUMNS = [
+    "Status",
+    "Pipeline",
+    "Pipeline Error Message",
+    "Config File",
+    "Attribute",
+    "Config Error Type",
+    "Config Error Message",
+]

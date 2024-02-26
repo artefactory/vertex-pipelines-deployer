@@ -377,7 +377,7 @@ def check(
 
     try:
         with console.status("Checking pipelines..."):
-            Pipelines.model_validate(
+            pipelines_model = Pipelines.model_validate(
                 {
                     "pipelines": {
                         p: {
@@ -393,10 +393,10 @@ def check(
     except ValidationError as e:
         if raise_error:
             raise e
-        print_check_results_table(to_check, e)
-        sys.exit(1)
+        print_check_results_table(to_check, validation_error=e)
+        typer.exit(1)
     else:
-        print_check_results_table(to_check)
+        print_check_results_table(to_check, pipelines_model=pipelines_model)
 
 
 @app.command(name="list")
