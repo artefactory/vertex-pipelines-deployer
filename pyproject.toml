@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vertex-deployer"
-version = "0.4.1"
+version = "0.4.2"
 description = ""
 authors = ["julesbertrand <julesbertrand13@gmail.com>"]
 readme = "README.md"
