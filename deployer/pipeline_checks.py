@@ -113,7 +113,7 @@ class Pipeline(CustomBaseModel):
         pipelines_dynamic_model = create_model_from_func(
             self.pipeline.pipeline_func,
             type_converter=_convert_artifact_type_to_str,
-            exclude_defaults=info.context.get("raise_for_defaults"),
+            exclude_defaults=info.context.get("raise_for_defaults", False),
         )
         config_model = ConfigsDynamicModel[pipelines_dynamic_model]
         self.configs = config_model.model_validate(
