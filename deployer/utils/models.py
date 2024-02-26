@@ -14,7 +14,6 @@ class CustomBaseModel(BaseModel):
         arbitrary_types_allowed=True,
         protected_namespaces=(),
         validate_default=True,
-        strict=True,
     )
 
 

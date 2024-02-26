@@ -167,7 +167,7 @@ def deploy(  # noqa: C901
         ),
     ] = constants.DEFAULT_SCHEDULER_TIMEZONE,
     tags: Annotated[
-        List[str], typer.Option(help="The tags to use when uploading the pipeline.")
+        Optional[List[str]], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = constants.DEFAULT_TAGS,
     config_filepath: Annotated[
         Optional[Path],
@@ -336,6 +336,15 @@ def check(
             help="Whether to raise an error if the pipeline is not valid.",
         ),
     ] = False,
+    warn_defaults: Annotated[
+        bool,
+        typer.Option(
+            "--warn-defaults / --no-warn-defaults",
+            "-wd / -nwd",
+            help="Whether to warn when a default value is used."
+            "and not overwritten in config file.",
+        ),
+    ] = True,
 ):
     """Check that pipelines are valid.
 
@@ -396,7 +405,9 @@ def check(
         print_check_results_table(to_check, validation_error=e)
         typer.exit(1)
     else:
-        print_check_results_table(to_check, pipelines_model=pipelines_model)
+        print_check_results_table(
+            to_check, pipelines_model=pipelines_model, warn_defaults=warn_defaults
+        )
 
 
 @app.command(name="list")
