@@ -54,6 +54,8 @@ $ vertex-deployer check [OPTIONS] PIPELINE_NAMES...
 **Options**:
 * `--all, -a / --no-all`: Whether to check all pipelines. [default: no-all]
 * `--config-filepath, -cfp PATH`: Path to the json/py file with parameter values and input artifacts to check. If not specified, all config files in the pipeline dir will be checked.
+* `--warn-defaults, -wd / --no-warn-defaults, -nwd`: Whether to warn when a default value is used and not overwritten in config file. [default: warn-defaults]
+* `raise-for-defaults, -rfd / --no-raise-for-defaults, -nrfd`: Whether to raise an validation error when a default value is used.and not overwritten in config file. [default: no-raise-for-defaults]
 * `--raise-error, -re / --no-raise-error, -nre`: Whether to raise an error if the pipeline is not valid. [default: no-raise-error]
 * `--help`: Show this message and exit.
 
@@ -114,6 +116,7 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAME
 * `--schedule, -s / --no-schedule, -ns`: Whether to create a schedule for the pipeline. [default: no-schedule]
 * `--cron TEXT`: Cron expression for scheduling the pipeline. To pass it to the CLI, use hyphens e.g. `0-10-*-*-*`.
 * `--delete-last-schedule, -dls / --no-delete-last-schedule`: Whether to delete the previous schedule before creating a new one. [default: no-delete-last-schedule]
+* ` --scheduler-timezone TEXT` : IANA Timezone for the scheduler. [default: Europe/Paris]
 * `--tags TEXT`: The tags to use when uploading the pipeline. [default: latest]
 * `--config-filepath, -cfp PATH`: Path to the json/py file with parameter values and input artifacts to use when running the pipeline.
 * `--config-name, -cn TEXT`: Name of the json/py file with parameter values and input artifacts to use when running the pipeline. It must be in the pipeline config dir. e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.
