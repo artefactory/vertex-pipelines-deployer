@@ -94,19 +94,26 @@ def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union
         )
 
     if isinstance(value, str):
-        if value not in pipeline_names.__members__:
-            raise typer.BadParameter(
-                f"Pipeline '{value}' not found at '{ctx.obj['settings'].pipelines_root_path}'."
-                f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
-            )
+        to_check = [value]
+    elif isinstance(value, list):
+        to_check = value
+    else:
+        return value
+
+    to_raise = [v for v in to_check if v not in pipeline_names.__members__]
+    if len(to_raise) > 0:
+        raise typer.BadParameter(
+            f"Pipelines {to_raise} not found at '{ctx.obj['settings'].pipelines_root_path}'."
+            f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
+        )
     return value
 
 
 @app.command(no_args_is_help=True)
 def deploy(  # noqa: C901
     ctx: typer.Context,
-    pipeline_name: Annotated[
-        str,
+    pipeline_names: Annotated[
+        List[str],
         typer.Argument(
             ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
         ),
@@ -247,65 +254,68 @@ def deploy(  # noqa: C901
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
-    pipeline_func = import_pipeline_from_dir(deployer_settings.pipelines_root_path, pipeline_name)
-
     from deployer.pipeline_deployer import VertexPipelineDeployer
 
-    deployer = VertexPipelineDeployer(
-        project_id=vertex_settings.PROJECT_ID,
-        region=vertex_settings.GCP_REGION,
-        staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
-        service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
-        pipeline_name=pipeline_name,
-        pipeline_func=pipeline_func,
-        gar_location=vertex_settings.GAR_LOCATION,
-        gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
-        local_package_path=local_package_path,
-    )
+    for pipeline_name in pipeline_names:
+        pipeline_func = import_pipeline_from_dir(
+            deployer_settings.pipelines_root_path, pipeline_name
+        )
 
-    if run or schedule:
-        if config_name is not None:
-            config_filepath = (
-                Path(deployer_settings.config_root_path) / pipeline_name / config_name
-            )
-        parameter_values, input_artifacts = load_config(config_filepath)
+        deployer = VertexPipelineDeployer(
+            project_id=vertex_settings.PROJECT_ID,
+            region=vertex_settings.GCP_REGION,
+            staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
+            service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
+            pipeline_name=pipeline_name,
+            pipeline_func=pipeline_func,
+            gar_location=vertex_settings.GAR_LOCATION,
+            gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
+            local_package_path=local_package_path,
+        )
 
-    if compile:
-        with console.status("Compiling pipeline..."):
-            deployer.compile()
+        if run or schedule:
+            if config_name is not None:
+                config_filepath = (
+                    Path(deployer_settings.config_root_path) / pipeline_name / config_name
+                )
+            parameter_values, input_artifacts = load_config(config_filepath)
 
-    if upload:
-        with console.status("Uploading pipeline..."):
-            deployer.upload_to_registry(tags=tags)
+        if compile:
+            with console.status("Compiling pipeline..."):
+                deployer.compile()
 
-    if run:
-        with console.status("Running pipeline..."):
-            deployer.run(
-                enable_caching=enable_caching,
-                parameter_values=parameter_values,
-                experiment_name=experiment_name,
-                input_artifacts=input_artifacts,
-                tag=tags[0] if tags else None,
-            )
+        if upload:
+            with console.status("Uploading pipeline..."):
+                deployer.upload_to_registry(tags=tags)
 
-    if schedule:
-        with console.status("Scheduling pipeline..."):
-            cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
-            deployer.schedule(
-                cron=cron,
-                enable_caching=enable_caching,
-                parameter_values=parameter_values,
-                tag=tags[0] if tags else None,
-                delete_last_schedule=delete_last_schedule,
-                scheduler_timezone=scheduler_timezone,
-            )
+        if run:
+            with console.status("Running pipeline..."):
+                deployer.run(
+                    enable_caching=enable_caching,
+                    parameter_values=parameter_values,
+                    experiment_name=experiment_name,
+                    input_artifacts=input_artifacts,
+                    tag=tags[0] if tags else None,
+                )
+
+        if schedule:
+            with console.status("Scheduling pipeline..."):
+                cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
+                deployer.schedule(
+                    cron=cron,
+                    enable_caching=enable_caching,
+                    parameter_values=parameter_values,
+                    tag=tags[0] if tags else None,
+                    delete_last_schedule=delete_last_schedule,
+                    scheduler_timezone=scheduler_timezone,
+                )
 
 
 @app.command()
 def check(
     ctx: typer.Context,
-    pipeline_name: Annotated[
-        Optional[str],
+    pipeline_names: Annotated[
+        Optional[List[str]],
         typer.Argument(
             ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
         ),
@@ -371,7 +381,7 @@ def check(
 
     **This command can be used to check pipelines in a Continuous Integration workflow.**
     """
-    if all and pipeline_name is not None:
+    if all and pipeline_names is not None:
         raise typer.BadParameter("Please specify either --all or a pipeline name")
 
     from deployer.pipeline_checks import Pipelines
@@ -379,19 +389,16 @@ def check(
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
     if all:
-        logger.info("Checking all pipelines")
         # unpack enum to get list of pipeline names
-        pipelines_to_check = [x.value for x in ctx.obj["pipeline_names"]]
-    elif pipeline_name is not None:
-        logger.info(f"Checking pipeline {pipeline_name}")
-        pipelines_to_check = [pipeline_name]
+        pipeline_names = [x.value for x in ctx.obj["pipeline_names"]]
+    logger.info(f"Checking pipelines {pipeline_names}")
+
     if config_filepath is None:
         to_check = {
-            p: list_config_filepaths(deployer_settings.config_root_path, p)
-            for p in pipelines_to_check
+            p: list_config_filepaths(deployer_settings.config_root_path, p) for p in pipeline_names
         }
     else:
-        to_check = {p: [config_filepath] for p in pipelines_to_check}
+        to_check = {p: [config_filepath] for p in pipeline_names}
 
     try:
         with console.status("Checking pipelines..."):
