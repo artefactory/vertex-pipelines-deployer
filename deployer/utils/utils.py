@@ -155,7 +155,7 @@ def dict_to_repr(
             dict_repr.append(" " * indent * depth + f"{k}")
             dict_repr.extend(dict_to_repr(v, v_ref, depth=depth + 1, indent=indent))
         else:
-            if subdict.get(k):
+            if subdict.get(k) is not None:
                 v_str = " " * indent * depth + f"[cyan]* {k}={v}[/cyan]"
             else:
                 v_str = " " * indent * depth + f"[white]{k}={v}[/white]"
