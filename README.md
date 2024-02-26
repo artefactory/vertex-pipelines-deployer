@@ -351,9 +351,9 @@ To check that your pipelines are valid, you can use the `check` command. It uses
 - check that your pipeline can be compiled
 - check that all configs related to the pipeline are respecting the pipeline definition (using a Pydantic model based on pipeline signature)
 
-To validate one specific pipeline:
+To validate one or multiple pipeline(s):
 ```bash
-vertex-deployer check dummy_pipeline
+vertex-deployer check dummy_pipeline <other pipeline name>
 ```
 
 To validate all pipelines in the `vertex/pipelines` folder:
@@ -491,6 +491,7 @@ create
 │  ├─ settings.py
 │  └─ utils
 │     ├─ config.py
+│     ├─ console.py
 │     ├─ exceptions.py
 │     ├─ logging.py
 │     ├─ models.py
