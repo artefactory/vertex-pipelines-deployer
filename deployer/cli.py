@@ -381,7 +381,7 @@ def check(
 
     **This command can be used to check pipelines in a Continuous Integration workflow.**
     """
-    if all and pipeline_names is not None:
+    if all and pipeline_names:
         raise typer.BadParameter("Please specify either --all or a pipeline name")
 
     from deployer.pipeline_checks import Pipelines
