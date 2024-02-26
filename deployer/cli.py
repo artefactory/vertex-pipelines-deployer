@@ -119,7 +119,7 @@ def deploy(  # noqa: C901
     pipeline_names: Annotated[
         List[str],
         typer.Argument(
-            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+            ..., help="The names of the pipeline to run.", callback=pipeline_name_callback
         ),
     ],
     env_file: Annotated[
@@ -327,7 +327,7 @@ def check(
     pipeline_names: Annotated[
         Optional[List[str]],
         typer.Argument(
-            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+            ..., help="The names of the pipeline to run.", callback=pipeline_name_callback
         ),
     ] = None,
     all: Annotated[
@@ -460,9 +460,9 @@ def list_pipelines(
 @app.command(name="create")
 def create_pipeline(
     ctx: typer.Context,
-    pipeline_name: Annotated[
-        str,
-        typer.Argument(..., help="The name of the pipeline to create."),
+    pipeline_names: Annotated[
+        List[str],
+        typer.Argument(..., help="The names of the pipeline to create."),
     ],
     config_type: Annotated[
         ConfigType,
@@ -470,13 +470,12 @@ def create_pipeline(
     ] = ConfigType.json,
 ):
     """Create files structure for a new pipeline."""
-    if not re.match(r"^[a-zA-Z0-9_]+$", pipeline_name):
+    invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
+    if invalid_pipelines:
         raise typer.BadParameter(
-            f"Invalid Pipeline name: '{pipeline_name}'\n"
+            f"Invalid Pipeline name(s): '{invalid_pipelines}'\n"
             "Pipeline name must only contain alphanumeric characters and underscores"
         )
-
-    logger.info(f"Creating pipeline {pipeline_name}")
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
@@ -488,25 +487,34 @@ def create_pipeline(
                 f" or create it with 'mkdir -p {path}'."
             )
 
-    pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
-    pipeline_filepath.touch(exist_ok=False)
-    pipeline_filepath.write_text(
-        constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
-    )
+    existing_pipelines = [
+        p for p in pipeline_names if (deployer_settings.pipelines_root_path / f"{p}.py").exists()
+    ]
+    if existing_pipelines:
+        raise typer.BadParameter(f"Pipelines {existing_pipelines} already exist.")
 
-    try:
-        config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
-        config_dirpath.mkdir(exist_ok=True)
-        for config_name in ["test", "dev", "prod"]:
-            config_filepath = config_dirpath / f"{config_name}.{config_type}"
-            config_filepath.touch(exist_ok=False)
-            if config_type == ConfigType.py:
-                config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
-    except Exception as e:
-        pipeline_filepath.unlink()
-        raise e
+    logger.info(f"Creating pipeline {pipeline_names} with config type {config_type}")
 
-    logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+    for pipeline_name in pipeline_names:
+        pipeline_filepath = deployer_settings.pipelines_root_path / f"{pipeline_name}.py"
+        pipeline_filepath.touch(exist_ok=False)
+        pipeline_filepath.write_text(
+            constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
+        )
+
+        try:
+            config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
+            config_dirpath.mkdir(exist_ok=True)
+            for config_name in ["test", "dev", "prod"]:
+                config_filepath = config_dirpath / f"{config_name}.{config_type}"
+                config_filepath.touch(exist_ok=False)
+                if config_type == ConfigType.py:
+                    config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
+        except Exception as e:
+            pipeline_filepath.unlink()
+            raise e
+
+        logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
 
 
 @app.command(name="init")
