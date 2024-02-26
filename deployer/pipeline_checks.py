@@ -7,6 +7,7 @@ from loguru import logger
 from pydantic import Field, ValidationError, computed_field, model_validator
 from pydantic.functional_validators import ModelWrapValidatorHandler
 from pydantic_core import PydanticCustomError
+from pydantic_core.core_schema import ValidationInfo
 from typing_extensions import Annotated, _AnnotatedAlias
 
 try:
@@ -106,11 +107,13 @@ class Pipeline(CustomBaseModel):
         return self
 
     @model_validator(mode="after")
-    def validate_configs(self):
+    def validate_configs(self, info: ValidationInfo):
         """Validate configs against pipeline parameters definition"""
         logger.debug(f"Validating configs for pipeline {self.pipeline_name}")
         pipelines_dynamic_model = create_model_from_func(
-            self.pipeline.pipeline_func, type_converter=_convert_artifact_type_to_str
+            self.pipeline.pipeline_func,
+            type_converter=_convert_artifact_type_to_str,
+            exclude_defaults=info.context.get("raise_for_defaults"),
         )
         config_model = ConfigsDynamicModel[pipelines_dynamic_model]
         self.configs = config_model.model_validate(

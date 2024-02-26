@@ -41,6 +41,7 @@ class _DeployerCheckSettings(CustomBaseModel):
     config_filepath: Optional[Path] = None
     raise_error: bool = False
     warn_defaults: bool = True
+    raise_for_defaults: bool = False
 
 
 class _DeployerListSettings(CustomBaseModel):

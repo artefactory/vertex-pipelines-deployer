@@ -345,6 +345,15 @@ def check(
             "and not overwritten in config file.",
         ),
     ] = True,
+    raise_for_defaults: Annotated[
+        bool,
+        typer.Option(
+            "--raise-for-defaults / --no-raise-for-defaults",
+            "-rfd / -nrfd",
+            help="Whether to raise an validation error when a default value is used."
+            "and not overwritten in config file.",
+        ),
+    ] = False,
 ):
     """Check that pipelines are valid.
 
@@ -397,13 +406,14 @@ def check(
                         }
                         for p, config_filepaths in to_check.items()
                     }
-                }
+                },
+                context={"raise_for_defaults": raise_for_defaults},
             )
     except ValidationError as e:
         if raise_error:
             raise e
         print_check_results_table(to_check, validation_error=e)
-        typer.exit(1)
+        sys.exit(1)
     else:
         print_check_results_table(
             to_check, pipelines_model=pipelines_model, warn_defaults=warn_defaults

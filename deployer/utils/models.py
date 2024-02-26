@@ -33,6 +33,7 @@ def create_model_from_func(
     func: Callable,
     model_name: Optional[str] = None,
     type_converter: Optional[TypeConverterType] = None,
+    exclude_defaults: bool = False,
 ) -> CustomBaseModel:
     """Create a Pydantic model from pipeline parameters."""
     if model_name is None:
@@ -47,7 +48,7 @@ def create_model_from_func(
         __model_name=model_name,
         __base__=CustomBaseModel,
         **{
-            p.name: (type_converter(p.annotation), p.default)
+            p.name: (type_converter(p.annotation), p.default if not exclude_defaults else ...)
             for p in func_signature.parameters.values()
         },
     )
