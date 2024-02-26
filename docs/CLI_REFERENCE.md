@@ -44,12 +44,14 @@ pipeline parameters definition, using Pydantic.
 **Usage**:
 
 ```console
-$ vertex-deployer check [OPTIONS]
+$ vertex-deployer check [OPTIONS] PIPELINE_NAMES...
 ```
 
-**Options**:
+**Arguments**:
 
-* `--pipeline-name []`
+* `PIPELINE_NAMES...`: The names of the pipeline to create. [optional]
+
+**Options**:
 * `--all, -a / --no-all`: Whether to check all pipelines. [default: no-all]
 * `--config-filepath, -cfp PATH`: Path to the json/py file with parameter values and input artifacts to check. If not specified, all config files in the pipeline dir will be checked.
 * `--raise-error, -re / --no-raise-error, -nre`: Whether to raise an error if the pipeline is not valid. [default: no-raise-error]
@@ -77,12 +79,12 @@ Create files structure for a new pipeline.
 **Usage**:
 
 ```console
-$ vertex-deployer create [OPTIONS] PIPELINE_NAME
+$ vertex-deployer create [OPTIONS] PIPELINE_NAMES...
 ```
 
 **Arguments**:
 
-* `PIPELINE_NAME`: The name of the pipeline to create. [required]
+* `PIPELINE_NAMES...`: The names of the pipeline to create. [required]
 
 **Options**:
 
@@ -101,7 +103,7 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAME
 
 **Arguments**:
 
-* `PIPELINE_NAME`: The name of the pipeline to deploy. [required]
+* `PIPELINE_NAMES...`: The names of the pipeline to deploy. [required]
 
 **Options**:
 
