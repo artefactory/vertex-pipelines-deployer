@@ -81,7 +81,7 @@ def main(
 
 
 def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union[str, bool]:
-    """Callback to check that the pipeline name is valid. Also used for 'all' option."""
+    """Callback to check that the pipeline name is valid."""
     if value is None:  # None is allowed for optional arguments
         return value
 
@@ -93,12 +93,16 @@ def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union
             f"'{ctx.obj['settings'].pipelines_root_path}'"
         )
 
-    if isinstance(value, str):
+    if ctx.params.get("all", False):
+        to_check = [x.value for x in pipeline_names.__members__.values()]
+    elif isinstance(value, str):
         to_check = [value]
     elif isinstance(value, list):
+        if len(value) == 0:
+            raise typer.BadParameter("No pipeline names specified.")
         to_check = value
     else:
-        return value
+        raise typer.BadParameter(f"Invalid value for pipeline_names: {value}")
 
     to_raise = [v for v in to_check if v not in pipeline_names.__members__]
     if len(to_raise) > 0:
@@ -251,6 +255,12 @@ def deploy(  # noqa: C901
                 "Both --config-filepath and --config-name are provided."
                 " Please specify only one to run or schedule a pipeline."
             )
+        if config_filepath is not None and len(pipeline_names) > 1:
+            raise typer.BadParameter(
+                "Multiple pipelines specified with --config-filepath."
+                " Please specify a --config-name that will be used for each pipeline."
+                " Or specify a single pipeline to use the --config-filepath."
+            )
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
@@ -322,9 +332,7 @@ def check(
     ] = None,
     all: Annotated[
         bool,
-        typer.Option(
-            "--all", "-a", help="Whether to check all pipelines.", callback=pipeline_name_callback
-        ),
+        typer.Option("--all", "-a", help="Whether to check all pipelines."),
     ] = False,
     config_filepath: Annotated[
         Optional[Path],
