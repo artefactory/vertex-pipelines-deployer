@@ -32,7 +32,6 @@ def load_vertex_settings(env_file: Optional[Path] = None) -> VertexPipelinesSett
     """Load the settings from the environment."""
     try:
         settings = VertexPipelinesSettings(_env_file=env_file, _env_file_encoding="utf-8")
-        print(settings)
     except ValidationError as e:
         msg = "Validation failed for VertexPipelinesSettings. "
         if env_file is not None:

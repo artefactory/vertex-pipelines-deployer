@@ -4,7 +4,7 @@ from typing import Type
 
 from pydantic import BaseModel
 from rich.console import Console
-from rich.prompt import Prompt
+from rich.prompt import Confirm, Prompt
 
 console = Console()
 
@@ -21,10 +21,8 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
     set_fields = {}
     for field_name, field_info in model.model_fields.items():
         if isclass(field_info.annotation) and issubclass(field_info.annotation, BaseModel):
-            answer = Prompt.ask(
-                f"Do you want to configure command {field_name}?", choices=["y", "n"], default="n"
-            )
-            if answer == "y":
+            answer = Confirm.ask(f"Do you want to configure command {field_name}?", default=False)
+            if answer:
                 set_fields[field_name] = ask_user_for_model_fields(field_info.annotation)
 
         else:
@@ -36,13 +34,9 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
                 choices = list(annotation.__members__)
 
             if isclass(annotation) and annotation == bool:
-                choices = ["y", "n"]
-                default = "y" if field_info.default else "n"
-
-            answer = Prompt.ask(field_name, default=default, choices=choices)
-
-            if isclass(annotation) and annotation == bool:
-                answer = answer == "y"
+                answer = Confirm.ask(field_name, default=default)
+            else:
+                answer = Prompt.ask(field_name, default=default, choices=choices)
 
             if answer != field_info.default:
                 set_fields[field_name] = answer

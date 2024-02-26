@@ -1,12 +1,13 @@
 import shutil
 from pathlib import Path
-from typing import Any, Dict, Generic, List, TypeVar
+from typing import Any, Dict, Generic, List, Optional, TypeVar
 
 import kfp.dsl
 from loguru import logger
 from pydantic import Field, ValidationError, computed_field, model_validator
 from pydantic.functional_validators import ModelWrapValidatorHandler
 from pydantic_core import PydanticCustomError
+from pydantic_core.core_schema import ValidationInfo
 from typing_extensions import Annotated, _AnnotatedAlias
 
 try:
@@ -57,6 +58,7 @@ class Pipeline(CustomBaseModel):
     config_paths: Annotated[List[Path], Field(validate_default=True)] = None
     pipelines_root_path: Path
     config_root_path: Path
+    configs: Optional[Dict[str, ConfigDynamicModel]] = None  # Optional because populated after
 
     @model_validator(mode="before")
     @classmethod
@@ -69,6 +71,7 @@ class Pipeline(CustomBaseModel):
         return data
 
     @computed_field
+    @property
     def pipeline(self) -> graph_component.GraphComponent:
         """Import pipeline"""
         if getattr(self, "_pipeline", None) is None:
@@ -104,14 +107,16 @@ class Pipeline(CustomBaseModel):
         return self
 
     @model_validator(mode="after")
-    def validate_configs(self):
+    def validate_configs(self, info: ValidationInfo):
         """Validate configs against pipeline parameters definition"""
         logger.debug(f"Validating configs for pipeline {self.pipeline_name}")
         pipelines_dynamic_model = create_model_from_func(
-            self.pipeline.pipeline_func, type_converter=_convert_artifact_type_to_str
+            self.pipeline.pipeline_func,
+            type_converter=_convert_artifact_type_to_str,
+            exclude_defaults=info.context.get("raise_for_defaults", False),
         )
         config_model = ConfigsDynamicModel[pipelines_dynamic_model]
-        config_model.model_validate(
+        self.configs = config_model.model_validate(
             {"configs": {x.name: {"config_path": x} for x in self.config_paths}}
         )
         return self

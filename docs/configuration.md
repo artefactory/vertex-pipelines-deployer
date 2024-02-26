@@ -12,12 +12,12 @@ You can override default options for specific CLI commands in the pyproject.toml
 You can also override global deployer options such as logging level, or pipelines / config root path to better fit your repo structure.
 
 ```toml title="pyproject.toml"
-[tool.vertex-deployer]
+[tool.vertex_deployer]
 log-level = "INFO"
 pipelines-root-path = "./vertex/pipelines"
 config-root-path = "./configs"
 
-[tool.vertex-deployer.deploy]
+[tool.vertex_deployer.deploy]
 enable-cache = true
 env-file = "example.env"
 compile = true

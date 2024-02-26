@@ -8,7 +8,7 @@ import rich.traceback
 import typer
 from loguru import logger
 from pydantic import ValidationError
-from rich.prompt import Prompt
+from rich.prompt import Confirm, Prompt
 from typing_extensions import Annotated
 
 from deployer import constants
@@ -81,7 +81,7 @@ def main(
 
 
 def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union[str, bool]:
-    """Callback to check that the pipeline name is valid. Also used for 'all' option."""
+    """Callback to check that the pipeline name is valid."""
     if value is None:  # None is allowed for optional arguments
         return value
 
@@ -93,22 +93,33 @@ def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union
             f"'{ctx.obj['settings'].pipelines_root_path}'"
         )
 
-    if isinstance(value, str):
-        if value not in pipeline_names.__members__:
-            raise typer.BadParameter(
-                f"Pipeline '{value}' not found at '{ctx.obj['settings'].pipelines_root_path}'."
-                f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
-            )
+    if ctx.params.get("all", False):
+        to_check = [x.value for x in pipeline_names.__members__.values()]
+    elif isinstance(value, str):
+        to_check = [value]
+    elif isinstance(value, list):
+        if len(value) == 0:
+            raise typer.BadParameter("No pipeline names specified.")
+        to_check = value
+    else:
+        raise typer.BadParameter(f"Invalid value for pipeline_names: {value}")
+
+    to_raise = [v for v in to_check if v not in pipeline_names.__members__]
+    if len(to_raise) > 0:
+        raise typer.BadParameter(
+            f"Pipelines {to_raise} not found at '{ctx.obj['settings'].pipelines_root_path}'."
+            f"\nAvailable pipelines: {list(pipeline_names.__members__)}"
+        )
     return value
 
 
 @app.command(no_args_is_help=True)
 def deploy(  # noqa: C901
     ctx: typer.Context,
-    pipeline_name: Annotated[
-        str,
+    pipeline_names: Annotated[
+        List[str],
         typer.Argument(
-            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+            ..., help="The names of the pipeline to run.", callback=pipeline_name_callback
         ),
     ],
     env_file: Annotated[
@@ -167,7 +178,7 @@ def deploy(  # noqa: C901
         ),
     ] = constants.DEFAULT_SCHEDULER_TIMEZONE,
     tags: Annotated[
-        List[str], typer.Option(help="The tags to use when uploading the pipeline.")
+        Optional[List[str]], typer.Option(help="The tags to use when uploading the pipeline.")
     ] = constants.DEFAULT_TAGS,
     config_filepath: Annotated[
         Optional[Path],
@@ -244,77 +255,84 @@ def deploy(  # noqa: C901
                 "Both --config-filepath and --config-name are provided."
                 " Please specify only one to run or schedule a pipeline."
             )
+        if config_filepath is not None and len(pipeline_names) > 1:
+            raise typer.BadParameter(
+                "Multiple pipelines specified with --config-filepath."
+                " Please specify a --config-name that will be used for each pipeline."
+                " Or specify a single pipeline to use the --config-filepath."
+            )
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
-    pipeline_func = import_pipeline_from_dir(deployer_settings.pipelines_root_path, pipeline_name)
-
     from deployer.pipeline_deployer import VertexPipelineDeployer
 
-    deployer = VertexPipelineDeployer(
-        project_id=vertex_settings.PROJECT_ID,
-        region=vertex_settings.GCP_REGION,
-        staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
-        service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
-        pipeline_name=pipeline_name,
-        pipeline_func=pipeline_func,
-        gar_location=vertex_settings.GAR_LOCATION,
-        gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
-        local_package_path=local_package_path,
-    )
+    for pipeline_name in pipeline_names:
+        pipeline_func = import_pipeline_from_dir(
+            deployer_settings.pipelines_root_path, pipeline_name
+        )
 
-    if run or schedule:
-        if config_name is not None:
-            config_filepath = (
-                Path(deployer_settings.config_root_path) / pipeline_name / config_name
-            )
-        parameter_values, input_artifacts = load_config(config_filepath)
+        deployer = VertexPipelineDeployer(
+            project_id=vertex_settings.PROJECT_ID,
+            region=vertex_settings.GCP_REGION,
+            staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
+            service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
+            pipeline_name=pipeline_name,
+            pipeline_func=pipeline_func,
+            gar_location=vertex_settings.GAR_LOCATION,
+            gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
+            local_package_path=local_package_path,
+        )
 
-    if compile:
-        with console.status("Compiling pipeline..."):
-            deployer.compile()
+        if run or schedule:
+            if config_name is not None:
+                config_filepath = (
+                    Path(deployer_settings.config_root_path) / pipeline_name / config_name
+                )
+            parameter_values, input_artifacts = load_config(config_filepath)
 
-    if upload:
-        with console.status("Uploading pipeline..."):
-            deployer.upload_to_registry(tags=tags)
+        if compile:
+            with console.status("Compiling pipeline..."):
+                deployer.compile()
 
-    if run:
-        with console.status("Running pipeline..."):
-            deployer.run(
-                enable_caching=enable_caching,
-                parameter_values=parameter_values,
-                experiment_name=experiment_name,
-                input_artifacts=input_artifacts,
-                tag=tags[0] if tags else None,
-            )
+        if upload:
+            with console.status("Uploading pipeline..."):
+                deployer.upload_to_registry(tags=tags)
 
-    if schedule:
-        with console.status("Scheduling pipeline..."):
-            cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
-            deployer.schedule(
-                cron=cron,
-                enable_caching=enable_caching,
-                parameter_values=parameter_values,
-                tag=tags[0] if tags else None,
-                delete_last_schedule=delete_last_schedule,
-                scheduler_timezone=scheduler_timezone,
-            )
+        if run:
+            with console.status("Running pipeline..."):
+                deployer.run(
+                    enable_caching=enable_caching,
+                    parameter_values=parameter_values,
+                    experiment_name=experiment_name,
+                    input_artifacts=input_artifacts,
+                    tag=tags[0] if tags else None,
+                )
+
+        if schedule:
+            with console.status("Scheduling pipeline..."):
+                cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
+                deployer.schedule(
+                    cron=cron,
+                    enable_caching=enable_caching,
+                    parameter_values=parameter_values,
+                    tag=tags[0] if tags else None,
+                    delete_last_schedule=delete_last_schedule,
+                    scheduler_timezone=scheduler_timezone,
+                )
 
 
 @app.command()
 def check(
     ctx: typer.Context,
-    pipeline_name: Annotated[
-        Optional[str],
+    pipeline_names: Annotated[
+        Optional[List[str]],
         typer.Argument(
-            ..., help="The name of the pipeline to run.", callback=pipeline_name_callback
+            ..., help="The names of the pipeline to run.", callback=pipeline_name_callback
         ),
     ] = None,
     all: Annotated[
         bool,
-        typer.Option(
-            "--all", "-a", help="Whether to check all pipelines.", callback=pipeline_name_callback
-        ),
+        typer.Option("--all", "-a", help="Whether to check all pipelines."),
     ] = False,
     config_filepath: Annotated[
         Optional[Path],
@@ -336,6 +354,24 @@ def check(
             help="Whether to raise an error if the pipeline is not valid.",
         ),
     ] = False,
+    warn_defaults: Annotated[
+        bool,
+        typer.Option(
+            "--warn-defaults / --no-warn-defaults",
+            "-wd / -nwd",
+            help="Whether to warn when a default value is used."
+            "and not overwritten in config file.",
+        ),
+    ] = True,
+    raise_for_defaults: Annotated[
+        bool,
+        typer.Option(
+            "--raise-for-defaults / --no-raise-for-defaults",
+            "-rfd / -nrfd",
+            help="Whether to raise an validation error when a default value is used."
+            "and not overwritten in config file.",
+        ),
+    ] = False,
 ):
     """Check that pipelines are valid.
 
@@ -353,7 +389,7 @@ def check(
 
     **This command can be used to check pipelines in a Continuous Integration workflow.**
     """
-    if all and pipeline_name is not None:
+    if all and pipeline_names:
         raise typer.BadParameter("Please specify either --all or a pipeline name")
 
     from deployer.pipeline_checks import Pipelines
@@ -361,23 +397,20 @@ def check(
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
     if all:
-        logger.info("Checking all pipelines")
         # unpack enum to get list of pipeline names
-        pipelines_to_check = [x.value for x in ctx.obj["pipeline_names"]]
-    elif pipeline_name is not None:
-        logger.info(f"Checking pipeline {pipeline_name}")
-        pipelines_to_check = [pipeline_name]
+        pipeline_names = [x.value for x in ctx.obj["pipeline_names"]]
+    logger.info(f"Checking pipelines {pipeline_names}")
+
     if config_filepath is None:
         to_check = {
-            p: list_config_filepaths(deployer_settings.config_root_path, p)
-            for p in pipelines_to_check
+            p: list_config_filepaths(deployer_settings.config_root_path, p) for p in pipeline_names
         }
     else:
-        to_check = {p: [config_filepath] for p in pipelines_to_check}
+        to_check = {p: [config_filepath] for p in pipeline_names}
 
     try:
         with console.status("Checking pipelines..."):
-            Pipelines.model_validate(
+            pipelines_model = Pipelines.model_validate(
                 {
                     "pipelines": {
                         p: {
@@ -388,15 +421,18 @@ def check(
                         }
                         for p, config_filepaths in to_check.items()
                     }
-                }
+                },
+                context={"raise_for_defaults": raise_for_defaults},
             )
     except ValidationError as e:
         if raise_error:
             raise e
-        print_check_results_table(to_check, e)
+        print_check_results_table(to_check, validation_error=e)
         sys.exit(1)
     else:
-        print_check_results_table(to_check)
+        print_check_results_table(
+            to_check, pipelines_model=pipelines_model, warn_defaults=warn_defaults
+        )
 
 
 @app.command(name="list")
@@ -424,9 +460,9 @@ def list_pipelines(
 @app.command(name="create")
 def create_pipeline(
     ctx: typer.Context,
-    pipeline_name: Annotated[
-        str,
-        typer.Argument(..., help="The name of the pipeline to create."),
+    pipeline_names: Annotated[
+        List[str],
+        typer.Argument(..., help="The names of the pipeline to create."),
     ],
     config_type: Annotated[
         ConfigType,
@@ -434,13 +470,12 @@ def create_pipeline(
     ] = ConfigType.json,
 ):
     """Create files structure for a new pipeline."""
-    if not re.match(r"^[a-zA-Z0-9_]+$", pipeline_name):
+    invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
+    if invalid_pipelines:
         raise typer.BadParameter(
-            f"Invalid Pipeline name: '{pipeline_name}'\n"
+            f"Invalid Pipeline name(s): '{invalid_pipelines}'\n"
             "Pipeline name must only contain alphanumeric characters and underscores"
         )
-
-    logger.info(f"Creating pipeline {pipeline_name}")
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
@@ -452,25 +487,40 @@ def create_pipeline(
                 f" or create it with 'mkdir -p {path}'."
             )
 
-    pipeline_filepath = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
-    pipeline_filepath.touch(exist_ok=False)
-    pipeline_filepath.write_text(
-        constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
+    existing_pipelines = [
+        p for p in pipeline_names if (deployer_settings.pipelines_root_path / f"{p}.py").exists()
+    ]
+    if existing_pipelines:
+        raise typer.BadParameter(f"Pipelines {existing_pipelines} already exist.")
+
+    console.print(
+        f"Creating pipeline {pipeline_names} with config type: [bold]{config_type}[/bold]"
     )
 
-    try:
-        config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
-        config_dirpath.mkdir(exist_ok=True)
-        for config_name in ["test", "dev", "prod"]:
-            config_filepath = config_dirpath / f"{config_name}.{config_type}"
-            config_filepath.touch(exist_ok=False)
-            if config_type == ConfigType.py:
-                config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
-    except Exception as e:
-        pipeline_filepath.unlink()
-        raise e
+    for pipeline_name in pipeline_names:
+        pipeline_filepath = deployer_settings.pipelines_root_path / f"{pipeline_name}.py"
+        pipeline_filepath.touch(exist_ok=False)
+        pipeline_filepath.write_text(
+            constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
+        )
 
-    logger.success(f"Pipeline {pipeline_name} created with configs in {config_dirpath}")
+        try:
+            config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
+            config_dirpath.mkdir(exist_ok=True)
+            for config_name in ["test", "dev", "prod"]:
+                config_filepath = config_dirpath / f"{config_name}.{config_type}"
+                config_filepath.touch(exist_ok=False)
+                if config_type == ConfigType.py:
+                    config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
+        except Exception as e:
+            pipeline_filepath.unlink()
+            raise e
+
+        console.print(
+            f"Pipeline '{pipeline_name}' created at '{pipeline_filepath}'"
+            f" with config files: {[str(p) for p in config_dirpath.glob('*')]}. :sparkles:",
+            style="blue",
+        )
 
 
 @app.command(name="init")
@@ -480,7 +530,7 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
     console.print("Welcome to Vertex Deployer!", style="blue")
     console.print("This command will help you getting fired up.", style="blue")
 
-    if Prompt.ask("Do you want to configure the deployer?", choices=["y", "n"]) == "y":
+    if Confirm.ask("Do you want to configure the deployer?"):
         pyproject_toml_filepath = find_pyproject_toml(Path.cwd().resolve())
 
         if pyproject_toml_filepath is None:
@@ -498,7 +548,7 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
         update_pyproject_toml(pyproject_toml_filepath, new_deployer_settings)
         console.print("Configuration saved in pyproject.toml :sparkles:", style="blue")
 
-    if Prompt.ask("Do you want to build default folder structure", choices=["y", "n"]) == "y":
+    if Confirm.ask("Do you want to build default folder structure"):
 
         def create_file_or_dir(path: Path, text: str = ""):
             """Create a file (if text is provided) or a directory at path. Warn if path exists."""
@@ -519,14 +569,13 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
             Path("./.env"), "=\n".join(VertexPipelinesSettings.model_json_schema()["required"])
         )
 
-    if Prompt.ask("Do you want to create a pipeline?", choices=["y", "n"]) == "y":
+    if Confirm.ask("Do you want to create a pipeline?"):
         wrong_name = True
         while wrong_name:
             pipeline_name = Prompt.ask("What is the name of the pipeline?")
-            pipeline_path = Path(deployer_settings.pipelines_root_path) / f"{pipeline_name}.py"
 
             try:
-                create_pipeline(pipeline_name=pipeline_name)
+                create_pipeline(ctx, pipeline_names=[pipeline_name])
             except typer.BadParameter as e:
                 console.print(e, style="red")
             except FileExistsError:
@@ -536,10 +585,6 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
                 )
             else:
                 wrong_name = False
-                console.print(
-                    f"Pipeline '{pipeline_name}' created at '{pipeline_path}'. :sparkles:",
-                    style="blue",
-                )
 
     console.print("All done :sparkles:", style="blue")
 
