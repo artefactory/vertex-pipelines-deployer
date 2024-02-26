@@ -25,7 +25,7 @@ class _DeployerDeploySettings(CustomBaseModel):
     cron: Optional[str] = None
     delete_last_schedule: bool = False
     scheduler_timezone: str = constants.DEFAULT_SCHEDULER_TIMEZONE
-    tags: List[str] = constants.DEFAULT_TAGS
+    tags: Optional[List[str]] = constants.DEFAULT_TAGS
     config_filepath: Optional[Path] = None
     config_name: Optional[str] = None
     enable_caching: bool = False
@@ -40,6 +40,8 @@ class _DeployerCheckSettings(CustomBaseModel):
     all: bool = False
     config_filepath: Optional[Path] = None
     raise_error: bool = False
+    warn_defaults: bool = True
+    raise_for_defaults: bool = False
 
 
 class _DeployerListSettings(CustomBaseModel):
