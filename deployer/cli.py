@@ -493,7 +493,9 @@ def create_pipeline(
     if existing_pipelines:
         raise typer.BadParameter(f"Pipelines {existing_pipelines} already exist.")
 
-    console.print(f"Creating pipeline {pipeline_names} with config type: [bold]{config_type}[/bold]")
+    console.print(
+        f"Creating pipeline {pipeline_names} with config type: [bold]{config_type}[/bold]"
+    )
 
     for pipeline_name in pipeline_names:
         pipeline_filepath = deployer_settings.pipelines_root_path / f"{pipeline_name}.py"
@@ -573,7 +575,7 @@ def init_deployer(ctx: typer.Context):  # noqa: C901
             pipeline_name = Prompt.ask("What is the name of the pipeline?")
 
             try:
-                create_pipeline(ctx, pipeline_name=pipeline_name)
+                create_pipeline(ctx, pipeline_names=[pipeline_name])
             except typer.BadParameter as e:
                 console.print(e, style="red")
             except FileExistsError:
