@@ -52,6 +52,7 @@ $ vertex-deployer check [OPTIONS] PIPELINE_NAMES...
 * `PIPELINE_NAMES...`: The names of the pipeline to create. [optional]
 
 **Options**:
+
 * `--all, -a / --no-all`: Whether to check all pipelines. [default: no-all]
 * `--config-filepath, -cfp PATH`: Path to the json/py file with parameter values and input artifacts to check. If not specified, all config files in the pipeline dir will be checked.
 * `--warn-defaults, -wd / --no-warn-defaults, -nwd`: Whether to warn when a default value is used and not overwritten in config file. [default: warn-defaults]
