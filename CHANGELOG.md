@@ -2,6 +2,19 @@
 
 
 
+## 0.4.3 (2024-03-01)
+
+### Ci
+
+* ci: fix deploy docs workflow trigger (#156) ([`32351db`](https://github.com/artefactory/vertex-pipelines-deployer/commit/32351dbae8b7cc41393a166371fd9ff77a41a004))
+
+### Fix
+
+* fix: instanciate list only if not ixisting when paring errors (#161) ([`16028a2`](https://github.com/artefactory/vertex-pipelines-deployer/commit/16028a21c48a45794438a5af8fe997cd06b5351c))
+
+* fix: inspect value empty for defaults in check cmd (#159) ([`5536f67`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5536f676968f88ef206d89f8418ec6d120d43ae8))
+
+
 ## 0.4.2 (2024-02-26)
 
 ### Ci
