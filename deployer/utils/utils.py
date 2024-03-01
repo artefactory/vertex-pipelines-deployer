@@ -316,7 +316,8 @@ def _parse_validation_errors(
         else:
             config_name = error["loc"][3]
             error_row = {"type": error["type"], "msg": error["msg"]}
-            parsed_errors[pipeline_name][config_name] = []
+            if config_name not in parsed_errors[pipeline_name].keys():
+                parsed_errors[pipeline_name][config_name] = []
             if len(error["loc"]) > 4:
                 error_row["field"] = error["loc"][5]
             parsed_errors[pipeline_name][config_name].append(error_row)
