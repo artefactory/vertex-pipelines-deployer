@@ -1,4 +1,4 @@
-from inspect import signature
+from inspect import _empty, signature
 from typing import Callable, Literal, Optional, Protocol
 
 from pydantic import BaseModel, ConfigDict, create_model
@@ -44,13 +44,18 @@ def create_model_from_func(
 
     func_signature = signature(func)
 
+    func_typing = {
+        p.name: (
+            type_converter(p.annotation),
+            ... if (exclude_defaults or p.default == _empty) else p.default,
+        )
+        for p in func_signature.parameters.values()
+    }
+
     func_model = create_model(
         __model_name=model_name,
         __base__=CustomBaseModel,
-        **{
-            p.name: (type_converter(p.annotation), ... if exclude_defaults else p.default)
-            for p in func_signature.parameters.values()
-        },
+        **func_typing,
     )
 
     return func_model
