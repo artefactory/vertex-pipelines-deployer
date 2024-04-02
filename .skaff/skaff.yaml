@@ -1,0 +1,28 @@
+spec_version: 1
+
+# Everyting in this file will be used to populate the catalog on skaff.artefact.com
+# It is also vectorized as is for the search, so make sure to provide relevant keywords
+
+name: Vertex Pipelines Deployer
+owner: jules.bertrand@artefact.com
+description: >
+  Check, compile, upload, run and schedule Vertex Pipelines in a standardized manner.
+documentation_url: https://supreme-funicular-mzylwj5.pages.github.io/
+
+type: deployable   # deployable, knowldege pack
+lifecycle: production  # prototype, production
+
+users:                 # DS, DA, DE
+  - DS
+  - DE
+
+clouds:                # aws, gcp, azure, databricks
+  - gcp
+
+technologies:          # python, dbt, terraform, airbyte, ...
+  - vertex
+  - python
+
+expertises:            # MMM, forecasting, ELT, release engineering, ...
+  - MLEng
+  - MLOps
