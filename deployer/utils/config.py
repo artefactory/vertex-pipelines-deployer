@@ -24,6 +24,8 @@ class VertexPipelinesSettings(BaseSettings):  # noqa: D101
     GCP_REGION: str
     GAR_LOCATION: str
     GAR_PIPELINES_REPO_ID: str
+    GAR_DOCKER_REPO_ID: str
+    GAR_VERTEX_BASE_IMAGE_NAME: str
     VERTEX_STAGING_BUCKET_NAME: str
     VERTEX_SERVICE_ACCOUNT: str
 

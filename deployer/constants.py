@@ -1,5 +1,7 @@
 from pathlib import Path
 
+TEMPLATES_PATH = Path(__file__).parent / "templates"
+
 DEFAULT_PIPELINE_ROOT_PATH = Path("vertex/pipelines")
 DEFAULT_CONFIG_ROOT_PATH = Path("vertex/configs")
 DEFAULT_LOG_LEVEL = "INFO"
