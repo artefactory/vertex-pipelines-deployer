@@ -83,7 +83,7 @@ def main(
 def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union[str, bool]:
     """Callback to check that the pipeline name is valid."""
     if value is None:  # None is allowed for optional arguments
-        return value
+        return []
 
     pipeline_names: enum.Enum = ctx.obj["pipeline_names"]
 
@@ -327,7 +327,7 @@ def check(
     pipeline_names: Annotated[
         Optional[List[str]],
         typer.Argument(
-            ..., help="The names of the pipeline to run.", callback=pipeline_name_callback
+            ..., help="The names of the pipeline to check.", callback=pipeline_name_callback
         ),
     ] = None,
     all: Annotated[
