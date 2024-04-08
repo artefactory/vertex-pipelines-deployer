@@ -327,7 +327,7 @@ def check(
     pipeline_names: Annotated[
         Optional[List[str]],
         typer.Argument(
-            ..., help="The names of the pipeline to run.", callback=pipeline_name_callback
+            ..., help="The names of the pipeline to check.", callback=pipeline_name_callback
         ),
     ] = None,
     all: Annotated[
