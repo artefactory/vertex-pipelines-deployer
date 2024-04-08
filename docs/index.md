@@ -32,4 +32,21 @@
     You can contact code owners or **[submit a new issue](https://github.com/artefactory/vertex-pipelines-deployer/issues/new/choose)** if you want to help.
 
 
+## Why this tool?
+
 --8<-- "README.md:why"
+
+
+## Installation
+
+--8<-- "README.md:installation"
+
+
+## Basic Usage
+
+Please refer to the [Basic Usage](usage.md) page for more information.
+
+
+## License
+
+This project is licensed under the terms of the Apache 2.0.

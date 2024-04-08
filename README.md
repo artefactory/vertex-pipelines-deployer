@@ -62,9 +62,9 @@
 
 [Full CLI documentation](docs/CLI_REFERENCE.md)
 
-<!-- --8<-- [start:why] -->
-## ❓ Why this tool?
 
+## ❓ Why this tool?
+<!-- --8<-- [start:why] -->
 
 Three use cases:
 
@@ -91,6 +91,11 @@ Two main commands:
 
 ## 📦 Installation
 <!-- --8<-- [start:installation] -->
+### From PyPI
+
+```bash
+pip install vertex-deployer
+```
 
 ### From git repo
 
@@ -109,32 +114,6 @@ If you want to test this package on examples from this repo:
 git clone git@github.com:artefactory/vertex-pipelines-deployer.git
 poetry install
 cd example
-```
-
-### From Artifact Registry (not available in PyPI yet)
-
-The package is available on a public Google Artifact Registry repo. You need to specify a
-[pip extra index url](https://pip.pypa.io/en/stable/cli/pip_install/#cmdoption-extra-index-url) to install it.
-
-Install latest version:
-```bash
-pip install --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
-```
-
-!!! tip "Add to requirements"
-    You can add the extra index URL to your `requirements.in` or `requirements.txt` file.
-    ```txt title="requirements.txt"
-    --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
-
-    vertex-deployer==0.3.3
-    ```
-
-??? info "About extra index URL"
-    You can add the extra index URL to your `pip.conf` file to avoid having to specify it every time.
-
-List available versions:
-```bash
-pip index versions --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple vertex-deployer
 ```
 <!-- --8<-- [end:installation] -->
 

@@ -41,10 +41,12 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
 
+watch:
+  - README.md
+
 nav:
-  - Get Started:
-    - Welcome: index.md
-    - Installation: install.md
+  - Vertex Deployer:
+    - Get Started: index.md
     - Prerequisites & Setup: setup.md
     - Folder Structure: folder_structure.md
     - Basic Usage: usage.md
