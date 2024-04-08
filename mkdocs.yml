@@ -4,20 +4,22 @@ repo_url: https://github.com/artefactory/vertex-pipelines-deployer
 
 theme:
   name: material
+  logo: assets/Artefact-AI-is-about-People-logo-1200x424.png
+  favicon: assets/artefact-favicon.png
   palette:
   - media: '(prefers-color-scheme: light)'
     scheme: default
-    primary: teal
-    accent: amber
+    primary: custom
+    accent: pink
     toggle:
-      icon: material/lightbulb
+      icon: material/weather-night
       name: Switch to dark mode
   - media: '(prefers-color-scheme: dark)'
     scheme: slate
-    primary: teal
-    accent: amber
+    primary: cyan
+    accent: pink
     toggle:
-      icon: material/lightbulb-outline
+      icon: material/weather-sunny
       name: Switch to light mode
   features:
   - search.suggest
@@ -29,12 +31,19 @@ theme:
 
 plugins:
   - search
-  - techdocs-core
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
-  - Get Started:
-    - Welcome: index.md
-    - Installation: install.md
+  - Vertex Deployer:
+    - Get Started: index.md
     - Prerequisites & Setup: setup.md
     - Folder Structure: folder_structure.md
     - Basic Usage: usage.md
