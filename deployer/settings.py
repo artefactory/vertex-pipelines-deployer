@@ -138,7 +138,7 @@ def load_deployer_settings() -> DeployerSettings:
     except ValidationError as e:
         msg = f"Invalid section tools.vertex_deployer:\n{e}\n"
         msg += f"\nPlease check your configuration file: {path_pyproject_toml}"
-        msg += f"\nAnd check setting is compatible with deployer version (current: {__version__})"
+        msg += f" and check settings are compatible with deployer version (current: {__version__})"
 
         raise InvalidPyProjectTOMLError(msg) from e
 
