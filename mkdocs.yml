@@ -41,9 +41,6 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
 
-watch:
-  - README.md
-
 nav:
   - Vertex Deployer:
     - Get Started: index.md
