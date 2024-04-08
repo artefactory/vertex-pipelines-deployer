@@ -8,7 +8,7 @@ from loguru import logger
 from pydantic import ValidationError
 from tomlkit.toml_file import TOMLFile
 
-from deployer import constants
+from deployer import __version__, constants
 from deployer.utils.config import ConfigType
 from deployer.utils.exceptions import InvalidPyProjectTOMLError
 from deployer.utils.models import CustomBaseModel
@@ -136,8 +136,9 @@ def load_deployer_settings() -> DeployerSettings:
     try:
         settings = DeployerSettings(**settings)
     except ValidationError as e:
-        msg = f"In {path_pyproject_toml}:\n{e}\n"
-        msg += "Please check your configuration file."
+        msg = f"Invalid section tools.vertex_deployer:\n{e}\n"
+        msg += f"\nPlease check your configuration file: {path_pyproject_toml}"
+        msg += f" and check settings are compatible with deployer version (current: {__version__})"
 
         raise InvalidPyProjectTOMLError(msg) from e
 
