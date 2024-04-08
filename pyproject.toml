@@ -1,8 +1,16 @@
 [tool.poetry]
 name = "vertex-deployer"
 version = "0.4.3"
-description = ""
-authors = ["julesbertrand <julesbertrand13@gmail.com>"]
+description = "Check, compile, upload, run, and schedule Kubeflow Pipelines on GCP Vertex AI in a standardized manner."
+authors = [
+    "artefactory <jules.bertrand@artefact.com>",
+    "julesbertrand  <jules.bertrand@artefact.com>"
+]
+license = "Apache-2.0"
+homepage = "https://github.com/artefactory/vertex-pipelines-deployer"
+documentation = "https://artefactory.github.io/vertex-pipelines-deployer/"
+repository = "https://github.com/artefactory/vertex-pipelines-deployer"
+keywords = ["kubeflow", "vertexai", "aiplatform", "gcp", "mlops", "deployer", "pipeline"]
 readme = "README.md"
 packages = [{include = "deployer"}]
 
