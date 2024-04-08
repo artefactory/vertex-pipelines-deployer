@@ -1,6 +1,11 @@
 <br />
 <div align="center">
     <h1 align="center">Vertex Pipelines Deployer</h1>
+    <p align="center">
+        <a href="https://www.artefact.com/">
+        <img src="docs/assets/Artefact-AI-is-about-People-logo-1200x424.png" style="max-width:50%;height:auto;background-color:#111146;" alt="Artefact Logo"/>
+        </a>
+    </p>
     <h3 align="center">Deploy Vertex Pipelines within minutes</h3>
         <p align="center">
         This tool is a wrapper around <a href="https://www.kubeflow.org/docs/components/pipelines/v2/hello-world/">kfp</a> and <a href="https://cloud.google.com/python/docs/reference/aiplatform/latest">google-cloud-aiplatform</a> that allows you to check, compile, upload, run, and schedule Vertex Pipelines in a standardized manner.

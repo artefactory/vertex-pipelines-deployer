@@ -32,10 +32,9 @@ ruff = "^0.1"
 pytest-cov = "^4.1"
 codespell = "^2.2"
 
-
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.5"
-mkdocs-techdocs-core = "^1.2"
+mkdocs-material = {extras = ["pygments"], version = "^9.5.17"}
 
 [tool.poetry.extras]
 profiling = ["pyinstrument"]
