@@ -47,6 +47,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 target-version = "py38"
 line-length = 99
+
+[tool.ruff.lint]
 ignore = [
     "D100",
     "D205",
@@ -66,13 +68,13 @@ select = [
     "I",    # isort
 ]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.ruff.lint.isort]
 known-first-party = ["vertex", "tests", "deployer"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "*cli.py" = ["D", "B008"]
 "*__init__.py" = [
     "F401",
