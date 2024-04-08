@@ -5,4 +5,4 @@ pandas<2.0.0
 --extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
 kfp
 google-cloud-aiplatform
-vertex_deployer==0.4.0
+vertex_deployer
