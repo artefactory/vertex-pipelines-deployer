@@ -28,6 +28,7 @@ from deployer.utils.init import (
     build_default_folder_structure,
     configure_deployer,
     create_initial_pipeline,
+    show_commands,
 )
 from deployer.utils.logging import LoguruLevel
 from deployer.utils.utils import (
@@ -530,6 +531,7 @@ def init_deployer(ctx: typer.Context):
     console.print("Welcome to Vertex Deployer!", style="blue")
     console.print("This command will help you getting fired up.", style="blue")
 
+    deployer_settings = ctx.obj["settings"]
     if Confirm.ask("Do you want to configure the deployer?"):
         deployer_settings = configure_deployer()
         ctx.obj["settings"] = deployer_settings
@@ -541,6 +543,8 @@ def init_deployer(ctx: typer.Context):
         create_initial_pipeline(ctx, deployer_settings)
 
     console.print("All done :sparkles:", style="blue")
+
+    show_commands(deployer_settings)
 
 
 @app.command(name="config")

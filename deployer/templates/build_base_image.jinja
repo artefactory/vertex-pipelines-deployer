@@ -1,0 +1,21 @@
+#!/bin/bash
+if [ ! -z "$ENV" ]; then
+    ENV_FILENAME=.env.$ENV
+    source $ENV_FILENAME
+    echo "Using '$ENV_FILENAME' env variables..."
+else
+    echo "Using declared env variables..."
+fi
+
+SUBSTITUTIONS="\
+_GAR_LOCATION=${GAR_LOCATION},\
+_GAR_DOCKER_REPO_ID=${GAR_DOCKER_REPO_ID},\
+_GAR_VERTEX_BASE_IMAGE_NAME=${GAR_VERTEX_BASE_IMAGE_NAME},\
+_TAG=${TAG}
+"
+
+gcloud builds submit \
+    --config {{ cloud_build_path }} \
+    --project=$PROJECT_ID \
+    --region $GCP_REGION \
+    --substitutions $SUBSTITUTIONS
