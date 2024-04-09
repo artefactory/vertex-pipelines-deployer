@@ -45,3 +45,9 @@ repos:
       types: [markdown]
       language: system
       stages: [commit, push]
+    - id: check-cli-documentation-updated
+      name: check cli documentation updated
+      entry: poetry run typer deployer/cli.py utils docs --output docs/CLI_REFERENCE.md --name vertex-deployer
+      pass_filenames: false
+      language: system
+      stages: [push]
