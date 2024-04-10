@@ -55,9 +55,18 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
             if answer != default:
                 set_fields[field_name] = answer
 
-    # TODO: This is a hack to set the pipelines_root_path and config_root_path
-    # to the correct values. This should be done with a Pydantic validator.
-    set_fields["pipelines_root_path"] = Path(set_fields["vertex_folder_path"]) / "pipelines"
-    set_fields["config_root_path"] = Path(set_fields["vertex_folder_path"]) / "configs"
+    set_fields = update_dependent_paths(set_fields)
+
+    return set_fields
+
+
+# TODO: This is a hack to set the pipelines_root_path and config_root_path
+# to the correct values. This should be done with a Pydantic validator.
+def update_dependent_paths(set_fields: dict):
+    """Update paths based on the vertex_folder_path field."""
+    vertex_folder_path = set_fields.get("vertex_folder_path")
+    if vertex_folder_path:
+        set_fields["pipelines_root_path"] = Path(vertex_folder_path) / "pipelines"
+        set_fields["config_root_path"] = Path(vertex_folder_path) / "configs"
 
     return set_fields
