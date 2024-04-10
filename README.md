@@ -414,8 +414,7 @@ This will overwrite default values. It can be useful if you always use the same 
 
 ```toml
 [tool.vertex-deployer]
-pipelines_root_path = "my/path/to/vertex/pipelines"
-configs_root_path = "my/path/to/vertex/configs"
+vertex_folder_path = "my/path/to/vertex"
 log_level = "INFO"
 
 [tool.vertex-deployer.deploy]
@@ -427,8 +426,7 @@ You can display all the configurable parameterss with default values by running:
 $ vertex-deployer config --all
 '*' means the value was set in config file
 
-* pipelines_root_path=my/path/to/vertex/pipelines
-* config_root_path=my/path/to/vertex/configs
+* vertex_folder_path=my/path/to/vertex
 * log_level=INFO
 deploy
   env_file=None

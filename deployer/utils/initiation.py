@@ -4,14 +4,11 @@ import typer
 from jinja2 import Environment, FileSystemLoader
 from rich.prompt import Prompt
 
-from deployer.constants import TEMPLATES_PATH
+from deployer import constants
 from deployer.settings import (
     DeployerSettings,
     find_pyproject_toml,
     update_pyproject_toml,
-)
-from deployer.utils.config import (
-    VertexPipelinesSettings,
 )
 from deployer.utils.console import ask_user_for_model_fields, console
 
@@ -38,26 +35,28 @@ def configure_deployer():
     return new_deployer_settings
 
 
-def _create_file_or_dir(path: Path, text: str = ""):
-    """Create a file (if text is provided) or a directory at path. Warn if path exists."""
+def _create_dir(path: Path):
+    """Create a directory at path. Warn if path exists."""
     if path.exists():
-        console.print(f"Path '{path}' already exists. Skipping creation of path.", style="yellow")
+        console.print(f"Directory '{path}' already exists. Skipping creation.", style="yellow")
     else:
-        if text:
-            path.touch()
-            path.write_text(text)
-        else:
-            path.mkdir(parents=True)
+        path.mkdir(parents=True)
 
 
 def _create_file_from_template(path: Path, template_path: Path, **kwargs):
     """Create a file at path from a template file."""
-    env = Environment(loader=FileSystemLoader(str(template_path.parent)), autoescape=True)
-    template = env.get_template(template_path.name)
-    if path.exists():
-        console.print(f"Path '{path}' already exists. Skipping creation of path.", style="yellow")
-    else:
-        path.write_text(template.render(**kwargs))
+    try:
+        env = Environment(loader=FileSystemLoader(str(template_path.parent)), autoescape=True)
+        template = env.get_template(template_path.name)
+        content = template.render(**kwargs)
+        if path.exists():
+            console.print(
+                f"Path '{path}' already exists. Skipping creation of path.", style="yellow"
+            )
+        else:
+            path.write_text(content)
+    except Exception as e:
+        console.print(f"An error occurred while creating the file from template: {e}", style="red")
 
 
 def build_default_folder_structure(deployer_settings: DeployerSettings):
@@ -69,32 +68,31 @@ def build_default_folder_structure(deployer_settings: DeployerSettings):
 
     # Create the folder structure
     for folder in ["configs", "components", "deployment", "lib", "pipelines"]:
-        _create_file_or_dir(vertex_folder_path / folder)
+        _create_dir(vertex_folder_path / folder)
 
     # Create the files
-    env_content = "\n".join(
-        f"{field}=" for field in VertexPipelinesSettings.model_json_schema()["required"]
-    )
-    _create_file_or_dir(Path("./deployer.env"), env_content)
-    _create_file_or_dir(
-        Path("deployer-requirements.txt"),
-        (TEMPLATES_PATH / "deployer-requirements.txt").read_text(),
-    )
-
     template_files_mapping = [
-        ("cloudbuild_local.yaml.jinja", cloud_build_path, {"dockerfile_path": dockerfile_path}),
+        (constants.DEPLOYER_ENV_TEMPLATE, Path("./deployer.env"), {}),
+        (constants.DEPLOYER_REQUIREMENTS_TEMPLATE, Path("./deployer-requirements.txt"), {}),
         (
-            "build_base_image.sh.jinja",
+            constants.CLOUDBUILD_LOCAL_TEMPLATE,
+            cloud_build_path,
+            {"dockerfile_path": dockerfile_path},
+        ),
+        (
+            constants.BUILD_BASE_IMAGE_TEMPLATE,
             build_base_image_path,
             {"cloud_build_path": cloud_build_path},
         ),
-        ("Dockerfile.jinja", dockerfile_path, {"vertex_folder_path": vertex_folder_path}),
+        (
+            constants.DOCKERFILE_TEMPLATE,
+            dockerfile_path,
+            {"vertex_folder_path": vertex_folder_path},
+        ),
     ]
 
-    for template_name, path, context in template_files_mapping:
-        _create_file_from_template(
-            path=path, template_path=TEMPLATES_PATH / template_name, **context
-        )
+    for template_path, path, context in template_files_mapping:
+        _create_file_from_template(path=path, template_path=template_path, **context)
 
     console.print("Complete folder structure created :sparkles:", style="blue")
 

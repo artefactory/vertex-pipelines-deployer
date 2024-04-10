@@ -11,22 +11,22 @@ DEFAULT_TAGS = None
 
 TEMP_LOCAL_PACKAGE_PATH = ".vertex-deployer-temp"
 
+PIPELINE_MINIMAL_TEMPLATE = Path(TEMPLATES_PATH / "pipeline_minimal.py.jinja")
+PYTHON_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "python_config.py")
+JSON_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "json_config.json")
+TOML_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "toml_config.toml")
+DOCKERFILE_TEMPLATE = Path(TEMPLATES_PATH / "Dockerfile.jinja")
+CLOUDBUILD_LOCAL_TEMPLATE = Path(TEMPLATES_PATH / "cloudbuild_local.yaml.jinja")
+BUILD_BASE_IMAGE_TEMPLATE = Path(TEMPLATES_PATH / "build_base_image.sh.jinja")
 
-PIPELINE_MINIMAL_TEMPLATE = """import kfp.dsl
+DEPLOYER_ENV_TEMPLATE = Path(TEMPLATES_PATH / "deployer.env")
+DEPLOYER_REQUIREMENTS_TEMPLATE = Path(TEMPLATES_PATH / "deployer-requirements.txt")
 
-
-@kfp.dsl.pipeline(name="{pipeline_name}")
-def {pipeline_name}():
-    pass
-
-"""
-
-PYTHON_CONFIG_TEMPLATE = """from kfp.dsl import Artifact, Dataset, Input, Output, Metrics
-
-parameter_values = {}
-input_artifacts = {}
-
-"""
+CONFIG_TEMPLATE_MAPPING = {
+    "json": JSON_CONFIG_TEMPLATE,
+    "toml": TOML_CONFIG_TEMPLATE,
+    "py": PYTHON_CONFIG_TEMPLATE,
+}
 
 PIPELINE_CHECKS_TABLE_COLUMNS = [
     "Status",

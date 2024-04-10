@@ -473,6 +473,8 @@ def create_pipeline(
     ] = ConfigType.json,
 ):
     """Create files structure for a new pipeline."""
+    from deployer.utils.initiation import _create_file_from_template
+
     invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
     if invalid_pipelines:
         raise typer.BadParameter(
@@ -502,9 +504,10 @@ def create_pipeline(
 
     for pipeline_name in pipeline_names:
         pipeline_filepath = deployer_settings.pipelines_root_path / f"{pipeline_name}.py"
-        pipeline_filepath.touch(exist_ok=False)
-        pipeline_filepath.write_text(
-            constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
+        _create_file_from_template(
+            path=pipeline_filepath,
+            template_path=constants.PIPELINE_MINIMAL_TEMPLATE,
+            pipeline_name=pipeline_name,
         )
 
         try:
@@ -512,9 +515,12 @@ def create_pipeline(
             config_dirpath.mkdir(exist_ok=True)
             for config_name in ["test", "dev", "prod"]:
                 config_filepath = config_dirpath / f"{config_name}.{config_type}"
-                config_filepath.touch(exist_ok=False)
-                if config_type == ConfigType.py:
-                    config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
+                config_template = constants.CONFIG_TEMPLATE_MAPPING[config_type]
+                _create_file_from_template(
+                    path=config_filepath,
+                    template_path=config_template,
+                )
+
         except Exception as e:
             pipeline_filepath.unlink()
             raise e
