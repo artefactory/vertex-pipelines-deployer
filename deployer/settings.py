@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 import toml
 import tomlkit
 from loguru import logger
-from pydantic import ValidationError, computed_field
+from pydantic import ValidationError
 from tomlkit.toml_file import TOMLFile
 
 from deployer import __version__, constants
@@ -73,12 +73,12 @@ class DeployerSettings(CustomBaseModel):
     create: _DeployerCreateSettings = _DeployerCreateSettings()
     config: _DeployerConfigSettings = _DeployerConfigSettings()
 
-    @computed_field
+    @property
     def pipelines_root_path(self) -> Path:
         """Construct the pipelines root path."""
         return self.vertex_folder_path / "pipelines"
 
-    @computed_field
+    @property
     def configs_root_path(self) -> Path:
         """Construct the configs root path."""
         return self.vertex_folder_path / "configs"
@@ -112,13 +112,7 @@ def update_pyproject_toml(path_pyproject_toml: str, deployer_settings: DeployerS
     toml_file = TOMLFile(path_pyproject_toml)
     toml_document = toml_file.read()
 
-    # This is a hack to avoid the default fields being written to the pyproject.toml file
-    # The computed fields are considered as non-default fields
-    default_fields = constants.DEFAULT_DEPLOYER_SETTINGS
     non_default_fields = deployer_settings.model_dump(mode="json", exclude_unset=True)
-    non_default_fields = {
-        k: v for k, v in non_default_fields.items() if v != default_fields.get(k)
-    }
 
     root_keys = ["tool", "vertex_deployer"]
 
