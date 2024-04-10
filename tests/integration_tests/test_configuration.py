@@ -66,7 +66,7 @@ def test_deployer_cli_and_settings_consistency():
     configured_parameters = {
         k: v
         for k, v in get_model_recursive_signature(DeployerSettings).items()
-        if k not in ["vertex_folder_path", "pipelines_root_path", "config_root_path", "log_level"]
+        if k not in ["vertex_folder_path", "pipelines_root_path", "configs_root_path", "log_level"]
     }
     cli_parameters = get_typer_app_signature(app)
 

@@ -26,6 +26,8 @@ def configure_deployer():
         pyproject_toml_filepath.touch()
 
     set_fields = ask_user_for_model_fields(DeployerSettings)
+    if set_fields.get("vertex_folder_path") == "vertex":
+        set_fields.pop("vertex_folder_path", None)
 
     new_deployer_settings = DeployerSettings(**set_fields)
 

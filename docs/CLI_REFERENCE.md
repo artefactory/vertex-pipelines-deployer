@@ -34,7 +34,7 @@ Checking that a pipeline is valid includes:
 
 * Checking that the pipeline can be compiled using `kfp.compiler.Compiler`.
 
-* Checking that config files in `{config_root_path}/{pipeline_name}` are corresponding to the
+* Checking that config files in `{configs_root_path}/{pipeline_name}` are corresponding to the
 pipeline parameters definition, using Pydantic.
 
 ---

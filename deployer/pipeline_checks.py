@@ -57,7 +57,7 @@ class Pipeline(CustomBaseModel):
     pipeline_name: str
     config_paths: Annotated[List[Path], Field(validate_default=True)] = None
     pipelines_root_path: Path
-    config_root_path: Path
+    configs_root_path: Path
     configs: Optional[Dict[str, ConfigDynamicModel]] = None  # Optional because populated after
 
     @model_validator(mode="before")
@@ -66,7 +66,7 @@ class Pipeline(CustomBaseModel):
         """Populate config names before validation"""
         if data.get("config_paths") is None:
             data["config_paths"] = list_config_filepaths(
-                str(data["config_root_path"]), data["pipeline_name"]
+                str(data["configs_root_path"]), data["pipeline_name"]
             )
         return data
 

@@ -289,7 +289,7 @@ def deploy(  # noqa: C901
         if run or schedule:
             if config_name is not None:
                 config_filepath = (
-                    Path(deployer_settings.config_root_path) / pipeline_name / config_name
+                    Path(deployer_settings.configs_root_path) / pipeline_name / config_name
                 )
             parameter_values, input_artifacts = load_config(config_filepath)
 
@@ -385,7 +385,7 @@ def check(
 
     * Checking that the pipeline can be compiled using `kfp.compiler.Compiler`.
 
-    * Checking that config files in `{config_root_path}/{pipeline_name}` are corresponding to the
+    * Checking that config files in `{configs_root_path}/{pipeline_name}` are corresponding to the
     pipeline parameters definition, using Pydantic.
 
     ---
@@ -406,7 +406,8 @@ def check(
 
     if config_filepath is None:
         to_check = {
-            p: list_config_filepaths(deployer_settings.config_root_path, p) for p in pipeline_names
+            p: list_config_filepaths(deployer_settings.configs_root_path, p)
+            for p in pipeline_names
         }
     else:
         to_check = {p: [config_filepath] for p in pipeline_names}
@@ -420,7 +421,7 @@ def check(
                             "pipeline_name": p,
                             "config_paths": config_filepaths,
                             "pipelines_root_path": deployer_settings.pipelines_root_path,
-                            "config_root_path": deployer_settings.config_root_path,
+                            "configs_root_path": deployer_settings.configs_root_path,
                         }
                         for p, config_filepaths in to_check.items()
                     }
@@ -451,7 +452,7 @@ def list_pipelines(
     """List all pipelines."""
     if with_configs:
         pipelines_dict = {
-            p.name: list_config_filepaths(ctx.obj["settings"].config_root_path, p.name)
+            p.name: list_config_filepaths(ctx.obj["settings"].configs_root_path, p.name)
             for p in ctx.obj["pipeline_names"].__members__.values()
         }
     else:
@@ -484,7 +485,7 @@ def create_pipeline(
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
-    for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
+    for path in [deployer_settings.pipelines_root_path, deployer_settings.configs_root_path]:
         if not Path(path).is_dir():
             raise FileNotFoundError(
                 f"Path '{path}' does not exist."
@@ -511,7 +512,7 @@ def create_pipeline(
         )
 
         try:
-            config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
+            config_dirpath = Path(deployer_settings.configs_root_path) / pipeline_name
             config_dirpath.mkdir(exist_ok=True)
             for config_name in ["test", "dev", "prod"]:
                 config_filepath = config_dirpath / f"{config_name}.{config_type}"

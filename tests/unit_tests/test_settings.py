@@ -39,11 +39,11 @@ class TestUpdatePyprojectToml:
             build-backend = "poetry.core.masonry.api"
 
             [tool.vertex_deployer]
-            pipelines_root_path = "pipelines"
+            vertex_folder_path = "vrtx"
             """,
             encoding="utf-8",
         )
-        deployer_settings = DeployerSettings(pipelines_root_path="vertex/pipelines")
+        deployer_settings = DeployerSettings(vertex_folder_path="vertex")
 
         # When
         update_pyproject_toml(path_pyproject_toml, deployer_settings)
@@ -53,9 +53,7 @@ class TestUpdatePyprojectToml:
         toml_document = tomlkit.loads(path_pyproject_toml.read_text())
         assert toml_document["build-system"]["requires"] == ["poetry-core>=1.0.0"]
         assert toml_document["build-system"]["build-backend"] == "poetry.core.masonry.api"
-        assert (
-            toml_document["tool"]["vertex_deployer"]["pipelines_root_path"] == "vertex/pipelines"
-        )
+        assert toml_document["tool"]["vertex_deployer"]["vertex_folder_path"] == "vertex"
 
     def test_update_pyproject_toml_successfully_updates_file_with_non_default_settings(
         self, tmp_path
@@ -64,8 +62,7 @@ class TestUpdatePyprojectToml:
         path_pyproject_toml = tmp_path / "pyproject.toml"
         path_pyproject_toml.write_text("", encoding="utf-8")
         deployer_settings = DeployerSettings(
-            pipelines_root_path=tmp_path / "pipelines",
-            config_root_path=tmp_path / "config",
+            vertex_folder_path=tmp_path,
             log_level="DEBUG",
             deploy={
                 "env_file": tmp_path / ".env",
@@ -106,8 +103,7 @@ class TestUpdatePyprojectToml:
         assert path_pyproject_toml.exists()
         toml_document = tomlkit.loads(path_pyproject_toml.read_text())
         deployer_section = toml_document["tool"]["vertex_deployer"]
-        assert deployer_section["pipelines_root_path"] == str(tmp_path / "pipelines")
-        assert deployer_section["config_root_path"] == str(tmp_path / "config")
+        assert deployer_section["vertex_folder_path"] == str(tmp_path)
         assert deployer_section["log_level"] == "DEBUG"
         assert deployer_section["deploy"]["env_file"] == str(tmp_path / ".env")
         assert deployer_section["deploy"]["compile"] is False

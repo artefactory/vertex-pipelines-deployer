@@ -87,17 +87,17 @@ class ConfigType(str, Enum):  # noqa: D101
     toml = "toml"
 
 
-def list_config_filepaths(config_root_path: Union[Path, str], pipeline_name: str) -> List[Path]:
+def list_config_filepaths(configs_root_path: Union[Path, str], pipeline_name: str) -> List[Path]:
     """List the config filepaths for a pipeline.
 
     Args:
-        config_root_path (Path): A `Path` object representing the root path of the configs.
+        configs_root_path (Path): A `Path` object representing the root path of the configs.
         pipeline_name (str): The name of the pipeline.
 
     Returns:
         List[Path]: A list of `Path` objects representing the config filepaths.
     """
-    configs_dirpath = Path(config_root_path) / pipeline_name
+    configs_dirpath = Path(configs_root_path) / pipeline_name
     config_filepaths = [
         x
         for config_type in ConfigType.__members__.values()

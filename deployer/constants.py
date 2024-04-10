@@ -37,3 +37,8 @@ PIPELINE_CHECKS_TABLE_COLUMNS = [
     "Config Error Type",
     "Config Error Message",
 ]
+
+DEFAULT_DEPLOYER_SETTINGS = {
+    "pipelines_root_path": "vertex/pipelines",
+    "configs_root_path": "vertex/configs",
+}
