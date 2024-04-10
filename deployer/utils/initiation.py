@@ -62,29 +62,32 @@ def _create_file_from_template(path: Path, template_path: Path, **kwargs):
 
 def build_default_folder_structure(deployer_settings: DeployerSettings):
     """Create the default folder structure for the Vertex Pipelines project."""
-    vertex_folder_path = deployer_settings.pipelines_root_path.parent
+    vertex_folder_path = deployer_settings.vertex_folder_path
     dockerfile_path = vertex_folder_path / "deployment" / "Dockerfile"
     cloud_build_path = vertex_folder_path / "deployment" / "cloudbuild.yaml"
     build_base_image_path = vertex_folder_path / "deployment" / "build_base_image.sh"
 
     # Create the folder structure
-    _create_file_or_dir(deployer_settings.pipelines_root_path)
-    _create_file_or_dir(deployer_settings.config_root_path)
-    for folder in ["components", "deployment", "lib"]:
+    for folder in ["configs", "components", "deployment", "lib", "pipelines"]:
         _create_file_or_dir(vertex_folder_path / folder)
 
     # Create the files
     env_content = "\n".join(
         f"{field}=" for field in VertexPipelinesSettings.model_json_schema()["required"]
     )
-    _create_file_or_dir(Path("./template.env"), env_content)
+    _create_file_or_dir(Path("./deployer.env"), env_content)
     _create_file_or_dir(
-        Path("requirements.txt"), (TEMPLATES_PATH / "requirements.txt").read_text()
+        Path("deployer-requirements.txt"),
+        (TEMPLATES_PATH / "deployer-requirements.txt").read_text(),
     )
 
     template_files_mapping = [
-        ("cloudbuild_local.jinja", cloud_build_path, {"dockerfile_path": dockerfile_path}),
-        ("build_base_image.jinja", build_base_image_path, {"cloud_build_path": cloud_build_path}),
+        ("cloudbuild_local.yaml.jinja", cloud_build_path, {"dockerfile_path": dockerfile_path}),
+        (
+            "build_base_image.sh.jinja",
+            build_base_image_path,
+            {"cloud_build_path": cloud_build_path},
+        ),
         ("Dockerfile.jinja", dockerfile_path, {"vertex_folder_path": vertex_folder_path}),
     ]
 
@@ -120,19 +123,13 @@ def create_initial_pipeline(ctx: typer.Context, deployer_settings: DeployerSetti
 
 def show_commands(deployer_settings: DeployerSettings):
     """Show the commands to run to build the project."""
-    vertex_folder_path = deployer_settings.pipelines_root_path.parent
+    vertex_folder_path = deployer_settings.vertex_folder_path
     build_base_image_path = vertex_folder_path / "deployment" / "build_base_image.sh"
 
     instructions = (
-        "Now that your deployer is configured, make sure that you're also done with the setup:\n"
-        "You should have:\n"
-        "- Set up your GCP project and enabled the correct APIs\n"
-        "- Created an artifact repository (Docker format) for your images "
-        "and an artifact repository (KFP format) for your pipelines\n"
-        "- Created a GCS bucket for Vertex Pipeline staging\n"
-        "- Created a service account with the correct permissions for your pipelines\n"
-        "Now you can write the code for your components pipelines, Dockerfile, and requirements\n"
-        "If you have done all of this, you're ready to start building your pipelines! :tada:\n"
+        "Now that your deployer is configured, make sure that you're also done with the setup!\n"
+        "You can find all the instructions in the README.md file.\n"
+        "If your setup is complete you're ready to start building your pipelines! :tada:\n"
         "Here are the commands you need to run to build your project:\n"
         "1. Build the base image:\n"
         "```bash\n"

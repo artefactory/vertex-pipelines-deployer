@@ -1,11 +1,7 @@
 #!/bin/bash
-if [ ! -z "$ENV" ]; then
-    ENV_FILENAME=.env.$ENV
-    source $ENV_FILENAME
-    echo "Using '$ENV_FILENAME' env variables..."
-else
-    echo "Using declared env variables..."
-fi
+ENV_FILENAME=deployer.env
+source $ENV_FILENAME
+echo "Using '$ENV_FILENAME' env variables..."
 
 SUBSTITUTIONS="\
 _GAR_LOCATION=${GAR_LOCATION},\

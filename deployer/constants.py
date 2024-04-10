@@ -1,9 +1,8 @@
 from pathlib import Path
 
-TEMPLATES_PATH = Path(__file__).parent / "templates"
+TEMPLATES_PATH = Path(__file__).parent / "_templates"
 
-DEFAULT_PIPELINE_ROOT_PATH = Path("vertex/pipelines")
-DEFAULT_CONFIG_ROOT_PATH = Path("vertex/configs")
+DEFAULT_VERTEX_FOLDER_PATH = Path("vertex")
 DEFAULT_LOG_LEVEL = "INFO"
 
 DEFAULT_SCHEDULER_TIMEZONE = "Europe/Paris"

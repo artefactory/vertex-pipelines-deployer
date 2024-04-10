@@ -24,7 +24,7 @@ from deployer.utils.config import (
     validate_or_log_settings,
 )
 from deployer.utils.console import console
-from deployer.utils.init import (
+from deployer.utils.initiation import (
     build_default_folder_structure,
     configure_deployer,
     create_initial_pipeline,
