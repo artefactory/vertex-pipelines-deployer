@@ -427,6 +427,7 @@ def check(
     except ValidationError as e:
         if raise_error:
             raise e
+        # FIXME: when ValidationError is raised, warnings are not displayed in the console
         print_check_results_table(to_check, validation_error=e)
         sys.exit(1)
     else:
