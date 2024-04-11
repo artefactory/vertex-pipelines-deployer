@@ -14,9 +14,12 @@ ENV GAR_PIPELINES_REPO_ID=${GAR_PIPELINES_REPO_ID}
 ENV VERTEX_STAGING_BUCKET_NAME=${VERTEX_STAGING_BUCKET_NAME}
 ENV VERTEX_SERVICE_ACCOUNT=${VERTEX_SERVICE_ACCOUNT}
 
-COPY requirements.txt .
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r requirements.txt
+WORKDIR /app
 
-COPY {{ vertex_folder_path }} .
+COPY deployer-requirements.txt .
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install -r deployer-requirements.txt
+
 ENV PYTHONPATH "${PYTHONPATH}:."
+
+COPY ./vertex /app/vertex

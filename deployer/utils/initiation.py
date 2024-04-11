@@ -65,6 +65,8 @@ def build_default_folder_structure(deployer_settings: DeployerSettings):
     dockerfile_path = vertex_folder_path / "deployment" / "Dockerfile"
     cloud_build_path = vertex_folder_path / "deployment" / "cloudbuild.yaml"
     build_base_image_path = vertex_folder_path / "deployment" / "build_base_image.sh"
+    requirements_path = Path("./deployer-requirements.txt")
+    deployer_env_path = Path("./deployer.env")
 
     # Create the folder structure
     for folder in ["configs", "components", "deployment", "lib", "pipelines"]:
@@ -72,8 +74,8 @@ def build_default_folder_structure(deployer_settings: DeployerSettings):
 
     # Create the files
     template_files_mapping = [
-        (constants.DEPLOYER_ENV_TEMPLATE, Path("./deployer.env"), {}),
-        (constants.DEPLOYER_REQUIREMENTS_TEMPLATE, Path("./deployer-requirements.txt"), {}),
+        (constants.DEPLOYER_ENV_TEMPLATE, deployer_env_path, {}),
+        (constants.DEPLOYER_REQUIREMENTS_TEMPLATE, requirements_path, {}),
         (
             constants.CLOUDBUILD_LOCAL_TEMPLATE,
             cloud_build_path,
@@ -125,14 +127,27 @@ def show_commands(deployer_settings: DeployerSettings):
     build_base_image_path = vertex_folder_path / "deployment" / "build_base_image.sh"
 
     instructions = (
+        "\n"
         "Now that your deployer is configured, make sure that you're also done with the setup!\n"
         "You can find all the instructions in the README.md file.\n"
+        "\n"
         "If your setup is complete you're ready to start building your pipelines! :tada:\n"
         "Here are the commands you need to run to build your project:\n"
+        "\n"
         "1. Build the base image:\n"
-        "```bash\n"
-        f"bash {build_base_image_path}\n"
-        "```"
+        f"$ bash {build_base_image_path}\n"
+        "\n"
+        "2. Check all the pipelines:\n"
+        "$ vertex-deployer check --all\n"
+        "\n"
+        "3. Deploy a pipeline and run it:\n"
+        "$ vertex-deployer deploy pipeline_name --run\n"
+        "If not set during configuration, you will need to provide the config path or name:\n"
+        "$ vertex-deployer deploy pipeline_name --cfp=path/to/your/config.type\n"
+        "\n"
+        "4. Schedule a pipeline:\n"
+        "you can add the following flags to the deploy command if not set in your config:\n"
+        "--schedule --cron=cron_expression --scheduler-timezone=IANA_time_zone\n"
     )
 
     console.print(instructions, style="blue")

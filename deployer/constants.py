@@ -19,8 +19,8 @@ DOCKERFILE_TEMPLATE = Path(TEMPLATES_PATH / "Dockerfile.jinja")
 CLOUDBUILD_LOCAL_TEMPLATE = Path(TEMPLATES_PATH / "cloudbuild_local.yaml.jinja")
 BUILD_BASE_IMAGE_TEMPLATE = Path(TEMPLATES_PATH / "build_base_image.sh.jinja")
 
-DEPLOYER_ENV_TEMPLATE = Path(TEMPLATES_PATH / "deployer.env")
-DEPLOYER_REQUIREMENTS_TEMPLATE = Path(TEMPLATES_PATH / "deployer-requirements.txt")
+DEPLOYER_ENV_TEMPLATE = Path(TEMPLATES_PATH / "deployer.env.jinja")
+DEPLOYER_REQUIREMENTS_TEMPLATE = Path(TEMPLATES_PATH / "deployer-requirements.txt.jinja")
 
 CONFIG_TEMPLATE_MAPPING = {
     "json": JSON_CONFIG_TEMPLATE,
