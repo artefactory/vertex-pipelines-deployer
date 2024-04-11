@@ -220,17 +220,6 @@ def deploy(  # noqa: C901
             "Defaults to '{pipeline_name}-experiment'.",
         ),
     ] = None,
-    local_package_path: Annotated[
-        Path,
-        typer.Option(
-            "--local-package-path",
-            "-lpp",
-            help="Local dir path where pipelines will be compiled.",
-            dir_okay=True,
-            file_okay=False,
-            resolve_path=True,
-        ),
-    ] = constants.DEFAULT_LOCAL_PACKAGE_PATH,
     skip_validation: Annotated[
         bool,
         typer.Option(
@@ -283,7 +272,7 @@ def deploy(  # noqa: C901
             pipeline_func=pipeline_func,
             gar_location=vertex_settings.GAR_LOCATION,
             gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
-            local_package_path=local_package_path,
+            local_package_path=deployer_settings.local_package_path,
         )
 
         if run or schedule:

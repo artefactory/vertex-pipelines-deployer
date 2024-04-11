@@ -6,7 +6,6 @@ DEFAULT_VERTEX_FOLDER_PATH = Path("vertex")
 DEFAULT_LOG_LEVEL = "INFO"
 
 DEFAULT_SCHEDULER_TIMEZONE = "Europe/Paris"
-DEFAULT_LOCAL_PACKAGE_PATH = Path("vertex/pipelines/compiled_pipelines")
 DEFAULT_TAGS = None
 
 TEMP_LOCAL_PACKAGE_PATH = ".vertex-deployer-temp"

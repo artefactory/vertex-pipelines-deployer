@@ -30,7 +30,6 @@ class _DeployerDeploySettings(CustomBaseModel):
     config_name: Optional[str] = None
     enable_caching: bool = False
     experiment_name: Optional[str] = None
-    local_package_path: Path = constants.DEFAULT_LOCAL_PACKAGE_PATH
     skip_validation: bool = True
 
 
@@ -82,6 +81,11 @@ class DeployerSettings(CustomBaseModel):
     def configs_root_path(self) -> Path:
         """Construct the configs root path."""
         return self.vertex_folder_path / "configs"
+
+    @property
+    def local_package_path(self) -> Path:
+        """Construct the local package path."""
+        return self.vertex_folder_path / "pipelines" / "compiled_pipelines"
 
 
 def find_pyproject_toml(path_project_root: Path) -> Optional[str]:

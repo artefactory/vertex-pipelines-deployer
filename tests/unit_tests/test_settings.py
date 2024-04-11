@@ -78,7 +78,6 @@ class TestUpdatePyprojectToml:
                 "config_name": "config_name",
                 "enable_caching": True,
                 "experiment_name": "experiment_name",
-                "local_package_path": tmp_path / "package",
             },
             check={
                 "all": True,
@@ -118,7 +117,6 @@ class TestUpdatePyprojectToml:
         assert deployer_section["deploy"]["config_name"] == "config_name"
         assert deployer_section["deploy"]["enable_caching"] is True
         assert deployer_section["deploy"]["experiment_name"] == "experiment_name"
-        assert deployer_section["deploy"]["local_package_path"] == str(tmp_path / "package")
         assert deployer_section["check"]["all"] is True
         assert deployer_section["check"]["config_filepath"] == str(tmp_path / "config.toml")
         assert deployer_section["check"]["raise_error"] is True

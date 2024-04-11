@@ -123,7 +123,6 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAMES...
 * `-cn, --config-name TEXT`: Name of the json/py file with parameter values and input artifacts to use when running the pipeline. It must be in the pipeline config dir. e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.
 * `-ec, --enable-caching`: Whether to enable caching when running the pipeline.
 * `-en, --experiment-name TEXT`: The name of the experiment to run the pipeline in.Defaults to '{pipeline_name}-experiment'.
-* `-lpp, --local-package-path DIRECTORY`: Local dir path where pipelines will be compiled.  [default: vertex/pipelines/compiled_pipelines]
 * `-y, --skip-validation / -n, --no-skip`: Whether to continue without user validation of the settings.  [default: skip-validation]
 * `--help`: Show this message and exit.
 

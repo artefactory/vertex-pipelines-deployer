@@ -320,7 +320,6 @@ vertex-deployer deploy dummy_pipeline \
     --upload \
     --run \
     --env-file example.env \
-    --local-package-path . \
     --tags my-tag \
     --config-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
@@ -442,7 +441,6 @@ deploy
   config_name=None
   enable_caching=False
   experiment_name=None
-  local_package_path=vertex/pipelines/compiled_pipelines
 check
   all=False
   config_filepath=None
