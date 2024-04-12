@@ -28,7 +28,7 @@ class _DeployerDeploySettings(CustomBaseModel):
     tags: Optional[List[str]] = constants.DEFAULT_TAGS
     config_filepath: Optional[Path] = None
     config_name: Optional[str] = None
-    enable_caching: bool = False
+    enable_caching: Optional[bool] = None
     experiment_name: Optional[str] = None
     local_package_path: Path = constants.DEFAULT_LOCAL_PACKAGE_PATH
     skip_validation: bool = True

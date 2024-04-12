@@ -121,7 +121,7 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAMES...
 * `--tags TEXT`: The tags to use when uploading the pipeline.
 * `-cfp, --config-filepath FILE`: Path to the json/py file with parameter values and input artifacts to use when running the pipeline.
 * `-cn, --config-name TEXT`: Name of the json/py file with parameter values and input artifacts to use when running the pipeline. It must be in the pipeline config dir. e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.
-* `-ec, --enable-caching`: Whether to enable caching when running the pipeline.
+* `-ec, --enable-caching / -nec, --no-cache`: Whether to turn on caching for the run.If this is not set, defaults to the compile time settings, which are True for alltasks by default, while users may specify different caching options for individualtasks. If this is set, the setting applies to all tasks in the pipeline.Overrides the compile time settings. Defaults to None.
 * `-en, --experiment-name TEXT`: The name of the experiment to run the pipeline in.Defaults to '{pipeline_name}-experiment'.
 * `-lpp, --local-package-path DIRECTORY`: Local dir path where pipelines will be compiled.  [default: vertex/pipelines/compiled_pipelines]
 * `-y, --skip-validation / -n, --no-skip`: Whether to continue without user validation of the settings.  [default: skip-validation]

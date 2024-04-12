@@ -110,10 +110,34 @@ class VertexPipelineDeployer:
     def _create_pipeline_job(
         self,
         template_path: str,
-        enable_caching: bool = False,
+        enable_caching: Optional[bool] = None,
         parameter_values: Optional[dict] = None,
         input_artifacts: Optional[dict] = None,
     ) -> aiplatform.PipelineJob:
+        """Create a pipeline job object
+
+        Args:
+            template_path (str): The path of PipelineJob or PipelineSpec JSON or YAML file. If the
+                Artifact Registry host is provided, this is the path to the pipeline template in
+                the Artifact Registry. Otherwise, this is the path to the pipeline template in
+                the local package.
+            enable_caching (Optional[bool], optional): Whether to turn on caching for the run.
+                If this is not set, defaults to the compile time settings, which are True for all
+                tasks by default, while users may specify different caching options for individual
+                tasks.
+                If this is set, the setting applies to all tasks in the pipeline.
+                Overrides the compile time settings. Defaults to None.
+            parameter_values (Optional[dict], optional): The mapping from runtime parameter names
+                to its values that control the pipeline run. Defaults to None.
+            input_artifacts (Optional[dict], optional): The mapping from the runtime parameter
+                name for this artifact to its resource id.
+                For example: "vertex_model":"456".
+                Note: full resource name ("projects/123/locations/us-central1/metadataStores/default/artifacts/456")
+                    cannot be used. Defaults to None.
+
+        Returns:
+            aiplatform.PipelineJob: The pipeline job object
+        """  # noqa: E501
         job = aiplatform.PipelineJob(
             display_name=self.pipeline_name,
             template_path=template_path,
@@ -156,7 +180,7 @@ class VertexPipelineDeployer:
 
     def run(
         self,
-        enable_caching: bool = False,
+        enable_caching: Optional[bool] = None,
         parameter_values: Optional[dict] = None,
         input_artifacts: Optional[dict] = None,
         experiment_name: Optional[str] = None,
@@ -170,15 +194,32 @@ class VertexPipelineDeployer:
         provided. Otherwise, use the pipeline file in the local package.
 
         Args:
-            enable_caching (bool, optional): Whether to enable caching. Defaults to False.
-            parameter_values (dict, optional): Pipeline parameter values. Defaults to None.
-            input_artifacts (dict, optional): Pipeline input artifacts. Defaults to None.
+            enable_caching (Optional[bool], optional): Whether to turn on caching for the run.
+                If this is not set, defaults to the compile time settings, which are True for all
+                tasks by default, while users may specify different caching options for individual
+                tasks.
+                If this is set, the setting applies to all tasks in the pipeline.
+                Overrides the compile time settings. Defaults to None.
+            parameter_values (Optional[dict], optional): The mapping from runtime parameter names
+                to its values that control the pipeline run. Defaults to None.
+            input_artifacts (Optional[dict], optional): The mapping from the runtime parameter
+                name for this artifact to its resource id.
+                For example: "vertex_model":"456".
+                Note: full resource name ("projects/123/locations/us-central1/metadataStores/default/artifacts/456")
+                    cannot be used. Defaults to None.
             experiment_name (str, optional): Experiment name. Defaults to None.
             tag (str, optional): Tag of the pipeline template. Defaults to None.
-        """
+        """  # noqa: E501
         experiment_name = self._check_experiment_name(experiment_name)
 
         template_path = self._get_template_path(tag)
+
+        logger.debug(
+            f"Running pipeline '{self.pipeline_name}' with settings:"
+            f"\n {'template_path':<20} {template_path:<30}"
+            f"\n {'enable_caching':<20} {enable_caching!s:<30}"
+            f"\n {'experiment_name':<20} {experiment_name:<30}"
+        )
 
         job = self._create_pipeline_job(
             template_path=template_path,
@@ -207,7 +248,7 @@ class VertexPipelineDeployer:
 
     def compile_upload_run(
         self,
-        enable_caching: bool = False,
+        enable_caching: Optional[bool] = None,
         parameter_values: Optional[dict] = None,
         experiment_name: Optional[str] = None,
         tags: Optional[List[str]] = None,
@@ -229,7 +270,7 @@ class VertexPipelineDeployer:
     def schedule(
         self,
         cron: str,
-        enable_caching: bool = False,
+        enable_caching: Optional[bool] = None,
         parameter_values: Optional[dict] = None,
         tag: Optional[str] = None,
         delete_last_schedule: bool = False,
