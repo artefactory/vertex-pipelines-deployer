@@ -2,6 +2,49 @@
 
 
 
+## 0.4.4 (2024-04-12)
+
+### Build
+
+* build(deps): bump vertex-deployer from 0.4.0 to 0.4.3 (#166)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2cd0fab`](https://github.com/artefactory/vertex-pipelines-deployer/commit/2cd0fab64e0feae3414c093a553e932b960eb137))
+
+* build(deps): update typer requirement from ^0.9 to ^0.12 (#171)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`71c9da5`](https://github.com/artefactory/vertex-pipelines-deployer/commit/71c9da5a177697702dfa76dc9579a288125cc9d7))
+
+* build(deps-dev): update ruff requirement from ^0.1 to ^0.3 (#165)
+
+Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
+Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
+Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2a5b637`](https://github.com/artefactory/vertex-pipelines-deployer/commit/2a5b637a1be8ad06c9626f78d8cc479ce8dbb81a))
+
+### Chore
+
+* chore: better exception message when validating deployer settings (#163) ([`5c08106`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5c08106706a1b86fefcc10dd250884687424d296))
+
+* chore: create .skaff/skaff.yaml (#172) ([`9876d39`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9876d39da79af3a9fa1666c6f3e2e5a28c7fab3c))
+
+### Ci
+
+* ci: check cli documentation is up to date (#178) ([`4c6436c`](https://github.com/artefactory/vertex-pipelines-deployer/commit/4c6436c01b2612cbf3e39f621073d537d77f7cf4))
+
+* ci: upload to pypi (#167) ([`7f02b42`](https://github.com/artefactory/vertex-pipelines-deployer/commit/7f02b4249244abd5c80b82e1654c792647d3a9ee))
+
+### Documentation
+
+* docs: update docs for public release (#174) ([`13219d0`](https://github.com/artefactory/vertex-pipelines-deployer/commit/13219d0f3b24dabf8dce72f747c2f7b4f815cb3b))
+
+### Fix
+
+* fix: enable caching default behavior (#177) ([`34663c1`](https://github.com/artefactory/vertex-pipelines-deployer/commit/34663c15ee41abf4e03e345164bd489194a38ca8))
+
+
 ## 0.4.3 (2024-03-01)
 
 ### Ci
