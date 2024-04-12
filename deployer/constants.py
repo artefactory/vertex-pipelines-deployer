@@ -2,7 +2,7 @@ from pathlib import Path
 
 TEMPLATES_PATH = Path(__file__).parent / "_templates"
 
-DEFAULT_VERTEX_FOLDER_PATH = Path("vertex")
+DEFAULT_VERTEX_FOLDER_PATH = "vertex"
 DEFAULT_LOG_LEVEL = "INFO"
 
 DEFAULT_SCHEDULER_TIMEZONE = "Europe/Paris"

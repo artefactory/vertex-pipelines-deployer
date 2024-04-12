@@ -29,6 +29,10 @@ def configure_deployer():
 
     set_fields = ask_user_for_model_fields(DeployerSettings)
 
+    tags = set_fields.get("deploy", {}).get("tags", None)
+    if tags:
+        set_fields["deploy"]["tags"] = [tags]
+
     new_deployer_settings = DeployerSettings(**set_fields)
 
     update_pyproject_toml(pyproject_toml_filepath, new_deployer_settings)

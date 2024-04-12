@@ -1,4 +1,3 @@
-from ast import literal_eval
 from enum import Enum
 from inspect import isclass
 from typing import Type
@@ -38,17 +37,11 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
             if isclass(annotation) and annotation == bool:
                 answer = Confirm.ask(field_name, default=default)
             else:
-                answer = Prompt.ask(field_name, default=str(default), choices=choices)
+                answer = Prompt.ask(
+                    field_name, default=default if default is not None else "None", choices=choices
+                )
 
-            # Attempt to evaluate the answer as a Python literal if it's a string
-            if isinstance(answer, str):
-                try:
-                    answer = literal_eval(answer)
-                except (ValueError, SyntaxError):
-                    # If literal_eval fails, keep the string as is
-                    pass
-
-            if answer != default:
+            if answer != field_info.default:
                 set_fields[field_name] = answer
 
     return set_fields
