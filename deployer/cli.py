@@ -8,7 +8,7 @@ import rich.traceback
 import typer
 from loguru import logger
 from pydantic import ValidationError
-from rich.prompt import Confirm
+from rich.prompt import Confirm, Prompt
 from typing_extensions import Annotated
 
 from deployer import constants
@@ -16,7 +16,6 @@ from deployer.init_deployer import (
     _create_file_from_template,
     build_default_folder_structure,
     configure_deployer,
-    create_initial_pipeline,
     show_commands,
 )
 from deployer.settings import (
@@ -526,6 +525,27 @@ def create_pipeline(
 
 @app.command(name="init")
 def init_deployer(ctx: typer.Context):
+    def create_initial_pipeline(ctx: typer.Context, deployer_settings: DeployerSettings):
+        """Create an initial pipeline with the provided settings."""
+        from deployer.cli import create_pipeline
+
+        wrong_name = True
+        while wrong_name:
+            pipeline_name = Prompt.ask("What is the name of the pipeline?")
+
+            try:
+                config_type = deployer_settings.create.config_type.name
+                create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
+            except typer.BadParameter as e:
+                console.print(e, style="red")
+            except FileExistsError:
+                console.print(
+                    f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
+                    style="yellow",
+                )
+            else:
+                wrong_name = False
+
     console.print("Welcome to Vertex Deployer!", style="bold blue")
     console.print("This command will help you getting fired up! :fire:\n", style="blue")
 

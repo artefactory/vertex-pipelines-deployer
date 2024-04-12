@@ -2,9 +2,7 @@ from pathlib import Path
 from typing import List
 
 import jinja2
-import typer
 from jinja2 import Environment, FileSystemLoader, meta
-from rich.prompt import Prompt
 from rich.tree import Tree
 
 from deployer import constants
@@ -167,28 +165,6 @@ def generate_tree(vertex_folder_path: Path):
     root.add("deployer.env")
     root.add("requirements-vertex.txt")
     return root
-
-
-def create_initial_pipeline(ctx: typer.Context, deployer_settings: DeployerSettings):
-    """Create an initial pipeline with the provided settings."""
-    from deployer.cli import create_pipeline
-
-    wrong_name = True
-    while wrong_name:
-        pipeline_name = Prompt.ask("What is the name of the pipeline?")
-
-        try:
-            config_type = deployer_settings.create.config_type.name
-            create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
-        except typer.BadParameter as e:
-            console.print(e, style="red")
-        except FileExistsError:
-            console.print(
-                f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
-                style="yellow",
-            )
-        else:
-            wrong_name = False
 
 
 def show_commands(deployer_settings: DeployerSettings):
