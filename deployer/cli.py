@@ -12,6 +12,13 @@ from rich.prompt import Confirm
 from typing_extensions import Annotated
 
 from deployer import constants
+from deployer.init_deployer import (
+    _create_file_from_template,
+    build_default_folder_structure,
+    configure_deployer,
+    create_initial_pipeline,
+    show_commands,
+)
 from deployer.settings import (
     DeployerSettings,
     load_deployer_settings,
@@ -24,12 +31,6 @@ from deployer.utils.config import (
     validate_or_log_settings,
 )
 from deployer.utils.console import console
-from deployer.utils.initiation import (
-    build_default_folder_structure,
-    configure_deployer,
-    create_initial_pipeline,
-    show_commands,
-)
 from deployer.utils.logging import LoguruLevel
 from deployer.utils.utils import (
     dict_to_repr,
@@ -463,8 +464,6 @@ def create_pipeline(
     ] = ConfigType.json,
 ):
     """Create files structure for a new pipeline."""
-    from deployer.utils.initiation import _create_file_from_template
-
     invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
     if invalid_pipelines:
         raise typer.BadParameter(
@@ -498,6 +497,9 @@ def create_pipeline(
             path=pipeline_filepath,
             template_path=constants.PIPELINE_MINIMAL_TEMPLATE,
             pipeline_name=pipeline_name,
+            component_module=str(deployer_settings.vertex_folder_path / "components").replace(
+                "/", "."
+            ),
         )
 
         try:
@@ -516,16 +518,16 @@ def create_pipeline(
             raise e
 
         console.print(
-            f"Pipeline '{pipeline_name}' created at '{pipeline_filepath}'"
-            f" with config files: {[str(p) for p in config_dirpath.glob('*')]}. :sparkles:",
+            f"\n Pipeline '{pipeline_name}' created at '{pipeline_filepath}'"
+            f"\n with config files: {[str(p) for p in config_dirpath.glob('*')]}. :sparkles: \n",
             style="blue",
         )
 
 
 @app.command(name="init")
 def init_deployer(ctx: typer.Context):
-    console.print("Welcome to Vertex Deployer!", style="blue")
-    console.print("This command will help you getting fired up.", style="blue")
+    console.print("Welcome to Vertex Deployer!", style="bold blue")
+    console.print("This command will help you getting fired up! :fire:\n", style="blue")
 
     deployer_settings = ctx.obj["settings"]
     if Confirm.ask("Do you want to configure the deployer?"):
@@ -538,9 +540,10 @@ def init_deployer(ctx: typer.Context):
     if Confirm.ask("Do you want to create a pipeline?"):
         create_initial_pipeline(ctx, deployer_settings)
 
-    console.print("All done :sparkles:", style="blue")
+    console.print("All done :sparkles:\n", style="bold blue")
 
-    show_commands(deployer_settings)
+    if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
+        show_commands(deployer_settings)
 
 
 @app.command(name="config")

@@ -32,7 +32,6 @@ repos:
       types: [python]
       language: system
       stages: [commit, push]
-      exclude: 'deployer/_templates/.*'
     - id: nbstripout
       name: Strip Jupyter notebook output (nbstripout)
       entry: poetry run nbstripout
