@@ -1,0 +1,9 @@
+# base
+# We consider that your initial requirements are defined in a requirements.txt file
+-r requirements.txt
+
+# deploy
+--extra-index-url https://europe-west1-python.pkg.dev/data-sandbox-fr/artefactory/simple
+kfp
+google-cloud-aiplatform
+vertex-deployer={{ deployer_version }}
