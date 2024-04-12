@@ -46,7 +46,7 @@ update-requirements:
 .PHONY: format-code
 ## Format/lint all-files using pre-commit hooks (black, flake8, isort, ...)
 format-code:
-	@poetry run pre-commit run -a
+	@poetry run pre-commit run -a --hook-stage pre-push
 
 
 .PHONY: run-unit-tests

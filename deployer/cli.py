@@ -83,7 +83,7 @@ def main(
 def pipeline_name_callback(ctx: typer.Context, value: Union[str, bool]) -> Union[str, bool]:
     """Callback to check that the pipeline name is valid."""
     if value is None:  # None is allowed for optional arguments
-        return value
+        return []
 
     pipeline_names: enum.Enum = ctx.obj["pipeline_names"]
 
@@ -203,11 +203,17 @@ def deploy(  # noqa: C901
         ),
     ] = None,
     enable_caching: Annotated[
-        bool,
+        Optional[bool],
         typer.Option(
-            "--enable-caching", "-ec", help="Whether to enable caching when running the pipeline."
+            "--enable-caching / --no-cache",
+            "-ec / -nec",
+            help="Whether to turn on caching for the run."
+            "If this is not set, defaults to the compile time settings, which are True for all"
+            "tasks by default, while users may specify different caching options for individual"
+            "tasks. If this is set, the setting applies to all tasks in the pipeline."
+            "Overrides the compile time settings. Defaults to None.",
         ),
-    ] = False,
+    ] = None,
     experiment_name: Annotated[
         Optional[str],
         typer.Option(
@@ -327,7 +333,7 @@ def check(
     pipeline_names: Annotated[
         Optional[List[str]],
         typer.Argument(
-            ..., help="The names of the pipeline to run.", callback=pipeline_name_callback
+            ..., help="The names of the pipeline to check.", callback=pipeline_name_callback
         ),
     ] = None,
     all: Annotated[

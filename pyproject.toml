@@ -1,8 +1,16 @@
 [tool.poetry]
 name = "vertex-deployer"
 version = "0.4.3"
-description = ""
-authors = ["julesbertrand <julesbertrand13@gmail.com>"]
+description = "Check, compile, upload, run, and schedule Kubeflow Pipelines on GCP Vertex AI in a standardized manner."
+authors = [
+    "artefactory <jules.bertrand@artefact.com>",
+    "julesbertrand  <jules.bertrand@artefact.com>"
+]
+license = "Apache-2.0"
+homepage = "https://github.com/artefactory/vertex-pipelines-deployer"
+documentation = "https://artefactory.github.io/vertex-pipelines-deployer/"
+repository = "https://github.com/artefactory/vertex-pipelines-deployer"
+keywords = ["kubeflow", "vertexai", "aiplatform", "gcp", "mlops", "deployer", "pipeline"]
 readme = "README.md"
 packages = [{include = "deployer"}]
 
@@ -14,7 +22,7 @@ python = ">=3.8, <3.11.0"
 kfp = "^2.0,>=2.0.1"
 google-cloud-aiplatform = "^1.26"
 requests = "^2.31"
-typer = "^0.9"
+typer = "^0.12"
 rich = "^13.5"
 loguru = "^0.7"
 pydantic-settings = "^2.0"
@@ -28,14 +36,13 @@ pytest = "^8.0"
 pre-commit = "^3.3"
 ipykernel = "^6.9"
 nbstripout = "^0.7"
-ruff = "^0.1"
+ruff = "^0.3"
 pytest-cov = "^4.1"
 codespell = "^2.2"
 
-
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.5"
-mkdocs-techdocs-core = "^1.2"
+mkdocs-material = {extras = ["pygments"], version = "^9.5.17"}
 
 [tool.poetry.extras]
 profiling = ["pyinstrument"]
@@ -47,6 +54,8 @@ build-backend = "poetry.core.masonry.api"
 [tool.ruff]
 target-version = "py38"
 line-length = 99
+
+[tool.ruff.lint]
 ignore = [
     "D100",
     "D205",
@@ -66,13 +75,13 @@ select = [
     "I",    # isort
 ]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.ruff.lint.isort]
 known-first-party = ["vertex", "tests", "deployer"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "*cli.py" = ["D", "B008"]
 "*__init__.py" = [
     "F401",
