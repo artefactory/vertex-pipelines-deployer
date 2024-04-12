@@ -525,10 +525,18 @@ def create_pipeline(
 
 @app.command(name="init")
 def init_deployer(ctx: typer.Context):
-    def create_initial_pipeline(ctx: typer.Context, deployer_settings: DeployerSettings):
-        """Create an initial pipeline with the provided settings."""
-        from deployer.cli import create_pipeline
+    console.print("Welcome to Vertex Deployer!", style="bold blue")
+    console.print("This command will help you getting fired up! :fire:\n", style="blue")
 
+    deployer_settings = ctx.obj["settings"]
+    if Confirm.ask("Do you want to configure the deployer?"):
+        deployer_settings = configure_deployer()
+        ctx.obj["settings"] = deployer_settings
+
+    if Confirm.ask("Do you want to build default folder structure"):
+        build_default_folder_structure(deployer_settings)
+
+    if Confirm.ask("Do you want to create a pipeline?"):
         wrong_name = True
         while wrong_name:
             pipeline_name = Prompt.ask("What is the name of the pipeline?")
@@ -545,20 +553,6 @@ def init_deployer(ctx: typer.Context):
                 )
             else:
                 wrong_name = False
-
-    console.print("Welcome to Vertex Deployer!", style="bold blue")
-    console.print("This command will help you getting fired up! :fire:\n", style="blue")
-
-    deployer_settings = ctx.obj["settings"]
-    if Confirm.ask("Do you want to configure the deployer?"):
-        deployer_settings = configure_deployer()
-        ctx.obj["settings"] = deployer_settings
-
-    if Confirm.ask("Do you want to build default folder structure"):
-        build_default_folder_structure(deployer_settings)
-
-    if Confirm.ask("Do you want to create a pipeline?"):
-        create_initial_pipeline(ctx, deployer_settings)
 
     console.print("All done :sparkles:\n", style="bold blue")
 

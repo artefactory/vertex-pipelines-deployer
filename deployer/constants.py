@@ -15,21 +15,14 @@ PYTHON_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "configs/python_config.py.jinja")
 JSON_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "configs/json_config.json.jinja")
 TOML_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "configs/toml_config.toml.jinja")
 
-DUMMY_COMPONENT_TEMPLATE = Path(TEMPLATES_PATH / "components/dummy_component.py.jinja")
-DEPLOYER_ENV_TEMPLATE = Path(TEMPLATES_PATH / "deployer.env.jinja")
-REQUIREMENTS_VERTEX_TEMPLATE = Path(TEMPLATES_PATH / "requirements-vertex.txt.jinja")
-DOCKERFILE_TEMPLATE = Path(TEMPLATES_PATH / "deployment/Dockerfile.jinja")
-CLOUDBUILD_LOCAL_TEMPLATE = Path(TEMPLATES_PATH / "deployment/cloudbuild_local.yaml.jinja")
-BUILD_BASE_IMAGE_TEMPLATE = Path(TEMPLATES_PATH / "deployment/build_base_image.sh.jinja")
-
-TEMPLATES_DEFAULT_STRUCTURE = [
-    DUMMY_COMPONENT_TEMPLATE,
-    DEPLOYER_ENV_TEMPLATE,
-    REQUIREMENTS_VERTEX_TEMPLATE,
-    DOCKERFILE_TEMPLATE,
-    CLOUDBUILD_LOCAL_TEMPLATE,
-    BUILD_BASE_IMAGE_TEMPLATE,
-]
+TEMPLATES_DEFAULT_STRUCTURE = {
+    "dummy_component": Path(TEMPLATES_PATH / "components/dummy_component.py.jinja"),
+    "deployer_env": Path(TEMPLATES_PATH / "deployer.env.jinja"),
+    "requirements_vertex": Path(TEMPLATES_PATH / "requirements-vertex.txt.jinja"),
+    "dockerfile": Path(TEMPLATES_PATH / "deployment/Dockerfile.jinja"),
+    "cloudbuild_local": Path(TEMPLATES_PATH / "deployment/cloudbuild_local.yaml.jinja"),
+    "build_base_image": Path(TEMPLATES_PATH / "deployment/build_base_image.sh.jinja"),
+}
 
 CONFIG_TEMPLATE_MAPPING = {
     "json": JSON_CONFIG_TEMPLATE,

@@ -1,5 +1,4 @@
 from pathlib import Path
-from typing import List
 
 import jinja2
 from jinja2 import Environment, FileSystemLoader, meta
@@ -13,6 +12,7 @@ from deployer.settings import (
     update_pyproject_toml,
 )
 from deployer.utils.console import ask_user_for_model_fields, console
+from deployer.utils.exceptions import TemplateFileCreationError
 
 
 def configure_deployer():
@@ -69,29 +69,20 @@ def _create_file_from_template(path: Path, template_path: Path, **kwargs):
         console.print(f"An unexpected error occurred: {e}", style="red")
 
 
-class TemplateFileCreationError(Exception):
-    """Exception raised when a file cannot be created from a template."""
-
-    def __init__(self, message="Error creating file from template"):
-        """Initialize the exception with a message."""
-        self.message = message
-        super().__init__(self.message)
-
-
 def _generate_templates_mapping(
-    templates: List[Path], mapping_variables: dict, vertex_folder_path: Path
+    templates_dict: dict, mapping_variables: dict, vertex_folder_path: Path
 ):
     """Generate the mapping of a list of templates to create and their variables."""
     templates_mapping = {}
     env = Environment(loader=FileSystemLoader(str(constants.TEMPLATES_PATH)), autoescape=True)
-    for template_path in templates:
+    for template, template_path in templates_dict.items():
         template_name = str(template_path.relative_to(constants.TEMPLATES_PATH))
         template_source = env.loader.get_source(env, template_name)[0]
         parsed_content = env.parse(template_source)
         variables = meta.find_undeclared_variables(parsed_content)
-        if template_path in [
-            constants.DEPLOYER_ENV_TEMPLATE,
-            constants.REQUIREMENTS_VERTEX_TEMPLATE,
+        if template in [
+            "deployer_env",
+            "requirements_vertex",
         ]:
             new_file_path = Path(template_name.replace(".jinja", ""))
         else:
@@ -108,10 +99,12 @@ def build_default_folder_structure(deployer_settings: DeployerSettings):
     """Create the default folder structure for the Vertex Pipelines project."""
     vertex_folder_path = deployer_settings.vertex_folder_path
     dockerfile_path = vertex_folder_path / str(
-        constants.DOCKERFILE_TEMPLATE.relative_to(constants.TEMPLATES_PATH)
+        constants.TEMPLATES_DEFAULT_STRUCTURE["dockerfile"].relative_to(constants.TEMPLATES_PATH)
     ).replace(".jinja", "")
     cloud_build_path = vertex_folder_path / str(
-        constants.CLOUDBUILD_LOCAL_TEMPLATE.relative_to(constants.TEMPLATES_PATH)
+        constants.TEMPLATES_DEFAULT_STRUCTURE["cloudbuild_local"].relative_to(
+            constants.TEMPLATES_PATH
+        )
     ).replace(".jinja", "")
 
     # Create the folder structure
