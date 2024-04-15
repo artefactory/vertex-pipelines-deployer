@@ -41,7 +41,9 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
                     field_name, default=default if default is not None else "None", choices=choices
                 )
 
-            if answer != field_info.default:
+            if answer != field_info.default and not (
+                answer in [None, "None"] and field_info.default is None
+            ):
                 set_fields[field_name] = answer
 
     return set_fields
