@@ -2,6 +2,19 @@
 
 
 
+## 0.5.0 (2024-04-16)
+
+### Documentation
+
+* docs: improve readme badges (#180) ([`8e1faf8`](https://github.com/artefactory/vertex-pipelines-deployer/commit/8e1faf87f01a2cf060f05e6702165ad3943cc1f6))
+
+### Feature
+
+* feat: improve init (#173)
+
+Co-authored-by: Elie Trigano &lt;elie.trigano@artefact.com&gt; ([`f937dfe`](https://github.com/artefactory/vertex-pipelines-deployer/commit/f937dfe95a144907ce66f951e2b5c12619966acb))
+
+
 ## 0.4.4 (2024-04-12)
 
 ### Build

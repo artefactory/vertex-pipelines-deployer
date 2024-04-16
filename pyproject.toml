@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vertex-deployer"
-version = "0.4.4"
+version = "0.5.0"
 description = "Check, compile, upload, run, and schedule Kubeflow Pipelines on GCP Vertex AI in a standardized manner."
 authors = [
     "artefactory <jules.bertrand@artefact.com>",
