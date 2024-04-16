@@ -20,7 +20,7 @@ $ vertex-deployer [OPTIONS] COMMAND [ARGS]...
 * `config`: Display the configuration from...
 * `create`: Create files structure for a new pipeline.
 * `deploy`: Compile, upload, run and schedule pipelines.
-* `init`
+* `init`: Initialize the deployer.
 * `list`: List all pipelines.
 
 ## `vertex-deployer check`
@@ -128,6 +128,8 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAMES...
 
 ## `vertex-deployer init`
 
+Initialize the deployer.
+
 **Usage**:
 
 ```console
@@ -136,6 +138,7 @@ $ vertex-deployer init [OPTIONS]
 
 **Options**:
 
+* `-d, --default`: Instantly creates the full vertex structure and files without configuration prompts
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer list`

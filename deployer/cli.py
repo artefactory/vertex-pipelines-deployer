@@ -16,6 +16,7 @@ from deployer.init_deployer import (
     _create_file_from_template,
     build_default_folder_structure,
     configure_deployer,
+    ensure_pyproject_toml,
     show_commands,
 )
 from deployer.settings import (
@@ -524,40 +525,64 @@ def create_pipeline(
 
 
 @app.command(name="init")
-def init_deployer(ctx: typer.Context):
-    console.print("Welcome to Vertex Deployer!", style="bold blue")
-    console.print("This command will help you getting fired up! :fire:\n", style="blue")
-
+def init_deployer(
+    ctx: typer.Context,
+    default: bool = typer.Option(
+        False,
+        "--default",
+        "-d",
+        help="Instantly creates the full vertex structure and files without configuration prompts",
+    ),
+):
+    """Initialize the deployer."""
     deployer_settings = ctx.obj["settings"]
-    if Confirm.ask("Do you want to configure the deployer?"):
-        deployer_settings = configure_deployer()
-        ctx.obj["settings"] = deployer_settings
+    console.print("Welcome to Vertex Deployer!", style="bold blue")
 
-    if Confirm.ask("Do you want to build default folder structure"):
+    if default or Confirm.ask(
+        "Do you want to instantly create the full vertex structure and templates\n"
+        "without configuration prompts? This will use the default settings."
+    ):
+        console.print("Performing quick initialization...", style="bold blue")
+        ensure_pyproject_toml()
+        deployer_settings = load_deployer_settings()
         build_default_folder_structure(deployer_settings)
+        create_pipeline(ctx, pipeline_names=["dummy_pipeline"], config_type=ConfigType.py)
 
-    if Confirm.ask("Do you want to create a pipeline?"):
-        wrong_name = True
-        while wrong_name:
-            pipeline_name = Prompt.ask("What is the name of the pipeline?")
-
-            try:
-                config_type = deployer_settings.create.config_type.name
-                create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
-            except typer.BadParameter as e:
-                console.print(e, style="red")
-            except FileExistsError:
-                console.print(
-                    f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
-                    style="yellow",
-                )
-            else:
-                wrong_name = False
-
-    console.print("All done :sparkles:\n", style="bold blue")
-
-    if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
+        console.print("Default initialization done :sparkles:\n", style="bold blue")
+        console.print("Here are some commands on how to use the deployer:", style="blue")
         show_commands(deployer_settings)
+    else:
+        console.print("This command will help you getting fired up! :fire:\n", style="blue")
+
+        if Confirm.ask("Do you want to configure the deployer?"):
+            deployer_settings = configure_deployer()
+            ctx.obj["settings"] = deployer_settings
+
+        if Confirm.ask("Do you want to build default folder structure"):
+            build_default_folder_structure(deployer_settings)
+
+        if Confirm.ask("Do you want to create a pipeline?"):
+            wrong_name = True
+            while wrong_name:
+                pipeline_name = Prompt.ask("What is the name of the pipeline?")
+
+                try:
+                    config_type = deployer_settings.create.config_type.name
+                    create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
+                except typer.BadParameter as e:
+                    console.print(e, style="red")
+                except FileExistsError:
+                    console.print(
+                        f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
+                        style="yellow",
+                    )
+                else:
+                    wrong_name = False
+
+            console.print("All done :sparkles:\n", style="bold blue")
+
+            if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
+                show_commands(deployer_settings)
 
 
 @app.command(name="config")

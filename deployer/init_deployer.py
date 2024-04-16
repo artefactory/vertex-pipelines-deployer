@@ -15,17 +15,24 @@ from deployer.utils.console import ask_user_for_model_fields, console
 from deployer.utils.exceptions import TemplateFileCreationError
 
 
-def configure_deployer():
-    """Configure the deployer settings."""
+def ensure_pyproject_toml():
+    """Ensure that a pyproject.toml file exists in the current directory."""
     pyproject_toml_filepath = find_pyproject_toml(Path.cwd().resolve())
 
     if pyproject_toml_filepath is None:
         console.print(
-            "No pyproject.toml file found. Creating one in current directory.",
+            "No pyproject.toml file found. Creating one in the current directory.",
             style="yellow",
         )
         pyproject_toml_filepath = Path("./pyproject.toml")
         pyproject_toml_filepath.touch()
+
+    return pyproject_toml_filepath
+
+
+def configure_deployer():
+    """Configure the deployer settings."""
+    pyproject_toml_filepath = ensure_pyproject_toml()
 
     set_fields = ask_user_for_model_fields(DeployerSettings)
 
@@ -161,6 +168,7 @@ def generate_tree(vertex_folder_path: Path):
 
     root.add("deployer.env")
     root.add("requirements-vertex.txt")
+    root.add("pyproject.toml")
     return root
 
 
