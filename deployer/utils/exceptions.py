@@ -16,3 +16,7 @@ class BadConfigError(ValueError):
 
 class InvalidPyProjectTOMLError(Exception):
     """Raised when the configuration is invalid."""
+
+
+class TemplateFileCreationError(Exception):
+    """Exception raised when a file cannot be created from a template."""

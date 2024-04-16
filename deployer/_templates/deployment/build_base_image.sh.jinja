@@ -1,0 +1,17 @@
+#!/bin/bash
+ENV_FILENAME=deployer.env
+source $ENV_FILENAME
+echo "Using '$ENV_FILENAME' env variables..."
+
+SUBSTITUTIONS="\
+_GAR_LOCATION=${GAR_LOCATION},\
+_GAR_DOCKER_REPO_ID=${GAR_DOCKER_REPO_ID},\
+_GAR_VERTEX_BASE_IMAGE_NAME=${GAR_VERTEX_BASE_IMAGE_NAME},\
+_TAG=${TAG}
+"
+
+gcloud builds submit \
+    --config {{ cloud_build_path }} \
+    --project=$PROJECT_ID \
+    --region $GCP_REGION \
+    --substitutions $SUBSTITUTIONS

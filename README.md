@@ -320,7 +320,6 @@ vertex-deployer deploy dummy_pipeline \
     --upload \
     --run \
     --env-file example.env \
-    --local-package-path . \
     --tags my-tag \
     --config-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
@@ -414,8 +413,7 @@ This will overwrite default values. It can be useful if you always use the same 
 
 ```toml
 [tool.vertex-deployer]
-pipelines_root_path = "my/path/to/vertex/pipelines"
-configs_root_path = "my/path/to/vertex/configs"
+vertex_folder_path = "my/path/to/vertex"
 log_level = "INFO"
 
 [tool.vertex-deployer.deploy]
@@ -427,8 +425,7 @@ You can display all the configurable parameterss with default values by running:
 $ vertex-deployer config --all
 '*' means the value was set in config file
 
-* pipelines_root_path=my/path/to/vertex/pipelines
-* config_root_path=my/path/to/vertex/configs
+* vertex_folder_path=my/path/to/vertex
 * log_level=INFO
 deploy
   env_file=None
@@ -444,7 +441,6 @@ deploy
   config_name=None
   enable_caching=False
   experiment_name=None
-  local_package_path=vertex/pipelines/compiled_pipelines
 check
   all=False
   config_filepath=None

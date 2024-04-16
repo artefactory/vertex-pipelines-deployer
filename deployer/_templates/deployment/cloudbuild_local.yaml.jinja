@@ -7,7 +7,7 @@ steps:
     args: [
       'build',
       '-t', '${_GAR_IMAGE_PATH}',
-      '-f', 'vertex/deployment/Dockerfile',
+      '-f', '{{ dockerfile_path }}',
       '--build-arg', 'PROJECT_ID=${PROJECT_ID}',
       '--build-arg', 'GCP_REGION=${_GCP_REGION}',
       '--build-arg', 'GAR_LOCATION=${_GAR_LOCATION}',
