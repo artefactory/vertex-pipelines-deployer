@@ -18,7 +18,7 @@
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/vertex-deployer?logo=python)
 ![PyPI - Status](https://img.shields.io/pypi/v/vertex-deployer)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/vertex-deployer)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/vertex-deployer?color=blue)
 ![PyPI - License](https://img.shields.io/pypi/l/vertex-deployer)
 
 [![CI](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml)
