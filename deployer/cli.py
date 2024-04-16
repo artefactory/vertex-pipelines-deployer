@@ -461,7 +461,7 @@ def create_pipeline(
     config_type: Annotated[
         ConfigType,
         typer.Option("--config-type", "-ct", help="The type of the config to create."),
-    ] = ConfigType.json,
+    ] = ConfigType.py,
 ):
     """Create files structure for a new pipeline."""
     invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
