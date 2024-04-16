@@ -16,15 +16,17 @@
 <!-- PROJECT SHIELDS -->
 <div align="center">
 
-[![Python Version](https://img.shields.io/badge/Python-3.8_3.9_3.10-blue?logo=python)](#supported-python-versions)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
-[![Linting: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-informational?logo=pre-commit&logoColor=white)](https://github.com/ornikar/vertex-eduscore/blob/develop/.pre-commit-config.yaml)
-[![License](https://img.shields.io/github/license/artefactory/vertex-pipelines-deployer)](https://github.com/artefactory/vertex-pipelines-deployer/blob/main/LICENSE)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/vertex-deployer?logo=python)
+![PyPI - Status](https://img.shields.io/pypi/v/vertex-deployer)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/vertex-deployer?color=blue)
+![PyPI - License](https://img.shields.io/pypi/l/vertex-deployer)
 
 [![CI](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml)
 [![Release](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml/badge.svg?branch=main&event=push)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml)
+
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-informational?logo=pre-commit&logoColor=white)](https://github.com/ornikar/vertex-eduscore/blob/develop/.pre-commit-config.yaml)
+[![Linting: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat)](https://pycqa.github.io/isort/)
 
 </div>
 
@@ -320,7 +322,6 @@ vertex-deployer deploy dummy_pipeline \
     --upload \
     --run \
     --env-file example.env \
-    --local-package-path . \
     --tags my-tag \
     --config-filepath vertex/configs/dummy_pipeline/config_test.json \
     --experiment-name my-experiment \
@@ -414,8 +415,7 @@ This will overwrite default values. It can be useful if you always use the same 
 
 ```toml
 [tool.vertex-deployer]
-pipelines_root_path = "my/path/to/vertex/pipelines"
-configs_root_path = "my/path/to/vertex/configs"
+vertex_folder_path = "my/path/to/vertex"
 log_level = "INFO"
 
 [tool.vertex-deployer.deploy]
@@ -427,8 +427,7 @@ You can display all the configurable parameterss with default values by running:
 $ vertex-deployer config --all
 '*' means the value was set in config file
 
-* pipelines_root_path=my/path/to/vertex/pipelines
-* config_root_path=my/path/to/vertex/configs
+* vertex_folder_path=my/path/to/vertex
 * log_level=INFO
 deploy
   env_file=None
@@ -444,7 +443,6 @@ deploy
   config_name=None
   enable_caching=False
   experiment_name=None
-  local_package_path=vertex/pipelines/compiled_pipelines
 check
   all=False
   config_filepath=None

@@ -30,7 +30,6 @@ class _DeployerDeploySettings(CustomBaseModel):
     config_name: Optional[str] = None
     enable_caching: Optional[bool] = None
     experiment_name: Optional[str] = None
-    local_package_path: Path = constants.DEFAULT_LOCAL_PACKAGE_PATH
     skip_validation: bool = True
 
 
@@ -53,7 +52,7 @@ class _DeployerListSettings(CustomBaseModel):
 class _DeployerCreateSettings(CustomBaseModel):
     """Settings for Vertex Deployer `create` command."""
 
-    config_type: ConfigType = ConfigType.json
+    config_type: ConfigType = ConfigType.py
 
 
 class _DeployerConfigSettings(CustomBaseModel):
@@ -65,14 +64,28 @@ class _DeployerConfigSettings(CustomBaseModel):
 class DeployerSettings(CustomBaseModel):
     """Settings for Vertex Deployer."""
 
-    pipelines_root_path: Path = constants.DEFAULT_PIPELINE_ROOT_PATH
-    config_root_path: Path = constants.DEFAULT_CONFIG_ROOT_PATH
+    vertex_folder_path: Path = constants.DEFAULT_VERTEX_FOLDER_PATH
     log_level: str = "INFO"
     deploy: _DeployerDeploySettings = _DeployerDeploySettings()
     check: _DeployerCheckSettings = _DeployerCheckSettings()
     list: _DeployerListSettings = _DeployerListSettings()
     create: _DeployerCreateSettings = _DeployerCreateSettings()
     config: _DeployerConfigSettings = _DeployerConfigSettings()
+
+    @property
+    def pipelines_root_path(self) -> Path:
+        """Construct the pipelines root path."""
+        return self.vertex_folder_path / "pipelines"
+
+    @property
+    def configs_root_path(self) -> Path:
+        """Construct the configs root path."""
+        return self.vertex_folder_path / "configs"
+
+    @property
+    def local_package_path(self) -> Path:
+        """Construct the local package path."""
+        return self.vertex_folder_path / "pipelines" / "compiled_pipelines"
 
 
 def find_pyproject_toml(path_project_root: Path) -> Optional[str]:

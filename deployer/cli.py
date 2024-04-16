@@ -12,21 +12,25 @@ from rich.prompt import Confirm, Prompt
 from typing_extensions import Annotated
 
 from deployer import constants
+from deployer.init_deployer import (
+    _create_file_from_template,
+    build_default_folder_structure,
+    configure_deployer,
+    ensure_pyproject_toml,
+    show_commands,
+)
 from deployer.settings import (
     DeployerSettings,
-    find_pyproject_toml,
     load_deployer_settings,
-    update_pyproject_toml,
 )
 from deployer.utils.config import (
     ConfigType,
-    VertexPipelinesSettings,
     list_config_filepaths,
     load_config,
     load_vertex_settings,
     validate_or_log_settings,
 )
-from deployer.utils.console import ask_user_for_model_fields, console
+from deployer.utils.console import console
 from deployer.utils.logging import LoguruLevel
 from deployer.utils.utils import (
     dict_to_repr,
@@ -223,17 +227,6 @@ def deploy(  # noqa: C901
             "Defaults to '{pipeline_name}-experiment'.",
         ),
     ] = None,
-    local_package_path: Annotated[
-        Path,
-        typer.Option(
-            "--local-package-path",
-            "-lpp",
-            help="Local dir path where pipelines will be compiled.",
-            dir_okay=True,
-            file_okay=False,
-            resolve_path=True,
-        ),
-    ] = constants.DEFAULT_LOCAL_PACKAGE_PATH,
     skip_validation: Annotated[
         bool,
         typer.Option(
@@ -286,13 +279,13 @@ def deploy(  # noqa: C901
             pipeline_func=pipeline_func,
             gar_location=vertex_settings.GAR_LOCATION,
             gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
-            local_package_path=local_package_path,
+            local_package_path=deployer_settings.local_package_path,
         )
 
         if run or schedule:
             if config_name is not None:
                 config_filepath = (
-                    Path(deployer_settings.config_root_path) / pipeline_name / config_name
+                    Path(deployer_settings.configs_root_path) / pipeline_name / config_name
                 )
             parameter_values, input_artifacts = load_config(config_filepath)
 
@@ -388,7 +381,7 @@ def check(
 
     * Checking that the pipeline can be compiled using `kfp.compiler.Compiler`.
 
-    * Checking that config files in `{config_root_path}/{pipeline_name}` are corresponding to the
+    * Checking that config files in `{configs_root_path}/{pipeline_name}` are corresponding to the
     pipeline parameters definition, using Pydantic.
 
     ---
@@ -409,7 +402,8 @@ def check(
 
     if config_filepath is None:
         to_check = {
-            p: list_config_filepaths(deployer_settings.config_root_path, p) for p in pipeline_names
+            p: list_config_filepaths(deployer_settings.configs_root_path, p)
+            for p in pipeline_names
         }
     else:
         to_check = {p: [config_filepath] for p in pipeline_names}
@@ -423,7 +417,7 @@ def check(
                             "pipeline_name": p,
                             "config_paths": config_filepaths,
                             "pipelines_root_path": deployer_settings.pipelines_root_path,
-                            "config_root_path": deployer_settings.config_root_path,
+                            "configs_root_path": deployer_settings.configs_root_path,
                         }
                         for p, config_filepaths in to_check.items()
                     }
@@ -454,7 +448,7 @@ def list_pipelines(
     """List all pipelines."""
     if with_configs:
         pipelines_dict = {
-            p.name: list_config_filepaths(ctx.obj["settings"].config_root_path, p.name)
+            p.name: list_config_filepaths(ctx.obj["settings"].configs_root_path, p.name)
             for p in ctx.obj["pipeline_names"].__members__.values()
         }
     else:
@@ -473,7 +467,7 @@ def create_pipeline(
     config_type: Annotated[
         ConfigType,
         typer.Option("--config-type", "-ct", help="The type of the config to create."),
-    ] = ConfigType.json,
+    ] = ConfigType.py,
 ):
     """Create files structure for a new pipeline."""
     invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
@@ -485,7 +479,7 @@ def create_pipeline(
 
     deployer_settings: DeployerSettings = ctx.obj["settings"]
 
-    for path in [deployer_settings.pipelines_root_path, deployer_settings.config_root_path]:
+    for path in [deployer_settings.pipelines_root_path, deployer_settings.configs_root_path]:
         if not Path(path).is_dir():
             raise FileNotFoundError(
                 f"Path '{path}' does not exist."
@@ -505,94 +499,96 @@ def create_pipeline(
 
     for pipeline_name in pipeline_names:
         pipeline_filepath = deployer_settings.pipelines_root_path / f"{pipeline_name}.py"
-        pipeline_filepath.touch(exist_ok=False)
-        pipeline_filepath.write_text(
-            constants.PIPELINE_MINIMAL_TEMPLATE.format(pipeline_name=pipeline_name)
+        _create_file_from_template(
+            path=pipeline_filepath,
+            template_path=constants.PIPELINE_MINIMAL_TEMPLATE,
+            pipeline_name=pipeline_name,
+            component_module=str(deployer_settings.vertex_folder_path / "components").replace(
+                "/", "."
+            ),
         )
 
         try:
-            config_dirpath = Path(deployer_settings.config_root_path) / pipeline_name
+            config_dirpath = Path(deployer_settings.configs_root_path) / pipeline_name
             config_dirpath.mkdir(exist_ok=True)
             for config_name in ["test", "dev", "prod"]:
                 config_filepath = config_dirpath / f"{config_name}.{config_type}"
-                config_filepath.touch(exist_ok=False)
-                if config_type == ConfigType.py:
-                    config_filepath.write_text(constants.PYTHON_CONFIG_TEMPLATE)
+                config_template = constants.CONFIG_TEMPLATE_MAPPING[config_type]
+                _create_file_from_template(
+                    path=config_filepath,
+                    template_path=config_template,
+                )
+
         except Exception as e:
             pipeline_filepath.unlink()
             raise e
 
         console.print(
-            f"Pipeline '{pipeline_name}' created at '{pipeline_filepath}'"
-            f" with config files: {[str(p) for p in config_dirpath.glob('*')]}. :sparkles:",
+            f"\n Pipeline '{pipeline_name}' created at '{pipeline_filepath}'"
+            f"\n with config files: {[str(p) for p in config_dirpath.glob('*')]}. :sparkles: \n",
             style="blue",
         )
 
 
 @app.command(name="init")
-def init_deployer(ctx: typer.Context):  # noqa: C901
-    deployer_settings: DeployerSettings = ctx.obj["settings"]
+def init_deployer(
+    ctx: typer.Context,
+    default: bool = typer.Option(
+        False,
+        "--default",
+        "-d",
+        help="Instantly creates the full vertex structure and files without configuration prompts",
+    ),
+):
+    """Initialize the deployer."""
+    deployer_settings = ctx.obj["settings"]
+    console.print("Welcome to Vertex Deployer!", style="bold blue")
 
-    console.print("Welcome to Vertex Deployer!", style="blue")
-    console.print("This command will help you getting fired up.", style="blue")
+    if default or Confirm.ask(
+        "Do you want to instantly create the full vertex structure and templates\n"
+        "without configuration prompts? This will use the default settings."
+    ):
+        console.print("Performing quick initialization...", style="bold blue")
+        ensure_pyproject_toml()
+        deployer_settings = load_deployer_settings()
+        build_default_folder_structure(deployer_settings)
+        create_pipeline(ctx, pipeline_names=["dummy_pipeline"], config_type=ConfigType.py)
 
-    if Confirm.ask("Do you want to configure the deployer?"):
-        pyproject_toml_filepath = find_pyproject_toml(Path.cwd().resolve())
+        console.print("Default initialization done :sparkles:\n", style="bold blue")
+        console.print("Here are some commands on how to use the deployer:", style="blue")
+        show_commands(deployer_settings)
+    else:
+        console.print("This command will help you getting fired up! :fire:\n", style="blue")
 
-        if pyproject_toml_filepath is None:
-            console.print(
-                "No pyproject.toml file found. Creating one in current directory.",
-                style="yellow",
-            )
-            pyproject_toml_filepath = Path("./pyproject.toml")
-            pyproject_toml_filepath.touch()
+        if Confirm.ask("Do you want to configure the deployer?"):
+            deployer_settings = configure_deployer()
+            ctx.obj["settings"] = deployer_settings
 
-        set_fields = ask_user_for_model_fields(DeployerSettings)
+        if Confirm.ask("Do you want to build default folder structure"):
+            build_default_folder_structure(deployer_settings)
 
-        new_deployer_settings = DeployerSettings(**set_fields)
+        if Confirm.ask("Do you want to create a pipeline?"):
+            wrong_name = True
+            while wrong_name:
+                pipeline_name = Prompt.ask("What is the name of the pipeline?")
 
-        update_pyproject_toml(pyproject_toml_filepath, new_deployer_settings)
-        console.print("Configuration saved in pyproject.toml :sparkles:", style="blue")
-
-    if Confirm.ask("Do you want to build default folder structure"):
-
-        def create_file_or_dir(path: Path, text: str = ""):
-            """Create a file (if text is provided) or a directory at path. Warn if path exists."""
-            if path.exists():
-                console.print(
-                    f"Path '{path}' already exists. Skipping creation of path.", style="yellow"
-                )
-            else:
-                if text:
-                    path.touch()
-                    path.write_text(text)
+                try:
+                    config_type = deployer_settings.create.config_type.name
+                    create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
+                except typer.BadParameter as e:
+                    console.print(e, style="red")
+                except FileExistsError:
+                    console.print(
+                        f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
+                        style="yellow",
+                    )
                 else:
-                    path.mkdir(parents=True)
+                    wrong_name = False
 
-        create_file_or_dir(deployer_settings.pipelines_root_path)
-        create_file_or_dir(deployer_settings.config_root_path)
-        create_file_or_dir(
-            Path("./.env"), "=\n".join(VertexPipelinesSettings.model_json_schema()["required"])
-        )
+            console.print("All done :sparkles:\n", style="bold blue")
 
-    if Confirm.ask("Do you want to create a pipeline?"):
-        wrong_name = True
-        while wrong_name:
-            pipeline_name = Prompt.ask("What is the name of the pipeline?")
-
-            try:
-                create_pipeline(ctx, pipeline_names=[pipeline_name])
-            except typer.BadParameter as e:
-                console.print(e, style="red")
-            except FileExistsError:
-                console.print(
-                    f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
-                    style="yellow",
-                )
-            else:
-                wrong_name = False
-
-    console.print("All done :sparkles:", style="blue")
+            if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
+                show_commands(deployer_settings)
 
 
 @app.command(name="config")

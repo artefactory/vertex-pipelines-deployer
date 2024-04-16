@@ -11,7 +11,6 @@ from kfp.registry import RegistryClient
 from loguru import logger
 from requests import HTTPError
 
-from deployer.constants import DEFAULT_LOCAL_PACKAGE_PATH
 from deployer.utils.exceptions import (
     MissingGoogleArtifactRegistryHostError,
     TagNotFoundError,
@@ -31,7 +30,7 @@ class VertexPipelineDeployer:
         service_account: Optional[str] = None,
         gar_location: Optional[str] = None,
         gar_repo_id: Optional[str] = None,
-        local_package_path: Path = DEFAULT_LOCAL_PACKAGE_PATH,
+        local_package_path: Optional[Path] = None,
     ) -> None:
         """I don't want to write a dostring here but ruff wants me to"""
         self.project_id = project_id

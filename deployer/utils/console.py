@@ -19,6 +19,7 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
         dict: A dictionary of the set fields.
     """
     set_fields = {}
+
     for field_name, field_info in model.model_fields.items():
         if isclass(field_info.annotation) and issubclass(field_info.annotation, BaseModel):
             answer = Confirm.ask(f"Do you want to configure command {field_name}?", default=False)
@@ -36,9 +37,13 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
             if isclass(annotation) and annotation == bool:
                 answer = Confirm.ask(field_name, default=default)
             else:
-                answer = Prompt.ask(field_name, default=default, choices=choices)
+                answer = Prompt.ask(
+                    field_name, default=default if default is not None else "None", choices=choices
+                )
 
-            if answer != field_info.default:
+            if answer != field_info.default and not (
+                answer in [None, "None"] and field_info.default is None
+            ):
                 set_fields[field_name] = answer
 
     return set_fields

@@ -1,0 +1,9 @@
+import kfp.dsl
+
+from {{ component_module }} import dummy_component
+
+
+@kfp.dsl.pipeline(name="{{ pipeline_name }}")
+def {{ pipeline_name }}(name: str):
+    """This pipeline prints hello {name}"""
+    dummy_component(name=name)
