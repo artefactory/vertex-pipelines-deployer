@@ -4,8 +4,8 @@ import jinja2
 from jinja2 import Environment, FileSystemLoader, meta
 from rich.tree import Tree
 
-from deployer import constants
 from deployer.__init__ import __version__ as deployer_version
+from deployer.constants import INSTRUCTIONS, TEMPLATES_DEFAULT_STRUCTURE, TEMPLATES_PATH
 from deployer.settings import (
     DeployerSettings,
     find_pyproject_toml,
@@ -72,7 +72,7 @@ def _create_file_from_template(path: Path, template_path: Path, **kwargs):
             )
         else:
             path.write_text(content)
-    except (FileNotFoundError, KeyError, jinja2.TemplateError) as e:
+    except (KeyError, jinja2.TemplateError, jinja2.TemplateNotFound) as e:
         raise TemplateFileCreationError(
             f"An error occurred while creating the file from template: {e}"
         ) from e
@@ -85,9 +85,9 @@ def _generate_templates_mapping(
 ):
     """Generate the mapping of a list of templates to create and their variables."""
     templates_mapping = {}
-    env = Environment(loader=FileSystemLoader(str(constants.TEMPLATES_PATH)), autoescape=True)
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)), autoescape=True)
     for template, template_path in templates_dict.items():
-        template_name = str(template_path.relative_to(constants.TEMPLATES_PATH))
+        template_name = str(template_path.relative_to(TEMPLATES_PATH))
         template_source = env.loader.get_source(env, template_name)[0]
         parsed_content = env.parse(template_source)
         variables = meta.find_undeclared_variables(parsed_content)
@@ -110,12 +110,10 @@ def build_default_folder_structure(deployer_settings: DeployerSettings):
     """Create the default folder structure for the Vertex Pipelines project."""
     vertex_folder_path = deployer_settings.vertex_folder_path
     dockerfile_path = vertex_folder_path / str(
-        constants.TEMPLATES_DEFAULT_STRUCTURE["dockerfile"].relative_to(constants.TEMPLATES_PATH)
+        TEMPLATES_DEFAULT_STRUCTURE["dockerfile"].relative_to(TEMPLATES_PATH)
     ).replace(".jinja", "")
     cloud_build_path = vertex_folder_path / str(
-        constants.TEMPLATES_DEFAULT_STRUCTURE["cloudbuild_local"].relative_to(
-            constants.TEMPLATES_PATH
-        )
+        TEMPLATES_DEFAULT_STRUCTURE["cloudbuild_local"].relative_to(TEMPLATES_PATH)
     ).replace(".jinja", "")
 
     # Create the folder structure
@@ -130,7 +128,7 @@ def build_default_folder_structure(deployer_settings: DeployerSettings):
     }
 
     templates_mapping = _generate_templates_mapping(
-        constants.TEMPLATES_DEFAULT_STRUCTURE, mapping_variables, vertex_folder_path
+        TEMPLATES_DEFAULT_STRUCTURE, mapping_variables, vertex_folder_path
     )
 
     # Create the files
@@ -177,6 +175,4 @@ def show_commands(deployer_settings: DeployerSettings):
     vertex_folder_path = deployer_settings.vertex_folder_path
     build_base_image_path = vertex_folder_path / "deployment" / "build_base_image.sh"
 
-    console.print(
-        constants.INSTRUCTIONS.format(build_base_image_path=build_base_image_path), style="blue"
-    )
+    console.print(INSTRUCTIONS.format(build_base_image_path=build_base_image_path), style="blue")

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 TEMPLATES_PATH = Path(__file__).parent / "_templates"
+TEMPLATES_PATH_TESTS = Path("tests/unit_tests/input_files")
 
 DEFAULT_VERTEX_FOLDER_PATH = "vertex"
 DEFAULT_LOG_LEVEL = "INFO"
