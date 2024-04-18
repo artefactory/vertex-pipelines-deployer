@@ -89,5 +89,16 @@ def test_init_command_with_user_input():
             assert "env_file" not in parsed_toml["tool"]["vertex_deployer"]["deploy"]
             assert "cron" not in parsed_toml["tool"]["vertex_deployer"]["deploy"]
             assert "check" not in parsed_toml["tool"]["vertex_deployer"]
+            assert Path("custom_value").is_dir()
+            assert (Path("custom_value") / "pipelines" / "pipe.py").is_file()
+            assert (Path("custom_value") / "configs" / "pipe" / "test.json").is_file()
+            assert (Path("custom_value") / "configs" / "pipe" / "dev.json").is_file()
+            assert (Path("custom_value") / "configs" / "pipe" / "prod.json").is_file()
+            assert (Path("custom_value") / "deployment" / "cloudbuild_local.yaml").is_file()
+            assert (Path("custom_value") / "deployment" / "Dockerfile").is_file()
+            assert (Path("custom_value") / "deployment" / "build_base_image.sh").is_file()
+            assert (Path("custom_value") / "lib").is_dir()
+            assert (Path("custom_value") / "components").is_dir()
+            assert (Path("custom_value") / "components" / "dummy_component.py").is_file()
 
             # No need for explicit cleanup, the temporary directory will be deleted automatically
