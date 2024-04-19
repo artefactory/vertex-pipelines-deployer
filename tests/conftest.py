@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import kfp.dsl
 import pytest
 from kfp.dsl import Artifact, Input
@@ -20,3 +22,8 @@ try:
     raise Exception("This is an exception.")
 except Exception as e:
     exception_traceback = e.__traceback__
+
+
+@pytest.fixture(scope="session")
+def templates_path_fixture():
+    return Path("tests/unit_tests/input_files")
