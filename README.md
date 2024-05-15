@@ -114,6 +114,7 @@ pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@dev
 If you want to test this package on examples from this repo:
 ```bash
 git clone git@github.com:artefactory/vertex-pipelines-deployer.git
+poetry shell
 poetry install
 cd example
 ```
