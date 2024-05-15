@@ -1,3 +1,5 @@
+include example.env
+
 # --8<-- [start:build-base-image]
 .PHONY: build-base-image
 build-base-image:
