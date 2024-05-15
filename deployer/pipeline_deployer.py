@@ -23,6 +23,7 @@ class VertexPipelineDeployer:
     def __init__(
         self,
         pipeline_name: str,
+        ui_display_name: str,
         pipeline_func: Callable,
         project_id: Optional[str] = None,
         region: Optional[str] = None,
@@ -39,6 +40,7 @@ class VertexPipelineDeployer:
         self.service_account = service_account
 
         self.pipeline_name = pipeline_name
+        self.ui_display_name = ui_display_name
         self.pipeline_func = pipeline_func
 
         self.gar_location = gar_location
@@ -139,6 +141,7 @@ class VertexPipelineDeployer:
         """  # noqa: E501
         job = aiplatform.PipelineJob(
             display_name=self.pipeline_name,
+            job_id=self.ui_display_name,
             template_path=template_path,
             pipeline_root=self.staging_bucket_uri,
             location=self.region,
