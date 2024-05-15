@@ -123,6 +123,7 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAMES...
 * `-cn, --config-name TEXT`: Name of the json/py file with parameter values and input artifacts to use when running the pipeline. It must be in the pipeline config dir. e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.
 * `-ec, --enable-caching / -nec, --no-cache`: Whether to turn on caching for the run.If this is not set, defaults to the compile time settings, which are True for alltasks by default, while users may specify different caching options for individualtasks. If this is set, the setting applies to all tasks in the pipeline.Overrides the compile time settings. Defaults to None.
 * `-en, --experiment-name TEXT`: The name of the experiment to run the pipeline in.Defaults to '{pipeline_name}-experiment'.
+* `-dn, --display-name TEXT`: The display name of the pipeline in Vertex.Defaults to '{pipeline_name}-%Y%m%d%H%M%S'.
 * `-y, --skip-validation / -n, --no-skip`: Whether to continue without user validation of the settings.  [default: skip-validation]
 * `--help`: Show this message and exit.
 
