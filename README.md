@@ -216,6 +216,18 @@ vertex
     If you're following a different folder structure, you can change the default paths in the `pyproject.toml` file.
     See [Configuration](#configuration) section for more information.
 
+You can also generate the expected structure with the following command:
+```
+vertex-deployer init
+```
+This should create a parent vertex folder with:
+- **components**: a folder for the function components
+
+- **configs**: a folder for the configs files (per pipeline)
+- **deployment**: a folder with default files to build a push a base image on Artifact registry
+- **lib**: empty folder where you can write all your code intelligence, logic
+- **pipelines**: finally, a folder with the pipeline scripts
+
 #### Pipelines
 
 Your file `{pipeline_name}.py` must contain a function called `{pipeline_name}` decorated using `kfp.dsl.pipeline`.
