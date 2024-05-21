@@ -16,3 +16,21 @@ git commit -m "first commit"
 git remote add origin "your_repo_url"
 git push -u origin master
 ```
+
+# Running the example
+
+Running inside example/
+
+Before the start, add this environment variable, so the pipelines are found: `export PYTHONPATH=.`
+
+**Check pipeline validity**
+```
+vertex-deployer check dummy_pipeline
+```
+
+**Build the custom image**
+
+Replace with the env file you wish to use:
+```
+set -a && source example.env && set +a && make build-base-image
+```
