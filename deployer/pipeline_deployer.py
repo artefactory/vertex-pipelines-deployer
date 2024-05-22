@@ -238,7 +238,7 @@ class VertexPipelineDeployer:
                     f"Encountered an error while linking your job {job.job_id}"
                     f" with experiment {experiment_name}."
                     " This is likely due to a bug in the AI Platform Pipelines client."
-                    " You job should be running anyway. Try to link it manually."
+                    " Your job should be running anyway. Try to link it manually."
                 )
             else:
                 raise e
