@@ -18,10 +18,18 @@ steps:
   # schedule pipeline: compile, upload, schedule
   - name: '${_GAR_IMAGE_PATH}'
     entrypoint: 'bash'
-    args: [
-      '-c',
-      'vertex-deployer -log DEBUG deploy dummy_pipeline --compile --upload --run -ec --tags ${_TAG} --schedule --delete-last-schedule --cron *-*-19-*-* --config-name config_test.json'
-    ]
+    args:
+      - '-c'
+      - |
+        vertex-deployer -log DEBUG deploy dummy_pipeline \
+          --compile \
+          --upload \
+          --run \
+          --enable-caching \
+          --config-name config_test.json \
+          --tags ${_TAG} \
+          --schedule --delete-last-schedule --cron '*-*-19-*-*'
+
     dir: '.'
     id: schedule-dummy-pipeline
     waitFor: ['build-base-image']
