@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Callable, List, Optional
 
@@ -23,8 +24,8 @@ class VertexPipelineDeployer:
     def __init__(
         self,
         pipeline_name: str,
-        ui_display_name: str,
         pipeline_func: Callable,
+        pipeline_display_name: Optional[str] = None,
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         staging_bucket_name: Optional[str] = None,
@@ -40,7 +41,7 @@ class VertexPipelineDeployer:
         self.service_account = service_account
 
         self.pipeline_name = pipeline_name
-        self.ui_display_name = ui_display_name
+        self.pipeline_display_name = pipeline_display_name
         self.pipeline_func = pipeline_func
 
         self.gar_location = gar_location
@@ -108,6 +109,21 @@ class VertexPipelineDeployer:
 
         return experiment_name
 
+    def _check_pipeline_display_name(self, tag: Optional[str] = None) -> None:
+        now_str = datetime.now().strftime("%Y%m%d%H%M%S")
+
+        if self.pipeline_display_name is None:
+            self.pipeline_display_name = f"{self.pipeline_name}"
+            logger.info(f"display_name not provided, using {self.pipeline_name} as base")
+        if tag:
+            self.pipeline_display_name += f"-{tag}"
+        self.pipeline_display_name += f"-{now_str}"
+
+        self.pipeline_display_name = self.pipeline_display_name.replace("_", "-")
+        self.pipeline_display_name = self.pipeline_display_name[:127]
+
+        logger.info(f"Pipeline_display_name is: {self.pipeline_display_name}")
+
     def _create_pipeline_job(
         self,
         template_path: str,
@@ -141,7 +157,7 @@ class VertexPipelineDeployer:
         """  # noqa: E501
         job = aiplatform.PipelineJob(
             display_name=self.pipeline_name,
-            job_id=self.ui_display_name,
+            job_id=self.pipeline_display_name,
             template_path=template_path,
             pipeline_root=self.staging_bucket_uri,
             location=self.region,
@@ -213,7 +229,7 @@ class VertexPipelineDeployer:
             tag (str, optional): Tag of the pipeline template. Defaults to None.
         """  # noqa: E501
         experiment_name = self._check_experiment_name(experiment_name)
-
+        self._check_pipeline_display_name(tag=tag)
         template_path = self._get_template_path(tag)
 
         logger.debug(
