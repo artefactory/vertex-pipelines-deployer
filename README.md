@@ -114,8 +114,8 @@ pip install git+https://github.com/artefactory/vertex-pipelines-deployer.git@dev
 If you want to test this package on examples from this repo:
 ```bash
 git clone git@github.com:artefactory/vertex-pipelines-deployer.git
-poetry shell
 poetry install
+poetry shell  # if you want to active the virtual environment
 cd example
 ```
 <!-- --8<-- [end:installation] -->
@@ -216,17 +216,6 @@ vertex
     If you're following a different folder structure, you can change the default paths in the `pyproject.toml` file.
     See [Configuration](#configuration) section for more information.
 
-You can also generate the expected structure with the following command:
-```
-vertex-deployer init
-```
-This should create a parent vertex folder with:
-- **components**: a folder for the function components
-
-- **configs**: a folder for the configs files (per pipeline)
-- **deployment**: a folder with default files to build a push a base image on Artifact registry
-- **lib**: empty folder where you can write all your code intelligence, logic
-- **pipelines**: finally, a folder with the pipeline scripts
 
 #### Pipelines
 
