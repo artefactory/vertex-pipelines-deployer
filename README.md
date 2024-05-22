@@ -216,7 +216,6 @@ vertex
     If you're following a different folder structure, you can change the default paths in the `pyproject.toml` file.
     See [Configuration](#configuration) section for more information.
 
-
 #### Pipelines
 
 Your file `{pipeline_name}.py` must contain a function called `{pipeline_name}` decorated using `kfp.dsl.pipeline`.
