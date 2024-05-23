@@ -60,6 +60,7 @@ def test_init_command_with_user_input(tmp_path):
                 "",
                 "",
                 "",
+                "",
                 "y",
                 "json",
                 "",
