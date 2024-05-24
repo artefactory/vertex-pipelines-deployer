@@ -1,0 +1,5 @@
+google-cloud-bigquery[pandas]>=3.0,<4.0
+pandas
+pandas_gbq
+fsspec
+gcsfs
