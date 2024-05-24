@@ -16,9 +16,10 @@ ENV VERTEX_SERVICE_ACCOUNT=${VERTEX_SERVICE_ACCOUNT}
 
 WORKDIR /app
 
-COPY deployer-requirements.txt .
+COPY requirements.txt .
+COPY requirements-vertex.txt .
 RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r deployer-requirements.txt
+RUN python3 -m pip install -r requirements-vertex.txt
 
 ENV PYTHONPATH "${PYTHONPATH}:."
 
