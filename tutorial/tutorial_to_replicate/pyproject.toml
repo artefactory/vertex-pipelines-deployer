@@ -1,0 +1,18 @@
+[tool.vertex_deployer]
+log_level = "DEBUG"
+
+[tool.vertex_deployer.deploy]
+env_file = "deployer.env"
+upload = true
+run = true
+delete_last_schedule = true
+tags = ["latest"]
+enable_caching = true
+experiment_name = "tutorial-experiment"
+skip_validation = false
+config_name = "test.py"
+
+[tool.vertex_deployer.check]
+all = true
+raise_error = true
+raise_for_defaults = true
