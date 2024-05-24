@@ -1,0 +1,8 @@
+# base
+# We consider that your initial requirements are defined in a requirements.txt file
+-r requirements.txt
+
+# deploy
+kfp
+google-cloud-aiplatform
+vertex-deployer==0.5.0
