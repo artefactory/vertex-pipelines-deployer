@@ -227,12 +227,12 @@ def deploy(  # noqa: C901
             "Defaults to '{pipeline_name}-experiment'.",
         ),
     ] = None,
-    display_name: Annotated[
+    run_name: Annotated[
         Optional[str],
         typer.Option(
-            "--display-name",
-            "-dn",
-            help="The display name of the pipeline in Vertex."
+            "--run-name",
+            "-rn",
+            help="The pipeline's run name. Displayed in the UI."
             "Defaults to '{pipeline_name}-{tags}-%Y%m%d%H%M%S'.",
         ),
     ] = None,
@@ -285,7 +285,7 @@ def deploy(  # noqa: C901
             staging_bucket_name=vertex_settings.VERTEX_STAGING_BUCKET_NAME,
             service_account=vertex_settings.VERTEX_SERVICE_ACCOUNT,
             pipeline_name=pipeline_name,
-            pipeline_display_name=display_name,
+            run_name=run_name,
             pipeline_func=pipeline_func,
             gar_location=vertex_settings.GAR_LOCATION,
             gar_repo_id=vertex_settings.GAR_PIPELINES_REPO_ID,
