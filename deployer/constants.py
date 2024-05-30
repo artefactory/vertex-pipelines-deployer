@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 TEMPLATES_PATH = Path(__file__).parent / "_templates"
@@ -64,3 +65,5 @@ INSTRUCTIONS = (
     "you can add the following flags to the deploy command if not set in your config:\n"
     "--schedule --cron=cron_expression --scheduler-timezone=IANA_time_zone\n"
 )
+
+_RUN_NAME_VALID_NAME_PATTERN = re.compile("^[a-z][-a-z0-9]{0,127}$", re.IGNORECASE)
