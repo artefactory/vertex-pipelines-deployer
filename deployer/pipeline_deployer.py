@@ -119,7 +119,6 @@ class VertexPipelineDeployer:
             self.run_name = f"{self.pipeline_name}"
             if tag:
                 self.run_name += f"-{tag}"
-
         else:
             self.run_name = self.run_name.replace("_", "-")
 
