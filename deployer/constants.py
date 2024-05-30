@@ -66,4 +66,4 @@ INSTRUCTIONS = (
     "--schedule --cron=cron_expression --scheduler-timezone=IANA_time_zone\n"
 )
 
-_RUN_NAME_VALID_NAME_PATTERN = re.compile("^[a-z][-a-z0-9]{0,127}$", re.IGNORECASE)
+VALID_RUN_NAME_PATTERN = re.compile("^[a-z][-a-z0-9]{0,127}$", re.IGNORECASE)

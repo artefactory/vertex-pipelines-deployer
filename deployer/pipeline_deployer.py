@@ -124,10 +124,10 @@ class VertexPipelineDeployer:
 
         self.run_name += f"-{now_str}"
 
-        if not constants._RUN_NAME_VALID_NAME_PATTERN.match(self.run_name):
+        if not constants.VALID_RUN_NAME_PATTERN.match(self.run_name):
             raise ValueError(
                 f"Run name {self.run_name} does not match the pattern"
-                f" {constants._RUN_NAME_VALID_NAME_PATTERN.pattern}"
+                f" {constants.VALID_RUN_NAME_PATTERN.pattern}"
             )
         logger.debug(f"run_name is: {self.run_name}")
 
