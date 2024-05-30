@@ -19,27 +19,38 @@ git push -u origin master
 
 # Running the example
 
-Running inside example/
+In this section we detail how to run basic commands in the example folder.
 
-Before the start, add this environment variable, so the pipelines are found: `export PYTHONPATH=.`
+* Before the start, add this environment variable, so the pipelines are found: `export PYTHONPATH=.`
 
-**Check pipeline validity**
-```
+* You must also add the required environment variables in the [example.env](example.env) file.
+
+## Check pipeline validity
+
+The following command will check if your pipeline is valid (notably, that the pipeline can be compiled and the config files are correctly defined).
+
+```bash
 vertex-deployer check dummy_pipeline
 ```
 
-**Build the custom image**
+## Build the custom image
 
+To build and upload the custom image to Artifact Registry, you can use the following make command:
+
+```bash
+export $(cat example.env | xargs)
+make build-base-image
 ```
-set -a && source example.env && set +a && make build-base-image
-```
 
-**Schedule the dummy pipeline**
+## Deploy the dummy pipeline via Cloud Build
 
-For this step to work, you will need to give additional IAM rights, to the service account used in Cloud Build Jobs.
-By default, the service account used is the following: `[PROJECT_NUMBER]@cloudbuild.gserviceaccount.com`
+For the `vertex-deployer deploy` command to work within cloudbuild (and not simply locally), you will need to give additional IAM rights, to the service account used in Cloud Build Jobs.
+\
+\
+By default, the service account used is the following:
+* `[PROJECT_NUMBER]@cloudbuild.gserviceaccount.com`
 
-```
+```bash
 export CLOUDBUILD_SERVICE_ACCOUNT = [PROJECT_NUMBER]@cloudbuild.gserviceaccount.com
 
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
@@ -51,8 +62,13 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
     --role="roles/iam.serviceAccountUser"
 ```
 
-Once this is done, you can launch the make command:
+Once this is done, you can launch the make command.
 
-```
-set -a && source example.env && set +a && make deploy-pipeline
+If you do not modify the [cloudbuild_cd.yaml](cloudbuild.yaml) file, it should:
+- rebuild the base image
+- deploy a scheduled Vertex AI pipeline
+
+```bash
+export $(cat example.env | xargs)
+make deploy-pipeline
 ```
