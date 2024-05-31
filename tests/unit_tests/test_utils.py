@@ -77,15 +77,26 @@ class TestFilterLinesFrom:
         internal_path = Path(__file__)
         external_path = Path("tests/conftest.py")
 
+        # Dynamically find the line number where the exception is raised in conftest.py
+        line_number = None
+        with open(external_path, "r") as file:
+            for i, line in enumerate(file, 1):
+                if "raise Exception" in line:
+                    line_number = i
+                    break
+        assert line_number is not None, "Exception line not found in conftest.py"
+
         # When
         internal_output = filter_lines_from(self.traceback, internal_path)
         external_output = filter_lines_from(exception_traceback, external_path)
+
+        # Then
         assert internal_output == (
             f'  File "{internal_path}", line 71, in TestFilterLinesFrom\n'
             '    raise Exception("This is an exception.")\n'
         )
         assert external_output == (
-            f'  File "{external_path.resolve()}", line 20, in <module>\n'
+            f'  File "{external_path.resolve()}", line {line_number}, in <module>\n'
             '    raise Exception("This is an exception.")\n'
         )
 
@@ -94,16 +105,25 @@ class TestFilterLinesFrom:
         internal_path = str(Path(__file__))
         external_path = "tests/conftest.py"
 
+        # Dynamically find the line number where the exception is raised
+        line_number = None
+        with open(external_path, "r") as file:
+            for i, line in enumerate(file, 1):
+                if "raise Exception" in line:
+                    line_number = i
+                    break
+
         # When
         internal_output = filter_lines_from(self.traceback, internal_path)
         external_output = filter_lines_from(exception_traceback, external_path)
-        print(internal_output)
+
+        # Then
         assert internal_output == (
             f'  File "{internal_path}", line 71, in TestFilterLinesFrom\n'
             '    raise Exception("This is an exception.")\n'
         )
         assert external_output == (
-            f'  File "{Path(external_path).resolve()}", line 20, in <module>\n'
+            f'  File "{Path(external_path).resolve()}", line {line_number}, in <module>\n'
             '    raise Exception("This is an exception.")\n'
         )
 
