@@ -114,14 +114,13 @@ class VertexPipelineDeployer:
         """Each run name (job_id) must be unique.
         We thus always add a timestamp to ensure uniqueness.
         """
-        now_str = datetime.now().strftime("%Y%m%d%H%M%S")
+        now_str = datetime.now().strftime("%Y%m%d-%H%M%S")
         if self.run_name is None:
             self.run_name = f"{self.pipeline_name}"
             if tag:
                 self.run_name += f"-{tag}"
-        else:
-            self.run_name = self.run_name.replace("_", "-")
 
+        self.run_name = self.run_name.replace("_", "-")
         self.run_name += f"-{now_str}"
 
         if not constants.VALID_RUN_NAME_PATTERN.match(self.run_name):
