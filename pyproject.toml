@@ -18,7 +18,7 @@ packages = [{include = "deployer"}]
 vertex-deployer = "deployer.cli:app"
 
 [tool.poetry.dependencies]
-python = ">=3.8, <3.11.0"
+python = ">=3.8, <3.13.0"
 kfp = "^2.0,>=2.0.1"
 google-cloud-aiplatform = "^1.26"
 requests = "^2.31"
