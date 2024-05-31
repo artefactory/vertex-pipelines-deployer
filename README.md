@@ -115,6 +115,7 @@ If you want to test this package on examples from this repo:
 ```bash
 git clone git@github.com:artefactory/vertex-pipelines-deployer.git
 poetry install
+poetry shell  # if you want to activate the virtual environment
 cd example
 ```
 <!-- --8<-- [end:installation] -->
