@@ -30,6 +30,7 @@ class _DeployerDeploySettings(CustomBaseModel):
     config_name: Optional[str] = None
     enable_caching: Optional[bool] = None
     experiment_name: Optional[str] = None
+    run_name: Optional[str] = None
     skip_validation: bool = True
 
 

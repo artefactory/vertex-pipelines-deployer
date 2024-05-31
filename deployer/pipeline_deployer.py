@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Callable, List, Optional
 
@@ -11,6 +12,7 @@ from kfp.registry import RegistryClient
 from loguru import logger
 from requests import HTTPError
 
+from deployer import constants
 from deployer.utils.exceptions import (
     MissingGoogleArtifactRegistryHostError,
     TagNotFoundError,
@@ -24,6 +26,7 @@ class VertexPipelineDeployer:
         self,
         pipeline_name: str,
         pipeline_func: Callable,
+        run_name: Optional[str] = None,
         project_id: Optional[str] = None,
         region: Optional[str] = None,
         staging_bucket_name: Optional[str] = None,
@@ -39,6 +42,7 @@ class VertexPipelineDeployer:
         self.service_account = service_account
 
         self.pipeline_name = pipeline_name
+        self.run_name = run_name
         self.pipeline_func = pipeline_func
 
         self.gar_location = gar_location
@@ -106,6 +110,26 @@ class VertexPipelineDeployer:
 
         return experiment_name
 
+    def _check_run_name(self, tag: Optional[str] = None) -> None:
+        """Each run name (job_id) must be unique.
+        We thus always add a timestamp to ensure uniqueness.
+        """
+        now_str = datetime.now().strftime("%Y%m%d-%H%M%S")
+        if self.run_name is None:
+            self.run_name = f"{self.pipeline_name}"
+            if tag:
+                self.run_name += f"-{tag}"
+
+        self.run_name = self.run_name.replace("_", "-")
+        self.run_name += f"-{now_str}"
+
+        if not constants.VALID_RUN_NAME_PATTERN.match(self.run_name):
+            raise ValueError(
+                f"Run name {self.run_name} does not match the pattern"
+                f" {constants.VALID_RUN_NAME_PATTERN.pattern}"
+            )
+        logger.debug(f"run_name is: {self.run_name}")
+
     def _create_pipeline_job(
         self,
         template_path: str,
@@ -139,6 +163,7 @@ class VertexPipelineDeployer:
         """  # noqa: E501
         job = aiplatform.PipelineJob(
             display_name=self.pipeline_name,
+            job_id=self.run_name,
             template_path=template_path,
             pipeline_root=self.staging_bucket_uri,
             location=self.region,
@@ -210,7 +235,7 @@ class VertexPipelineDeployer:
             tag (str, optional): Tag of the pipeline template. Defaults to None.
         """  # noqa: E501
         experiment_name = self._check_experiment_name(experiment_name)
-
+        self._check_run_name(tag=tag)
         template_path = self._get_template_path(tag)
 
         logger.debug(
