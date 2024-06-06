@@ -2,6 +2,27 @@
 
 
 
+## 0.5.1 (2024-06-06)
+
+### Chore
+
+* chore: ak repo explo (#186) ([`20e6665`](https://github.com/artefactory/vertex-pipelines-deployer/commit/20e6665275c1b1ae7f8a132582699d5f87a67c23))
+
+### Ci
+
+* ci: set python semantic release version ([`9be89db`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9be89dbff44972e314b89ced04ee6848133466aa))
+
+### Enhancements
+
+* enh: rename pipeline UI (#187) ([`7b1ae60`](https://github.com/artefactory/vertex-pipelines-deployer/commit/7b1ae60847bde41b76c5e58827a7b1623bd6f0d5))
+
+### Unknown
+
+* improvement: add tests init (#182)
+
+Co-authored-by: Elie Trigano &lt;elie.trigano@artefact.com&gt; ([`89f9701`](https://github.com/artefactory/vertex-pipelines-deployer/commit/89f97019f4ee877eda067756dc44d11eb98a8802))
+
+
 ## 0.5.0 (2024-04-16)
 
 ### Documentation
