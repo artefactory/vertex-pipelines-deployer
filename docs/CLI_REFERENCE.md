@@ -91,7 +91,7 @@ $ vertex-deployer create [OPTIONS] PIPELINE_NAMES...
 
 **Options**:
 
-* `-ct, --config-type [json|py|toml]`: The type of the config to create.  [default: py]
+* `-ct, --config-type [json|py|toml|yaml]`: The type of the config to create.  [default: py]
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer deploy`
