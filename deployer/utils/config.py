@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
 import tomlkit.items
+import yaml
 from loguru import logger
 from pydantic import ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -83,6 +84,7 @@ class ConfigType(str, Enum):  # noqa: D101
     json = "json"
     py = "py"
     toml = "toml"
+    yaml = "yaml"
 
 
 def list_config_filepaths(configs_root_path: Path, pipeline_name: str) -> List[Path]:
@@ -131,6 +133,11 @@ def load_config(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
 
     if config_filepath.suffix == ".toml":
         parameter_values = _load_config_toml(config_filepath)
+        return parameter_values, None
+
+    if config_filepath.suffix == ".yaml":
+        with open(config_filepath, "r") as f:
+            parameter_values = yaml.safe_load(f)
         return parameter_values, None
 
     if config_filepath.suffix == ".py":
