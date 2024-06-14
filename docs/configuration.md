@@ -36,6 +36,7 @@ The choice of format depends on the complexity and requirements of the configura
 Python files allow for complex configurations and dynamic values, while JSON and TOML files are more suitable for static and simple configurations.
 
 For example, you have here the same config file in the three formats:
+
 === "JSON"
     ```json title="vertex/configs/dummy_pipeline/config_test.json"
     {
@@ -76,6 +77,29 @@ For example, you have here the same config file in the three formats:
 
     Then, these sections are flattened, except for inline dicts, leading to slightly different parameter names
     (e.g., `modeling_grid_search_lambda` instead of `lambda`).
+
+
+=== "YAML"
+    ```yaml title="vertex/configs/dummy_pipeline/config_test.yaml"
+    model_name: my-model
+    default_params:
+      lambda: 0.1
+      alpha: hello world
+    grid_search:
+      lambda:
+        - 0.1
+        - 0.2
+        - 0.3
+      alpha:
+        - hello world
+        - goodbye world
+      cv: 3
+    ```
+
+    YAML config files are similar to TOML files in terms of flexibility and verbosity.
+
+    They are more human-readable than TOML files, but they are also more error-prone due to indentation.
+
 
 === "Python"
     ```python title="vertex/configs/dummy_pipeline/config_test.py"

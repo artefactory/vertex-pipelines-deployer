@@ -238,15 +238,12 @@ def pipeline():
 
 #### Configs
 
-Config file can be either `.py`, `.json` or `.toml` files.
+Config file can be either `.py`, `.json`, `.toml` or `yaml` format.
 They must be located in the `config/{pipeline_name}` folder.
-
-!!! question "Why not YAML?"
-    YAML is not supported yet. Feel free to open a PR if you want to add it.
 
 **Why multiple formats?**
 
-`.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` files are useful to define simple configs (e.g. a string).
+`.py` files are useful to define complex configs (e.g. a list of dicts) while `.json` / `.toml` / `yaml` files are useful to define simple configs (e.g. a string).
 It also adds flexibility to the user and allows you to use the deployer with almost no migration cost.
 
 **How to format them?**
@@ -262,20 +259,23 @@ It also adds flexibility to the user and allows you to use the deployer with alm
     Section names will be joined using `"_"` separator and this is not configurable at the moment.
     Example:
 
-=== "TOML file"
-    ```toml
-    [modeling]
-    model_name = "my-model"
-    params = { lambda = 0.1 }
-    ```
+    === "TOML file"
+        ```toml
+        [modeling]
+        model_name = "my-model"
+        params = { lambda = 0.1 }
+        ```
 
-=== "Resulting parameter values"
-    ```python
-    {
-        "modeling_model_name": "my-model",
-        "modeling_params": { "lambda": 0.1 }
-    }
-    ```
+    === "Resulting parameter values"
+        ```python
+        {
+            "modeling_model_name": "my-model",
+            "modeling_params": { "lambda": 0.1 }
+        }
+        ```
+
+- `.yaml` files must be valid yaml files containing only one dict of key: value representing parameter values.
+
 ??? question "Why are sections flattened when using TOML config files?"
     Vertex Pipelines parameter validation and parameter logging to Vertex Experiments are based on the parameter name.
     If you do not flatten your sections, you'll only be able to validate section names and that they should be of type `dict`.
