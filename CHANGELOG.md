@@ -2,6 +2,13 @@
 
 
 
+## 0.5.2 (2024-06-14)
+
+### Enhancements
+
+* enh: add yaml support (#193) ([`d00f518`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d00f518d0e7f386c418442878d913f907c0ed46c))
+
+
 ## 0.5.1 (2024-06-06)
 
 ### Chore
