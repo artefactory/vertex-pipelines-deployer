@@ -2,6 +2,13 @@
 
 
 
+## 0.5.3 (2024-07-04)
+
+### Fix
+
+* fix: pydantic update 2.8.0 (#197) ([`0127301`](https://github.com/artefactory/vertex-pipelines-deployer/commit/01273017a31dd378c095f3256c301327f78a1ef6))
+
+
 ## 0.5.2 (2024-06-14)
 
 ### Enhancements
