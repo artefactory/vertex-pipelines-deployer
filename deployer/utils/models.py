@@ -53,7 +53,7 @@ def create_model_from_func(
     }
 
     func_model = create_model(
-        __model_name=model_name,
+        model_name,
         __base__=CustomBaseModel,
         **func_typing,
     )
