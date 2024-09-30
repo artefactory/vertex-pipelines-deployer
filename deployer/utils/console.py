@@ -34,7 +34,7 @@ def ask_user_for_model_fields(model: Type[BaseModel]) -> dict:
             if isclass(annotation) and issubclass(annotation, Enum):
                 choices = list(annotation.__members__)
 
-            if isclass(annotation) and annotation == bool:
+            if isclass(annotation) and isinstance(annotation, bool):
                 answer = Confirm.ask(field_name, default=default)
             else:
                 answer = Prompt.ask(
