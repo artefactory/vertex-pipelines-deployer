@@ -68,14 +68,6 @@ class ConfigType(str, Enum):  # noqa: D101
     yml = "yaml"
 
 
-CONFIG_TEMPLATE_MAPPING = {
-    "json": Path(TEMPLATES_PATH / "configs/config.json"),
-    "toml": Path(TEMPLATES_PATH / "configs/config.toml"),
-    "py": Path(TEMPLATES_PATH / "configs/config.py"),
-    "yaml": Path(TEMPLATES_PATH / "configs/config.yaml"),
-}
-
-
 class EnvironmentNames(str, Enum):  # noqa: D101
     dev = "dev"
     stg = "stg"

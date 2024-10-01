@@ -477,7 +477,7 @@ def create_pipeline(
     config_type: Annotated[
         ConfigType,
         typer.Option("--config-type", "-ct", help="The type of the config to create."),
-    ] = ConfigType.py,
+    ] = ConfigType.yaml,
 ):
     """Create files structure for a new pipeline."""
     invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
@@ -562,7 +562,7 @@ def init_deployer(
         ensure_pyproject_toml()
         deployer_settings = load_deployer_settings()
         build_default_folder_structure(deployer_settings)
-        create_pipeline(ctx, pipeline_names=["dummy_pipeline"], config_type=ConfigType.py)
+        create_pipeline(ctx, pipeline_names=["dummy_pipeline"])
 
         console.print("Default initialization done :sparkles:\n", style="bold blue")
         console.print("Here are some commands on how to use the deployer:", style="blue")
@@ -583,7 +583,10 @@ def init_deployer(
                 pipeline_name = Prompt.ask("What is the name of the pipeline?")
 
                 try:
-                    config_type = deployer_settings.create.config_type.name
+                    config_type = Prompt.ask(
+                        "What is the type of the config file?",
+                        choices=set(ConfigType.__members__.values()),
+                    )
                     create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
                 except typer.BadParameter as e:
                     console.print(e, style="red")

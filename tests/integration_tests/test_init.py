@@ -18,9 +18,9 @@ def test_init_command_with_defaults(tmp_path):
         assert "Default initialization done" in result.stdout
         assert Path("vertex").is_dir()
         assert (Path("vertex") / "pipelines" / "dummy_pipeline.py").is_file()
-        assert (Path("vertex") / "configs" / "dummy_pipeline" / "dev.py").is_file()
-        assert (Path("vertex") / "configs" / "dummy_pipeline" / "stg.py").is_file()
-        assert (Path("vertex") / "configs" / "dummy_pipeline" / "prd.py").is_file()
+        assert (Path("vertex") / "configs" / "dummy_pipeline" / "dev.yaml").is_file()
+        assert (Path("vertex") / "configs" / "dummy_pipeline" / "stg.yaml").is_file()
+        assert (Path("vertex") / "configs" / "dummy_pipeline" / "prd.yaml").is_file()
         assert (Path("vertex") / "deployment" / "cloudbuild_local.yaml").is_file()
         assert (Path("vertex") / "deployment" / "Dockerfile").is_file()
         assert (Path("vertex") / "deployment" / "build_base_image.sh").is_file()
@@ -67,6 +67,7 @@ def test_init_command_with_user_input(tmp_path):
                 "y",
                 "y",
                 "pipe",
+                "json",
                 "n",
             ]
         )
