@@ -521,7 +521,7 @@ def create_pipeline(
         try:
             config_dirpath = Path(deployer_settings.configs_root_path) / pipeline_name
             config_dirpath.mkdir(exist_ok=True)
-            for config_name in ["dev", "stg", "prd"]:
+            for config_name in constants.EnvironmentNames.__members__.values():
                 config_filepath = config_dirpath / f"{config_name}.{config_type}"
                 config_template = constants.TEMPLATES_PATH / "configs" / f"config.{config_type}"
                 _create_file_from_template(

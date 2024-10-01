@@ -74,3 +74,9 @@ CONFIG_TEMPLATE_MAPPING = {
     "py": Path(TEMPLATES_PATH / "configs/config.py"),
     "yaml": Path(TEMPLATES_PATH / "configs/config.yaml"),
 }
+
+
+class EnvironmentNames(str, Enum):  # noqa: D101
+    dev = "dev"
+    stg = "stg"
+    prd = "prd"
