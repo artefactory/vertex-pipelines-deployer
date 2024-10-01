@@ -1,4 +1,5 @@
 import re
+from enum import Enum
 from pathlib import Path
 
 TEMPLATES_PATH = Path(__file__).parent / "_templates"
@@ -11,26 +12,6 @@ DEFAULT_TAGS = None
 
 TEMP_LOCAL_PACKAGE_PATH = ".vertex-deployer-temp"
 
-PIPELINE_MINIMAL_TEMPLATE = Path(TEMPLATES_PATH / "pipelines/pipeline_minimal.py.jinja")
-PYTHON_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "configs/python_config.py.jinja")
-JSON_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "configs/json_config.json.jinja")
-TOML_CONFIG_TEMPLATE = Path(TEMPLATES_PATH / "configs/toml_config.toml.jinja")
-
-TEMPLATES_DEFAULT_STRUCTURE = {
-    "dummy_component": Path(TEMPLATES_PATH / "components/dummy_component.py.jinja"),
-    "deployer_env": Path(TEMPLATES_PATH / "deployer.env.jinja"),
-    "requirements_vertex": Path(TEMPLATES_PATH / "requirements-vertex.txt.jinja"),
-    "dockerfile": Path(TEMPLATES_PATH / "deployment/Dockerfile.jinja"),
-    "cloudbuild_local": Path(TEMPLATES_PATH / "deployment/cloudbuild_local.yaml.jinja"),
-    "build_base_image": Path(TEMPLATES_PATH / "deployment/build_base_image.sh.jinja"),
-}
-
-CONFIG_TEMPLATE_MAPPING = {
-    "json": JSON_CONFIG_TEMPLATE,
-    "toml": TOML_CONFIG_TEMPLATE,
-    "py": PYTHON_CONFIG_TEMPLATE,
-}
-
 PIPELINE_CHECKS_TABLE_COLUMNS = [
     "Status",
     "Pipeline",
@@ -41,6 +22,16 @@ PIPELINE_CHECKS_TABLE_COLUMNS = [
     "Config Error Message",
 ]
 
+PIPELINE_MINIMAL_TEMPLATE = Path(TEMPLATES_PATH / "pipelines/pipeline_minimal.py.jinja")
+
+TEMPLATES_DEFAULT_STRUCTURE = {
+    "dummy_component": Path(TEMPLATES_PATH / "components/dummy_component.py"),
+    "deployer_env": Path(TEMPLATES_PATH / "deployer.env"),
+    "requirements_vertex": Path(TEMPLATES_PATH / "requirements-vertex.txt.jinja"),
+    "dockerfile": Path(TEMPLATES_PATH / "deployment/Dockerfile"),
+    "cloudbuild_local": Path(TEMPLATES_PATH / "deployment/cloudbuild_local.yaml.jinja"),
+    "build_base_image": Path(TEMPLATES_PATH / "deployment/build_base_image.sh.jinja"),
+}
 
 INSTRUCTIONS = (
     "\n"
@@ -67,3 +58,25 @@ INSTRUCTIONS = (
 )
 
 VALID_RUN_NAME_PATTERN = re.compile("^[a-z][-a-z0-9]{0,127}$", re.IGNORECASE)
+
+
+class ConfigType(str, Enum):  # noqa: D101
+    json = "json"
+    py = "py"
+    toml = "toml"
+    yaml = "yaml"
+    yml = "yaml"
+
+
+CONFIG_TEMPLATE_MAPPING = {
+    "json": Path(TEMPLATES_PATH / "configs/config.json"),
+    "toml": Path(TEMPLATES_PATH / "configs/config.toml"),
+    "py": Path(TEMPLATES_PATH / "configs/config.py"),
+    "yaml": Path(TEMPLATES_PATH / "configs/config.yaml"),
+}
+
+
+class EnvironmentNames(str, Enum):  # noqa: D101
+    dev = "dev"
+    stg = "stg"
+    prd = "prd"

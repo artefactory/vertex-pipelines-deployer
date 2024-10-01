@@ -18,9 +18,9 @@ def test_init_command_with_defaults(tmp_path):
         assert "Default initialization done" in result.stdout
         assert Path("vertex").is_dir()
         assert (Path("vertex") / "pipelines" / "dummy_pipeline.py").is_file()
-        assert (Path("vertex") / "configs" / "dummy_pipeline" / "test.py").is_file()
         assert (Path("vertex") / "configs" / "dummy_pipeline" / "dev.py").is_file()
-        assert (Path("vertex") / "configs" / "dummy_pipeline" / "prod.py").is_file()
+        assert (Path("vertex") / "configs" / "dummy_pipeline" / "stg.py").is_file()
+        assert (Path("vertex") / "configs" / "dummy_pipeline" / "prd.py").is_file()
         assert (Path("vertex") / "deployment" / "cloudbuild_local.yaml").is_file()
         assert (Path("vertex") / "deployment" / "Dockerfile").is_file()
         assert (Path("vertex") / "deployment" / "build_base_image.sh").is_file()
@@ -89,9 +89,9 @@ def test_init_command_with_user_input(tmp_path):
         assert parsed_toml["tool"]["vertex_deployer"]["create"]["config_type"] == "json"
         assert Path("custom_value").is_dir()
         assert (Path("custom_value") / "pipelines" / "pipe.py").is_file()
-        assert (Path("custom_value") / "configs" / "pipe" / "test.json").is_file()
         assert (Path("custom_value") / "configs" / "pipe" / "dev.json").is_file()
-        assert (Path("custom_value") / "configs" / "pipe" / "prod.json").is_file()
+        assert (Path("custom_value") / "configs" / "pipe" / "stg.json").is_file()
+        assert (Path("custom_value") / "configs" / "pipe" / "prd.json").is_file()
         assert (Path("custom_value") / "deployment" / "cloudbuild_local.yaml").is_file()
         assert (Path("custom_value") / "deployment" / "Dockerfile").is_file()
         assert (Path("custom_value") / "deployment" / "build_base_image.sh").is_file()

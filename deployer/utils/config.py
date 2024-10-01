@@ -1,6 +1,5 @@
 import importlib
 import json
-from enum import Enum
 from pathlib import Path
 from typing import List, Optional, Tuple, Union
 
@@ -14,6 +13,7 @@ from rich.table import Table
 from tomlkit import TOMLDocument
 from tomlkit.toml_file import TOMLFile
 
+from deployer.constants import ConfigType
 from deployer.utils.console import console
 from deployer.utils.exceptions import BadConfigError, UnsupportedConfigFileError
 
@@ -80,13 +80,6 @@ def validate_or_log_settings(
             raise ValueError("User chose to exit")
 
 
-class ConfigType(str, Enum):  # noqa: D101
-    json = "json"
-    py = "py"
-    toml = "toml"
-    yaml = "yaml"
-
-
 def list_config_filepaths(configs_root_path: Path, pipeline_name: str) -> List[Path]:
     """List the config filepaths for a pipeline.
 
@@ -100,7 +93,7 @@ def list_config_filepaths(configs_root_path: Path, pipeline_name: str) -> List[P
     configs_dirpath = Path(configs_root_path) / pipeline_name
     config_filepaths = [
         x
-        for config_type in ConfigType.__members__.values()
+        for config_type in ConfigType.__members__.keys()
         for x in configs_dirpath.glob(f"*.{config_type}")
     ]
     return config_filepaths
@@ -135,7 +128,7 @@ def load_config(config_filepath: Path) -> Tuple[Optional[dict], Optional[dict]]:
         parameter_values = _load_config_toml(config_filepath)
         return parameter_values, None
 
-    if config_filepath.suffix == ".yaml":
+    if config_filepath.suffix == ".yaml" or config_filepath.suffix == ".yml":
         parameter_values = _load_config_yaml(config_filepath)
         return parameter_values, None
 
@@ -167,7 +160,12 @@ def _load_config_python(config_filepath: Path) -> Tuple[Optional[dict], Optional
     """
     spec = importlib.util.spec_from_file_location("module.name", config_filepath)
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    try:
+        spec.loader.exec_module(module)
+    except Exception as e:
+        raise BadConfigError(
+            f"{config_filepath}: invalid Python config file.\n{e.__class__.__name__}: {e}"
+        ) from e
 
     parameter_values = getattr(module, "parameter_values", None)
     input_artifacts = getattr(module, "input_artifacts", None)

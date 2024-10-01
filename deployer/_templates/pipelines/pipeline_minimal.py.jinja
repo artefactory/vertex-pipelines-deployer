@@ -1,6 +1,6 @@
 import kfp.dsl
 
-from {{ component_module }} import dummy_component
+from {{ component_module }}.dummy_component import dummy_component
 
 
 @kfp.dsl.pipeline(name="{{ pipeline_name }}")
