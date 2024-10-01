@@ -562,7 +562,7 @@ def init_deployer(
         ensure_pyproject_toml()
         deployer_settings = load_deployer_settings()
         build_default_folder_structure(deployer_settings)
-        create_pipeline(ctx, pipeline_names=["dummy_pipeline"], config_type=ConfigType.py)
+        create_pipeline(ctx, pipeline_names=["dummy_pipeline"])
 
         console.print("Default initialization done :sparkles:\n", style="bold blue")
         console.print("Here are some commands on how to use the deployer:", style="blue")
@@ -585,7 +585,7 @@ def init_deployer(
                 try:
                     config_type = Prompt.ask(
                         "What is the type of the config file?",
-                        choices=ConfigType.__members__.keys(),
+                        choices=set(ConfigType.__members__.values()),
                     )
                     create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
                 except typer.BadParameter as e:
