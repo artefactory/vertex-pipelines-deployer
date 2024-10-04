@@ -3,7 +3,7 @@
     <h1 align="center">Vertex Pipelines Deployer</h1>
     <p align="center">
         <a href="https://www.artefact.com/">
-        <img src="docs/assets/Artefact-AI-is-about-People-logo-1200x424.png" style="max-width:50%;height:auto;background-color:#111146;" alt="Artefact Logo"/>
+        <img src="docs/assets/logo.svg" style="max-width:50%;height:auto;background-color:#111146;" alt="Artefact Skaff Logo"/>
         </a>
     </p>
     <h3 align="center">Deploy Vertex Pipelines within minutes</h3>

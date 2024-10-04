@@ -4,8 +4,24 @@ repo_url: https://github.com/artefactory/vertex-pipelines-deployer
 
 theme:
   name: material
-  logo: assets/Artefact-AI-is-about-People-logo-1200x424.png
+  logo: assets/logo.svg
   favicon: assets/artefact-favicon.png
+  font:
+    text: Oxygen
+  features:
+    - search.suggest
+    - search.highlight
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - navigation.indexes
+    - navigation.path
+    - navigation.instant
+    - navigation.instant.preview
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.tracking
+    - toc.follow
   palette:
   - media: '(prefers-color-scheme: light)'
     scheme: default
@@ -21,27 +37,42 @@ theme:
     toggle:
       icon: material/weather-sunny
       name: Switch to light mode
-  features:
-  - search.suggest
-  - search.highlight
-  - content.tooltips
-  - content.tabs.link
-  - content.code.annotate
-  - content.code.copy
 
 plugins:
   - search
 
 markdown_extensions:
   - admonition
+  - md_in_html
   - pymdownx.details
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
 
+
+extra:
+  generator: false
+  analytics:
+    provider: google
+    property: G-7REH78BCSD
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: This page was helpful
+          data: 1@
+          note: >-
+            Thanks for your feedback!
+        - icon: material/thumb-down-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve this page by
+            <a href="https://github.com/artefactory-skaff/skaff-repo-template/issues/new/?title=[Feedback]+{title}+-+{url}" target="_blank" rel="noopener">opening an issue</a>.
+
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/skaff.css
 
 nav:
   - Vertex Deployer:
