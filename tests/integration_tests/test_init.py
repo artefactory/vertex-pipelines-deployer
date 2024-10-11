@@ -67,7 +67,6 @@ def test_init_command_with_user_input(tmp_path):
                 "y",
                 "y",
                 "pipe",
-                # ConfigType.json,
                 "json",
                 "n",
             ]
