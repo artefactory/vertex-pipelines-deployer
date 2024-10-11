@@ -28,7 +28,7 @@ repos:
       stages: [commit, push]
     - id: ruff-check
       name: ruff check
-      entry: poetry run ruff check --config pyproject.toml
+      entry: poetry run ruff check --config pyproject.toml --output-format concise
       types: [python]
       language: system
       stages: [commit, push]

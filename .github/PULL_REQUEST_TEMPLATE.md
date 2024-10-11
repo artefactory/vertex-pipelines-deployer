@@ -14,6 +14,7 @@
 - [ ] 🔧 Bug fix (non-breaking change which fixes an issue)
 - [ ] 🥂 Improvement (non-breaking change which improves an existing feature)
 - [ ] 🔐 Security fix
+- [ ] ⚙️ CI / CD update
 - [ ] 📚 Examples / docs / tutorials / dependencies update
 - [ ] 💥 Breaking change (fix or feature that would cause existing functionality to change)
 

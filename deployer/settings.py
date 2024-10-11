@@ -53,7 +53,7 @@ class _DeployerListSettings(CustomBaseModel):
 class _DeployerCreateSettings(CustomBaseModel):
     """Settings for Vertex Deployer `create` command."""
 
-    config_type: ConfigType = ConfigType.py
+    config_type: ConfigType = ConfigType.yaml
 
 
 class _DeployerConfigSettings(CustomBaseModel):
