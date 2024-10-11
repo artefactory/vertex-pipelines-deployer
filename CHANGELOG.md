@@ -2,6 +2,33 @@
 
 
 
+## 0.5.4 (2024-10-11)
+
+### Build
+
+* build(deps): add compatibility with python up to 3.12 (#192) ([`76cd116`](https://github.com/artefactory/vertex-pipelines-deployer/commit/76cd116cdee8778b387616bc1b4aa1912d992e55))
+
+* build(deps-dev): update ruff requirement from ^0.3 to &gt;=0.3,&lt;0.6 (#196) ([`03549f7`](https://github.com/artefactory/vertex-pipelines-deployer/commit/03549f799de52fd2f95e205d2046fd6fd06cac4f))
+
+* build(deps-dev): update pytest-cov requirement from ^4.1 to ^5.0 (#168) ([`d0305ec`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d0305ec9fc2902e61d79939bb75a4ed3a63eaf0a))
+
+### Ci
+
+* ci: update semantic release branches rules (#207) ([`48ab5f7`](https://github.com/artefactory/vertex-pipelines-deployer/commit/48ab5f7f809dd2ede185110c22d5653cdf7f1448))
+
+### Documentation
+
+* docs: update to skaff style (#210) ([`ab5fb2f`](https://github.com/artefactory/vertex-pipelines-deployer/commit/ab5fb2fdd5387f24e9b9024e72bdfa51908a97d6))
+
+### Enhancements
+
+* enh: ask for config file type in init (#206) ([`79a66e2`](https://github.com/artefactory/vertex-pipelines-deployer/commit/79a66e28e1b6c71990b19e30b34b7ff4504defa5))
+
+### Fix
+
+* fix: yaml and init templates (#205) ([`0885793`](https://github.com/artefactory/vertex-pipelines-deployer/commit/0885793b4898eb6fcd8255a291ffef661e030725))
+
+
 ## 0.5.3 (2024-07-04)
 
 ### Fix
