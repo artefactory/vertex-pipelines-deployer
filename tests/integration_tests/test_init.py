@@ -11,7 +11,7 @@ runner = CliRunner()
 def test_init_command_with_defaults(tmp_path):
     with runner.isolated_filesystem(temp_dir=tmp_path):
         # Given
-        result = runner.invoke(app, ["init", "--default"])
+        result = runner.invoke(app, ["init", "--default"], catch_exceptions=False)
 
         # Then
         assert result.exit_code == 0
@@ -67,12 +67,13 @@ def test_init_command_with_user_input(tmp_path):
                 "y",
                 "y",
                 "pipe",
+                # ConfigType.json,
                 "json",
                 "n",
             ]
         )
 
-        result = runner.invoke(app, ["init"], input=user_inputs)
+        result = runner.invoke(app, ["init"], input=user_inputs, catch_exceptions=False)
         # Then
         assert result.exit_code == 0
         # Pay attention to the assertions if the user inputs are changed

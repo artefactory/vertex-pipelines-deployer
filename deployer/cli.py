@@ -477,7 +477,7 @@ def create_pipeline(
     config_type: Annotated[
         ConfigType,
         typer.Option("--config-type", "-ct", help="The type of the config to create."),
-    ] = "yaml",
+    ] = ConfigType.yaml,
 ):
     """Create files structure for a new pipeline."""
     invalid_pipelines = [p for p in pipeline_names if not re.match(r"^[a-zA-Z0-9_]+$", p)]
@@ -507,6 +507,8 @@ def create_pipeline(
         f"Creating pipeline {pipeline_names} with config type: [bold]{config_type}[/bold]"
     )
 
+    ct_value = config_type.value if isinstance(config_type, enum.Enum) else config_type
+
     for pipeline_name in pipeline_names:
         pipeline_filepath = deployer_settings.pipelines_root_path / f"{pipeline_name}.py"
         _create_file_from_template(
@@ -522,8 +524,8 @@ def create_pipeline(
             config_dirpath = Path(deployer_settings.configs_root_path) / pipeline_name
             config_dirpath.mkdir(exist_ok=True)
             for config_name in constants.EnvironmentNames.__members__.values():
-                config_filepath = config_dirpath / f"{config_name.value}.{config_type}"
-                config_template = constants.TEMPLATES_PATH / "configs" / f"config.{config_type}"
+                config_filepath = config_dirpath / f"{config_name.value}.{ct_value}"
+                config_template = constants.TEMPLATES_PATH / "configs" / f"config.{ct_value}"
                 _create_file_from_template(
                     path=config_filepath,
                     template_path=config_template,
