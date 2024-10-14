@@ -47,7 +47,7 @@ jobs:
 
     - name: Python Semantic Release
       id: python-semantic-release
-      uses: python-semantic-release/python-semantic-release@v9.6.0  # need python >=3.12 to use latest versions
+      uses: python-semantic-release/python-semantic-release@v9.11.0  # need python >=3.12 to use latest versions
       with:
         github_token: ${{ secrets.RELEASE_ACCESS_TOKEN }}
 
