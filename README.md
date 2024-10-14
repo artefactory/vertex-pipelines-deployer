@@ -374,6 +374,7 @@ To initialize the deployer with default settings and folder structure, use the `
 vertex-deployer init
 ```
 
+<!-- termynal -->
 ```bash
 $ vertex-deployer init
 Welcome to Vertex Deployer!
