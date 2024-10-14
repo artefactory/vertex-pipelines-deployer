@@ -40,6 +40,9 @@ theme:
 
 plugins:
   - search
+  - termynal:
+      prompt_literal_start:
+        - ">"
 
 markdown_extensions:
   - admonition
