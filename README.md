@@ -415,11 +415,11 @@ You can configure the deployer using the `pyproject.toml` file to better fit you
 This will overwrite default values. It can be useful if you always use the same options, e.g. always the same `--scheduler-timezone`
 
 ```toml
-[tool.vertex-deployer]
+[tool.vertex_deployer]
 vertex_folder_path = "my/path/to/vertex"
 log_level = "INFO"
 
-[tool.vertex-deployer.deploy]
+[tool.vertex_deployer.deploy]
 scheduler_timezone = "Europe/Paris"
 ```
 
