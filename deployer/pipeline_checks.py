@@ -146,7 +146,7 @@ def _convert_artifact_type_to_str(annotation: type) -> type:
     """Convert a kfp.dsl.Artifact type to a string.
 
     This is mandatory for type checking, as kfp.dsl.Artifact types should be passed as strings
-    to VertexAI. See https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob
+    to VertexAI. See `https://cloud.google.com/python/docs/reference/aiplatform/latest/google.cloud.aiplatform.PipelineJob`
     for details.
     """
     if isinstance(annotation, _AnnotatedAlias):

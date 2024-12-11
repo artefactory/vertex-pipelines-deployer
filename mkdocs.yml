@@ -40,6 +40,20 @@ theme:
 
 plugins:
   - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+          options:
+            members_order: source
+            separate_signature: true
+            filters: ["!^_"]
+            docstring_options:
+              ignore_init_summary: true
+            merge_init_into_class: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            show_symbol_type_heading: true
 
 markdown_extensions:
   - admonition
@@ -81,8 +95,12 @@ nav:
     - Folder Structure: folder_structure.md
     - Basic Usage: usage.md
   - Advanced User Guide:
-    - Vertex DevOps: advanced_user_guide.md
-    - Understand settings and configurations: configuration.md
+    - Vertex DevOps: advanced/advanced_user_guide.md
+    - Understand settings and configurations: advanced/configuration.md
   - CLI Reference: CLI_REFERENCE.md
+  - API Documentation:
+    - VertexPipelinesDeployer: api/vertex_deployer.md
+    - pipeline_checks: api/pipeline_checks.md
+    - utils: api/utils.md
   - Contributing: contributing.md
   - Changelog: changelog.md
