@@ -2,17 +2,55 @@
 
 
 
+## 0.5.5 (2025-01-25)
+
+### Build system
+
+* build(deps): bump actions/cache from 4.0.0 to 4.1.1 (#215)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`cf0a5d9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/cf0a5d93bf3ba0f920e1500e59f4dd9c7d0c3f27))
+
+* build(deps): bump python-semantic-release/python-semantic-release from 9.6.0 to 9.11.0 (#216)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Co-authored-by: julesbertrand <julesbertrand13@gmail.com> ([`7c0635c`](https://github.com/artefactory/vertex-pipelines-deployer/commit/7c0635c03c103ca747efc7f07cd4f52f3289ad3a))
+
+* build(deps): actions/pr-agent set version to 0.24 (#218) ([`1058103`](https://github.com/artefactory/vertex-pipelines-deployer/commit/10581033b5a3826f950d7269dfa787021408db10))
+
+* build(deps): update pyinstrument requirement from ^4.5 to >=4.5,<6.0 (#214)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`d618659`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d6186596118cf94d3265afcef032c98024659ec7))
+
+* build(deps): update tomlkit requirement from ^0.12 to >=0.12,<0.14 (#200)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`575c4a9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/575c4a98eed24fd1f59083e026454d65e83a41cb))
+
+### Documentation
+
+* docs: add api ref using mkdocstrings (#231) ([`efef2de`](https://github.com/artefactory/vertex-pipelines-deployer/commit/efef2de5df37b1d70e1ca07b61748bb3f58b6a50))
+
+* docs: fix typo in deployer toml configuration ([`489ecac`](https://github.com/artefactory/vertex-pipelines-deployer/commit/489ecacd35726ba699db58f7c8d7471a6456830a))
+
+### Enhancements
+
+* enh: use underscore instead of dash in cron parsing (#234) ([`7221d6a`](https://github.com/artefactory/vertex-pipelines-deployer/commit/7221d6a37043cb2100db36e9d1935531a56a1bed))
+
+
 ## 0.5.4 (2024-10-11)
 
-### Build
+### Build system
 
 * build(deps): add compatibility with python up to 3.12 (#192) ([`76cd116`](https://github.com/artefactory/vertex-pipelines-deployer/commit/76cd116cdee8778b387616bc1b4aa1912d992e55))
 
-* build(deps-dev): update ruff requirement from ^0.3 to &gt;=0.3,&lt;0.6 (#196) ([`03549f7`](https://github.com/artefactory/vertex-pipelines-deployer/commit/03549f799de52fd2f95e205d2046fd6fd06cac4f))
+* build(deps-dev): update ruff requirement from ^0.3 to >=0.3,<0.6 (#196) ([`03549f7`](https://github.com/artefactory/vertex-pipelines-deployer/commit/03549f799de52fd2f95e205d2046fd6fd06cac4f))
 
 * build(deps-dev): update pytest-cov requirement from ^4.1 to ^5.0 (#168) ([`d0305ec`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d0305ec9fc2902e61d79939bb75a4ed3a63eaf0a))
 
-### Ci
+### Continuous integration
 
 * ci: update semantic release branches rules (#207) ([`48ab5f7`](https://github.com/artefactory/vertex-pipelines-deployer/commit/48ab5f7f809dd2ede185110c22d5653cdf7f1448))
 
@@ -24,14 +62,14 @@
 
 * enh: ask for config file type in init (#206) ([`79a66e2`](https://github.com/artefactory/vertex-pipelines-deployer/commit/79a66e28e1b6c71990b19e30b34b7ff4504defa5))
 
-### Fix
+### Fixes
 
 * fix: yaml and init templates (#205) ([`0885793`](https://github.com/artefactory/vertex-pipelines-deployer/commit/0885793b4898eb6fcd8255a291ffef661e030725))
 
 
 ## 0.5.3 (2024-07-04)
 
-### Fix
+### Fixes
 
 * fix: pydantic update 2.8.0 (#197) ([`0127301`](https://github.com/artefactory/vertex-pipelines-deployer/commit/01273017a31dd378c095f3256c301327f78a1ef6))
 
@@ -45,11 +83,11 @@
 
 ## 0.5.1 (2024-06-06)
 
-### Chore
+### Chores
 
 * chore: ak repo explo (#186) ([`20e6665`](https://github.com/artefactory/vertex-pipelines-deployer/commit/20e6665275c1b1ae7f8a132582699d5f87a67c23))
 
-### Ci
+### Continuous integration
 
 * ci: set python semantic release version ([`9be89db`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9be89dbff44972e314b89ced04ee6848133466aa))
 
@@ -61,7 +99,7 @@
 
 * improvement: add tests init (#182)
 
-Co-authored-by: Elie Trigano &lt;elie.trigano@artefact.com&gt; ([`89f9701`](https://github.com/artefactory/vertex-pipelines-deployer/commit/89f97019f4ee877eda067756dc44d11eb98a8802))
+Co-authored-by: Elie Trigano <elie.trigano@artefact.com> ([`89f9701`](https://github.com/artefactory/vertex-pipelines-deployer/commit/89f97019f4ee877eda067756dc44d11eb98a8802))
 
 
 ## 0.5.0 (2024-04-16)
@@ -70,42 +108,42 @@ Co-authored-by: Elie Trigano &lt;elie.trigano@artefact.com&gt; ([`89f9701`](http
 
 * docs: improve readme badges (#180) ([`8e1faf8`](https://github.com/artefactory/vertex-pipelines-deployer/commit/8e1faf87f01a2cf060f05e6702165ad3943cc1f6))
 
-### Feature
+### Features
 
 * feat: improve init (#173)
 
-Co-authored-by: Elie Trigano &lt;elie.trigano@artefact.com&gt; ([`f937dfe`](https://github.com/artefactory/vertex-pipelines-deployer/commit/f937dfe95a144907ce66f951e2b5c12619966acb))
+Co-authored-by: Elie Trigano <elie.trigano@artefact.com> ([`f937dfe`](https://github.com/artefactory/vertex-pipelines-deployer/commit/f937dfe95a144907ce66f951e2b5c12619966acb))
 
 
 ## 0.4.4 (2024-04-12)
 
-### Build
+### Build system
 
 * build(deps): bump vertex-deployer from 0.4.0 to 0.4.3 (#166)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
-Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2cd0fab`](https://github.com/artefactory/vertex-pipelines-deployer/commit/2cd0fab64e0feae3414c093a553e932b960eb137))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Co-authored-by: julesbertrand <julesbertrand13@gmail.com> ([`2cd0fab`](https://github.com/artefactory/vertex-pipelines-deployer/commit/2cd0fab64e0feae3414c093a553e932b960eb137))
 
 * build(deps): update typer requirement from ^0.9 to ^0.12 (#171)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
-Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`71c9da5`](https://github.com/artefactory/vertex-pipelines-deployer/commit/71c9da5a177697702dfa76dc9579a288125cc9d7))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Co-authored-by: julesbertrand <julesbertrand13@gmail.com> ([`71c9da5`](https://github.com/artefactory/vertex-pipelines-deployer/commit/71c9da5a177697702dfa76dc9579a288125cc9d7))
 
 * build(deps-dev): update ruff requirement from ^0.1 to ^0.3 (#165)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt;
-Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2a5b637`](https://github.com/artefactory/vertex-pipelines-deployer/commit/2a5b637a1be8ad06c9626f78d8cc479ce8dbb81a))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+Co-authored-by: julesbertrand <julesbertrand13@gmail.com> ([`2a5b637`](https://github.com/artefactory/vertex-pipelines-deployer/commit/2a5b637a1be8ad06c9626f78d8cc479ce8dbb81a))
 
-### Chore
+### Chores
 
 * chore: better exception message when validating deployer settings (#163) ([`5c08106`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5c08106706a1b86fefcc10dd250884687424d296))
 
 * chore: create .skaff/skaff.yaml (#172) ([`9876d39`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9876d39da79af3a9fa1666c6f3e2e5a28c7fab3c))
 
-### Ci
+### Continuous integration
 
 * ci: check cli documentation is up to date (#178) ([`4c6436c`](https://github.com/artefactory/vertex-pipelines-deployer/commit/4c6436c01b2612cbf3e39f621073d537d77f7cf4))
 
@@ -115,18 +153,18 @@ Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2a5b637`](htt
 
 * docs: update docs for public release (#174) ([`13219d0`](https://github.com/artefactory/vertex-pipelines-deployer/commit/13219d0f3b24dabf8dce72f747c2f7b4f815cb3b))
 
-### Fix
+### Fixes
 
 * fix: enable caching default behavior (#177) ([`34663c1`](https://github.com/artefactory/vertex-pipelines-deployer/commit/34663c15ee41abf4e03e345164bd489194a38ca8))
 
 
 ## 0.4.3 (2024-03-01)
 
-### Ci
+### Continuous integration
 
 * ci: fix deploy docs workflow trigger (#156) ([`32351db`](https://github.com/artefactory/vertex-pipelines-deployer/commit/32351dbae8b7cc41393a166371fd9ff77a41a004))
 
-### Fix
+### Fixes
 
 * fix: instanciate list only if not ixisting when paring errors (#161) ([`16028a2`](https://github.com/artefactory/vertex-pipelines-deployer/commit/16028a21c48a45794438a5af8fe997cd06b5351c))
 
@@ -135,7 +173,7 @@ Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2a5b637`](htt
 
 ## 0.4.2 (2024-02-26)
 
-### Ci
+### Continuous integration
 
 * ci: update changelog template (#154) ([`0f4e8c0`](https://github.com/artefactory/vertex-pipelines-deployer/commit/0f4e8c041a405bc63b0c98f10b7bd4a786f5261e))
 
@@ -151,14 +189,14 @@ Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2a5b637`](htt
 
 * enh: handle default values (#148) ([`032ef87`](https://github.com/artefactory/vertex-pipelines-deployer/commit/032ef87da96496c51967ee9a85d27ff62aefa9a4))
 
-### Fix
+### Fixes
 
 * fix: init command failing (#147) ([`df3fb3a`](https://github.com/artefactory/vertex-pipelines-deployer/commit/df3fb3a1e96a8ea3be6b0bdbbad9005e18ba30ee))
 
 
 ## 0.4.1 (2024-02-14)
 
-### Build
+### Build system
 
 * build(deps-dev): update black requirement from ^23.7 to ^24.1 (#138) ([`ae8ee8c`](https://github.com/artefactory/vertex-pipelines-deployer/commit/ae8ee8c4fd7217970e35736ff26a75237a166948))
 
@@ -168,11 +206,11 @@ Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2a5b637`](htt
 
 * build(deps-dev): update pytest requirement from ^7.4 to ^8.0 (#137) ([`9d5a148`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9d5a148ffe21c16bdfa0e45f8d88e86d853f1d93))
 
-### Ci
+### Continuous integration
 
 * ci: use ruff for formatting (#144) ([`ba554c3`](https://github.com/artefactory/vertex-pipelines-deployer/commit/ba554c3e88fdaeceaeb892966886a1ea80b229bd))
 
-### Fix
+### Fixes
 
 * fix: print vertex settings and ask for validation (#141) ([`668aaad`](https://github.com/artefactory/vertex-pipelines-deployer/commit/668aaad4d5ab72bf026b8ae151508efc36e7795f))
 
@@ -181,41 +219,41 @@ Co-authored-by: julesbertrand &lt;julesbertrand13@gmail.com&gt; ([`2a5b637`](htt
 
 ## 0.4.0 (2024-01-05)
 
-### Build
+### Build system
 
 * build(release): fix release to gcp (#126) ([`9b4e619`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9b4e61932260ceca12460dbb43d65e65ce1a0877))
 
-### Chore
+### Chores
 
 * chore: switch to apache 2.0 licence (#128) ([`ea3a67d`](https://github.com/artefactory/vertex-pipelines-deployer/commit/ea3a67dacbce6fafb558896d7d8225dee414472d))
 
-### Feature
+### Features
 
 * feat: add init command to configure deployer (#127) ([`5ac7022`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5ac702220255c5c9460eac474d7afdb822cae425))
 
-### Performance
+### Performance improvements
 
 * perf: improve cli with context and callbacks (#129) ([`d99c007`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d99c007451e70847636161b000477093433cdb08))
 
 
 ## 0.3.3 (2024-01-03)
 
-### Build
+### Build system
 
 * build(deps): bump actions/setup-python from 4 to 5 (#118) ([`3d48df3`](https://github.com/artefactory/vertex-pipelines-deployer/commit/3d48df38892a263a6a6e1e08a2132c0f63e0a6f2))
 
 * build(deps): bump google-github-actions/auth from 1 to 2 (#114)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`d98a54e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d98a54e5e378f29f015849d04d0c160d58b7509d))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`d98a54e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/d98a54e5e378f29f015849d04d0c160d58b7509d))
 
 * build(deps): bump vertex-deployer from 0.3.1 to 0.3.2 (#107) ([`9af430b`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9af430b01e3baf990d69b2229a84f95251faf8de))
 
-### Chore
+### Chores
 
 * chore: update artifact registry url (#106) ([`226f200`](https://github.com/artefactory/vertex-pipelines-deployer/commit/226f20085f1c6f19396abb6db79adc3b6e443003))
 
-### Ci
+### Continuous integration
 
 * ci: add pep-8 compliance and bandit ruff checks (#110) ([`c87685b`](https://github.com/artefactory/vertex-pipelines-deployer/commit/c87685b324b7c53046885a895cb1a7c128a5e5bf))
 
@@ -237,44 +275,44 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * docs: update doc build trigger (#100) ([`9560b70`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9560b70a675ab582bd2e5c8183bf0bf6454fcd2a))
 
-### Fix
+### Fixes
 
 * fix: toml config files cannot have sections (#122) ([`013e2ba`](https://github.com/artefactory/vertex-pipelines-deployer/commit/013e2baa7b94477824a874bb735be903ab43e436))
 
 * fix: multiple issues when using vertex deployer create (#123) ([`b98b14e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/b98b14e25b444f92ac4369573adf4a6b66784a37))
 
-### Test
+### Testing
 
 * test: add integration test to ensure config and cli params are iso (#121) ([`440b51e`](https://github.com/artefactory/vertex-pipelines-deployer/commit/440b51e1e848cc63bec24515a6dc3ca2985d3852))
 
 
 ## 0.3.2 (2023-11-08)
 
-### Build
+### Build system
 
 * build(deps-dev): update ruff requirement from ^0.0 to ^0.1 (#95)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`cff19af`](https://github.com/artefactory/vertex-pipelines-deployer/commit/cff19af4bd76b96b595f3cc653b4316f336b5988))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`cff19af`](https://github.com/artefactory/vertex-pipelines-deployer/commit/cff19af4bd76b96b595f3cc653b4316f336b5988))
 
 * build(deps): bump actions/cache from 3.2.4 to 3.3.2 (#94)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`5d2dbf9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5d2dbf93360313d843ef7d1c8685367ef0adbf39))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`5d2dbf9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5d2dbf93360313d843ef7d1c8685367ef0adbf39))
 
 * build(deps): bump actions/setup-python from 2 to 4 (#92)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`9d25ad6`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9d25ad64f2442baba1cc1906817d0c66473bac07))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`9d25ad6`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9d25ad64f2442baba1cc1906817d0c66473bac07))
 
 * build(deps): bump actions/checkout from 2 to 4 (#93)
 
-Signed-off-by: dependabot[bot] &lt;support@github.com&gt;
-Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.github.com&gt; ([`c97ec85`](https://github.com/artefactory/vertex-pipelines-deployer/commit/c97ec85383e0f8a391a24a74890e0d7639a034f0))
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> ([`c97ec85`](https://github.com/artefactory/vertex-pipelines-deployer/commit/c97ec85383e0f8a391a24a74890e0d7639a034f0))
 
 * build: update dependencies specifiers to be more flexible (#91) ([`fddf1a9`](https://github.com/artefactory/vertex-pipelines-deployer/commit/fddf1a97d5929095d03ae702c4b2c3a95001463e))
 
-### Ci
+### Continuous integration
 
 * ci: build and deploy docs when a release is published (#90) ([`01ce99a`](https://github.com/artefactory/vertex-pipelines-deployer/commit/01ce99afed4bc4e791b86106d30ecc76f49bf6ff))
 
@@ -284,18 +322,18 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * docs: update installation instructions (#98) ([`6e51b89`](https://github.com/artefactory/vertex-pipelines-deployer/commit/6e51b8931eaa4a60b484759bc9acc8ff108897c7))
 
-### Fix
+### Fixes
 
 * fix: warn when cannot associate run to experiment (#99) ([`7ba89f3`](https://github.com/artefactory/vertex-pipelines-deployer/commit/7ba89f3bc0d6b267b26920ecfd5b17a9f2801500))
 
-### Performance
+### Performance improvements
 
 * perf: rationalize kfp imports (#97) ([`19da429`](https://github.com/artefactory/vertex-pipelines-deployer/commit/19da4298baa1ce549fa72b60fe4fcf4e1dcf1a92))
 
 
 ## 0.3.1 (2023-11-06)
 
-### Fix
+### Fixes
 
 * fix: build doc after release (#89) ([`e9b6b36`](https://github.com/artefactory/vertex-pipelines-deployer/commit/e9b6b361cf07b6cfb5b9d1944b8a26ce9fa72053))
 
@@ -304,14 +342,14 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 ## 0.3.0 (2023-11-06)
 
-### Feature
+### Features
 
 * feat: configure with pyproject (#82) ([`56d69f4`](https://github.com/artefactory/vertex-pipelines-deployer/commit/56d69f418d40d0a30007e6b66af212409e2717fc))
 
 
 ## 0.2.2 (2023-11-06)
 
-### Ci
+### Continuous integration
 
 * ci: update changelog parameters (#81) ([`5cd8321`](https://github.com/artefactory/vertex-pipelines-deployer/commit/5cd8321b3e7ff2c99751fc81c705739c0c05a653))
 
@@ -319,7 +357,7 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * docs: add mkdocs documentation (#79) ([`dd66594`](https://github.com/artefactory/vertex-pipelines-deployer/commit/dd665943944335478613f346d30020a9febe03b5))
 
-### Fix
+### Fixes
 
 * fix: release to artifact registry (#85) ([`395b256`](https://github.com/artefactory/vertex-pipelines-deployer/commit/395b2565c07f47aacd9b23c3d38f19cd10b1380a))
 
@@ -334,7 +372,7 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * docs: fix typos in readme (#74) ([`9cc7ad3`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9cc7ad3b546b5d160468bf5ddda500b030e16dba))
 
-### Fix
+### Fixes
 
 * fix: simplify check pipelines cmd (#73) ([`c63a7fb`](https://github.com/artefactory/vertex-pipelines-deployer/commit/c63a7fb3ec855c023f96f9d651608afc727f3df5))
 
@@ -347,11 +385,11 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * docs: update documentation (#68) ([`e942add`](https://github.com/artefactory/vertex-pipelines-deployer/commit/e942adddccca85c28941cd986f7afcad986cffd3))
 
-### Feature
+### Features
 
 * feat: add support for toml config files (#70) ([`b997e69`](https://github.com/artefactory/vertex-pipelines-deployer/commit/b997e69b6838d35d4818d2db9f28ab0927131414))
 
-### Fix
+### Fixes
 
 * fix: pipelines objects can be named as `{pipeline_name}` instead of `pipeline` (#69) ([`f79d081`](https://github.com/artefactory/vertex-pipelines-deployer/commit/f79d081cb81ea92f01cfd29bf46db3b1bfcb368c))
 
@@ -364,7 +402,7 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * docs: update installation guidelines (#61) ([`e284168`](https://github.com/artefactory/vertex-pipelines-deployer/commit/e284168af39a914ddf4b2883ccc6031cb322ada2))
 
-### Fix
+### Fixes
 
 * fix: make imports in cli commands to reduce overhead (#63) ([`9c973f0`](https://github.com/artefactory/vertex-pipelines-deployer/commit/9c973f0fe51d6fd5a91fe7df190a363f57fc9944))
 
@@ -373,11 +411,11 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 ## 0.1.0 (2023-10-05)
 
-### Chore
+### Chores
 
 * chore: update release version tag format and commit message (#50) ([`b635287`](https://github.com/artefactory/vertex-pipelines-deployer/commit/b6352871a1b4dc8e53402b49bb4380322f3a4075))
 
-### Ci
+### Continuous integration
 
 * ci: upload release to gcs (#56)
 
@@ -393,7 +431,7 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * enh: use pydantic settings to get deployment variables from env file instead of os.environ (#24) ([`879c14a`](https://github.com/artefactory/vertex-pipelines-deployer/commit/879c14a168510e5388489e55b34399c9efe0eb45))
 
-### Feature
+### Features
 
 * feat: add rich display in console (#54)
 
@@ -411,7 +449,7 @@ Co-authored-by: dependabot[bot] &lt;49699333+dependabot[bot]@users.noreply.githu
 
 * enh: rename config_path as config_file ([`6753402`](https://github.com/artefactory/vertex-pipelines-deployer/commit/675340220076aa19c0bc63539193403512ec721f))
 
-### Fix
+### Fixes
 
 * fix: scheduling tag retrieval (#59) ([`11347ba`](https://github.com/artefactory/vertex-pipelines-deployer/commit/11347baac2a40c36dafc607e3536a9c6b666f73d))
 
@@ -513,7 +551,7 @@ Automatically generated by python-semantic-release ([`0809df7`](https://github.c
 
 * feat: add command create to cli and folder structure reorg
 
-* enh: renamed pipelines_deployer.py -&gt; pipeline_deployer.py
+* enh: renamed pipelines_deployer.py -> pipeline_deployer.py
 
 * test: update tests
 
