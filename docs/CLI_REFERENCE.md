@@ -115,7 +115,7 @@ $ vertex-deployer deploy [OPTIONS] PIPELINE_NAMES...
 * `-u, --upload / -nu, --no-upload`: Whether to upload the pipeline to Google Artifact Registry.  [default: no-upload]
 * `-r, --run / -nr, --no-run`: Whether to run the pipeline.  [default: no-run]
 * `-s, --schedule / -ns, --no-schedule`: Whether to create a schedule for the pipeline.  [default: no-schedule]
-* `--cron TEXT`: Cron expression for scheduling the pipeline. To pass it to the CLI, use hyphens e.g. '0-10-*-*-*'.
+* `--cron TEXT`: Cron expression for scheduling the pipeline. To pass it to the CLI, use underscore e.g. '0_10_*_*_*'.
 * `-dls, --delete-last-schedule`: Whether to delete the previous schedule before creating a new one.
 * `--scheduler-timezone TEXT`: Timezone for scheduling the pipeline. Must be a valid string from IANA time zone database  [default: Europe/Paris]
 * `--tags TEXT`: The tags to use when uploading the pipeline.

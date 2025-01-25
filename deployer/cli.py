@@ -163,7 +163,7 @@ def deploy(  # noqa: C901
         Optional[str],
         typer.Option(
             help="Cron expression for scheduling the pipeline."
-            " To pass it to the CLI, use hyphens e.g. '0-10-*-*-*'."
+            " To pass it to the CLI, use underscore e.g. '0_10_*_*_*'."
         ),
     ] = None,
     delete_last_schedule: Annotated[
@@ -319,7 +319,7 @@ def deploy(  # noqa: C901
 
         if schedule:
             with console.status("Scheduling pipeline..."):
-                cron = cron.replace("-", " ")  # ugly fix to allow cron expression as env variable
+                cron = cron.replace("_", " ")  # ugly fix to allow cron expression as env variable
                 deployer.schedule(
                     cron=cron,
                     enable_caching=enable_caching,

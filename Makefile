@@ -13,7 +13,7 @@ PYTHON_VERSION = 3.10
 .PHONY: download-poetry
 ## Download poetry
 download-poetry:
-	curl -sSL https://install.python-poetry.org | python3 -
+	curl -sSL https://install.python-poetry.org | python3 - --version 1.8.4
 
 
 .PHONY: install
