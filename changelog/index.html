@@ -1,0 +1,3478 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../contributing/">
+      
+      
+      
+      <link rel="icon" href="../assets/artefact-favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.50">
+    
+    
+      
+        <title>Changelog - Vertex Pipelines Deployer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.a40c8224.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxygen:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Oxygen";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../stylesheets/skaff.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-7REH78BCSD"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-7REH78BCSD",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-7REH78BCSD",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Vertex Pipelines Deployer" class="md-header__button md-logo" aria-label="Vertex Pipelines Deployer" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vertex Pipelines Deployer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="cyan" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/artefactory/vertex-pipelines-deployer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    artefactory/vertex-pipelines-deployer
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Vertex Pipelines Deployer" class="md-nav__button md-logo" aria-label="Vertex Pipelines Deployer" data-md-component="logo">
+      
+  <img src="../assets/logo.svg" alt="logo">
+
+    </a>
+    Vertex Pipelines Deployer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/artefactory/vertex-pipelines-deployer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    artefactory/vertex-pipelines-deployer
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href=".." class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    Vertex Deployer
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_1" id="__nav_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_1">
+            <span class="md-nav__icon md-icon"></span>
+            Vertex Deployer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Prerequisites & Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../folder_structure/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Folder Structure
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Basic Usage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advanced User Guide
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced User Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/advanced_user_guide/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Vertex DevOps
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../advanced/configuration/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Understand settings and configurations
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CLI_REFERENCE/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    CLI Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            API Documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/vertex_deployer/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    VertexPipelineDeployer
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/pipeline_checks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    pipeline_checks
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/utils/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    utils
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#055-2025-01-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.5 (2025-01-25)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.5 (2025-01-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#054-2024-10-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.4 (2024-10-11)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.4 (2024-10-11)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#053-2024-07-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.3 (2024-07-04)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.3 (2024-07-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#052-2024-06-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.2 (2024-06-14)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.2 (2024-06-14)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#051-2024-06-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.1 (2024-06-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.1 (2024-06-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unknown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#050-2024-04-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 (2024-04-16)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.0 (2024-04-16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#044-2024-04-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.4 (2024-04-12)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.4 (2024-04-12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chores_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#043-2024-03-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.3 (2024-03-01)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.3 (2024-03-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#042-2024-02-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.2 (2024-02-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.2 (2024-02-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#041-2024-02-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.1 (2024-02-14)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.1 (2024-02-14)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#040-2024-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 (2024-01-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.0 (2024-01-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chores_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance improvements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#033-2024-01-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.3 (2024-01-03)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.3 (2024-01-03)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chores_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#032-2023-11-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.2 (2023-11-08)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.2 (2023-11-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-improvements_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance improvements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#031-2023-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.1 (2023-11-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.1 (2023-11-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#030-2023-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 (2023-11-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.0 (2023-11-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#022-2023-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.2 (2023-11-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.2 (2023-11-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#021-2023-10-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.1 (2023-10-13)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.1 (2023-10-13)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020-2023-10-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 (2023-10-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 (2023-10-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#011-2023-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.1 (2023-10-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.1 (2023-10-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2023-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.0 (2023-10-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.0 (2023-10-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chores_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unknown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#055-2025-01-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.5 (2025-01-25)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.5 (2025-01-25)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#054-2024-10-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.4 (2024-10-11)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.4 (2024-10-11)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#053-2024-07-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.3 (2024-07-04)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.3 (2024-07-04)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#052-2024-06-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.2 (2024-06-14)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.2 (2024-06-14)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#051-2024-06-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.1 (2024-06-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.1 (2024-06-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chores" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unknown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#050-2024-04-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 (2024-04-16)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.0 (2024-04-16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#044-2024-04-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.4 (2024-04-12)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.4 (2024-04-12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chores_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#043-2024-03-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.3 (2024-03-01)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.3 (2024-03-01)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#042-2024-02-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.2 (2024-02-26)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.2 (2024-02-26)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#041-2024-02-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.1 (2024-02-14)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.1 (2024-02-14)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#040-2024-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 (2024-01-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.0 (2024-01-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chores_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance improvements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#033-2024-01-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.3 (2024-01-03)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.3 (2024-01-03)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chores_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#032-2023-11-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.2 (2023-11-08)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.2 (2023-11-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#build-system_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Build system
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-improvements_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance improvements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#031-2023-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.1 (2023-11-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.1 (2023-11-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixes_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#030-2023-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 (2023-11-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.0 (2023-11-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#features_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#022-2023-11-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.2 (2023-11-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.2 (2023-11-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#021-2023-10-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.1 (2023-10-13)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.1 (2023-10-13)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020-2023-10-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 (2023-10-06)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 (2023-10-06)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#011-2023-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.1 (2023-10-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.1 (2023-10-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#documentation_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2023-10-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.0 (2023-10-05)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.0 (2023-10-05)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chores_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chores
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuous-integration_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Continuous integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enhancements_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enhancements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#features_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixes_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unknown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="changelog">CHANGELOG</h1>
+<h2 id="055-2025-01-25">0.5.5 (2025-01-25)</h2>
+<h3 id="build-system">Build system</h3>
+<ul>
+<li>build(deps): bump actions/cache from 4.0.0 to 4.1.1 (#215)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/cf0a5d93bf3ba0f920e1500e59f4dd9c7d0c3f27"><code>cf0a5d9</code></a>)</p>
+<ul>
+<li>build(deps): bump python-semantic-release/python-semantic-release from 9.6.0 to 9.11.0 (#216)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: julesbertrand <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/7c0635c03c103ca747efc7f07cd4f52f3289ad3a"><code>7c0635c</code></a>)</p>
+<ul>
+<li>
+<p>build(deps): actions/pr-agent set version to 0.24 (#218) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/10581033b5a3826f950d7269dfa787021408db10"><code>1058103</code></a>)</p>
+</li>
+<li>
+<p>build(deps): update pyinstrument requirement from ^4.5 to &gt;=4.5,&lt;6.0 (#214)</p>
+</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/d6186596118cf94d3265afcef032c98024659ec7"><code>d618659</code></a>)</p>
+<ul>
+<li>build(deps): update tomlkit requirement from ^0.12 to &gt;=0.12,&lt;0.14 (#200)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/575c4a98eed24fd1f59083e026454d65e83a41cb"><code>575c4a9</code></a>)</p>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li>
+<p>docs: add api ref using mkdocstrings (#231) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/efef2de5df37b1d70e1ca07b61748bb3f58b6a50"><code>efef2de</code></a>)</p>
+</li>
+<li>
+<p>docs: fix typo in deployer toml configuration (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/489ecacd35726ba699db58f7c8d7471a6456830a"><code>489ecac</code></a>)</p>
+</li>
+</ul>
+<h3 id="enhancements">Enhancements</h3>
+<ul>
+<li>enh: use underscore instead of dash in cron parsing (#234) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/7221d6a37043cb2100db36e9d1935531a56a1bed"><code>7221d6a</code></a>)</li>
+</ul>
+<h2 id="054-2024-10-11">0.5.4 (2024-10-11)</h2>
+<h3 id="build-system_1">Build system</h3>
+<ul>
+<li>
+<p>build(deps): add compatibility with python up to 3.12 (#192) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/76cd116cdee8778b387616bc1b4aa1912d992e55"><code>76cd116</code></a>)</p>
+</li>
+<li>
+<p>build(deps-dev): update ruff requirement from ^0.3 to &gt;=0.3,&lt;0.6 (#196) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/03549f799de52fd2f95e205d2046fd6fd06cac4f"><code>03549f7</code></a>)</p>
+</li>
+<li>
+<p>build(deps-dev): update pytest-cov requirement from ^4.1 to ^5.0 (#168) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/d0305ec9fc2902e61d79939bb75a4ed3a63eaf0a"><code>d0305ec</code></a>)</p>
+</li>
+</ul>
+<h3 id="continuous-integration">Continuous integration</h3>
+<ul>
+<li>ci: update semantic release branches rules (#207) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/48ab5f7f809dd2ede185110c22d5653cdf7f1448"><code>48ab5f7</code></a>)</li>
+</ul>
+<h3 id="documentation_1">Documentation</h3>
+<ul>
+<li>docs: update to skaff style (#210) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/ab5fb2fdd5387f24e9b9024e72bdfa51908a97d6"><code>ab5fb2f</code></a>)</li>
+</ul>
+<h3 id="enhancements_1">Enhancements</h3>
+<ul>
+<li>enh: ask for config file type in init (#206) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/79a66e28e1b6c71990b19e30b34b7ff4504defa5"><code>79a66e2</code></a>)</li>
+</ul>
+<h3 id="fixes">Fixes</h3>
+<ul>
+<li>fix: yaml and init templates (#205) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/0885793b4898eb6fcd8255a291ffef661e030725"><code>0885793</code></a>)</li>
+</ul>
+<h2 id="053-2024-07-04">0.5.3 (2024-07-04)</h2>
+<h3 id="fixes_1">Fixes</h3>
+<ul>
+<li>fix: pydantic update 2.8.0 (#197) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/01273017a31dd378c095f3256c301327f78a1ef6"><code>0127301</code></a>)</li>
+</ul>
+<h2 id="052-2024-06-14">0.5.2 (2024-06-14)</h2>
+<h3 id="enhancements_2">Enhancements</h3>
+<ul>
+<li>enh: add yaml support (#193) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/d00f518d0e7f386c418442878d913f907c0ed46c"><code>d00f518</code></a>)</li>
+</ul>
+<h2 id="051-2024-06-06">0.5.1 (2024-06-06)</h2>
+<h3 id="chores">Chores</h3>
+<ul>
+<li>chore: ak repo explo (#186) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/20e6665275c1b1ae7f8a132582699d5f87a67c23"><code>20e6665</code></a>)</li>
+</ul>
+<h3 id="continuous-integration_1">Continuous integration</h3>
+<ul>
+<li>ci: set python semantic release version (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9be89dbff44972e314b89ced04ee6848133466aa"><code>9be89db</code></a>)</li>
+</ul>
+<h3 id="enhancements_3">Enhancements</h3>
+<ul>
+<li>enh: rename pipeline UI (#187) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/7b1ae60847bde41b76c5e58827a7b1623bd6f0d5"><code>7b1ae60</code></a>)</li>
+</ul>
+<h3 id="unknown">Unknown</h3>
+<ul>
+<li>improvement: add tests init (#182)</li>
+</ul>
+<p>Co-authored-by: Elie Trigano <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#101;&#108;&#105;&#101;&#46;&#116;&#114;&#105;&#103;&#97;&#110;&#111;&#64;&#97;&#114;&#116;&#101;&#102;&#97;&#99;&#116;&#46;&#99;&#111;&#109;">&#101;&#108;&#105;&#101;&#46;&#116;&#114;&#105;&#103;&#97;&#110;&#111;&#64;&#97;&#114;&#116;&#101;&#102;&#97;&#99;&#116;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/89f97019f4ee877eda067756dc44d11eb98a8802"><code>89f9701</code></a>)</p>
+<h2 id="050-2024-04-16">0.5.0 (2024-04-16)</h2>
+<h3 id="documentation_2">Documentation</h3>
+<ul>
+<li>docs: improve readme badges (#180) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/8e1faf87f01a2cf060f05e6702165ad3943cc1f6"><code>8e1faf8</code></a>)</li>
+</ul>
+<h3 id="features">Features</h3>
+<ul>
+<li>feat: improve init (#173)</li>
+</ul>
+<p>Co-authored-by: Elie Trigano <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#101;&#108;&#105;&#101;&#46;&#116;&#114;&#105;&#103;&#97;&#110;&#111;&#64;&#97;&#114;&#116;&#101;&#102;&#97;&#99;&#116;&#46;&#99;&#111;&#109;">&#101;&#108;&#105;&#101;&#46;&#116;&#114;&#105;&#103;&#97;&#110;&#111;&#64;&#97;&#114;&#116;&#101;&#102;&#97;&#99;&#116;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f937dfe95a144907ce66f951e2b5c12619966acb"><code>f937dfe</code></a>)</p>
+<h2 id="044-2024-04-12">0.4.4 (2024-04-12)</h2>
+<h3 id="build-system_2">Build system</h3>
+<ul>
+<li>build(deps): bump vertex-deployer from 0.4.0 to 0.4.3 (#166)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: julesbertrand <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/2cd0fab64e0feae3414c093a553e932b960eb137"><code>2cd0fab</code></a>)</p>
+<ul>
+<li>build(deps): update typer requirement from ^0.9 to ^0.12 (#171)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: julesbertrand <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/71c9da5a177697702dfa76dc9579a288125cc9d7"><code>71c9da5</code></a>)</p>
+<ul>
+<li>build(deps-dev): update ruff requirement from ^0.1 to ^0.3 (#165)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: julesbertrand <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;">&#106;&#117;&#108;&#101;&#115;&#98;&#101;&#114;&#116;&#114;&#97;&#110;&#100;&#49;&#51;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/2a5b637a1be8ad06c9626f78d8cc479ce8dbb81a"><code>2a5b637</code></a>)</p>
+<h3 id="chores_1">Chores</h3>
+<ul>
+<li>
+<p>chore: better exception message when validating deployer settings (#163) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/5c08106706a1b86fefcc10dd250884687424d296"><code>5c08106</code></a>)</p>
+</li>
+<li>
+<p>chore: create .skaff/skaff.yaml (#172) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9876d39da79af3a9fa1666c6f3e2e5a28c7fab3c"><code>9876d39</code></a>)</p>
+</li>
+</ul>
+<h3 id="continuous-integration_2">Continuous integration</h3>
+<ul>
+<li>
+<p>ci: check cli documentation is up to date (#178) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/4c6436c01b2612cbf3e39f621073d537d77f7cf4"><code>4c6436c</code></a>)</p>
+</li>
+<li>
+<p>ci: upload to pypi (#167) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/7f02b4249244abd5c80b82e1654c792647d3a9ee"><code>7f02b42</code></a>)</p>
+</li>
+</ul>
+<h3 id="documentation_3">Documentation</h3>
+<ul>
+<li>docs: update docs for public release (#174) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/13219d0f3b24dabf8dce72f747c2f7b4f815cb3b"><code>13219d0</code></a>)</li>
+</ul>
+<h3 id="fixes_2">Fixes</h3>
+<ul>
+<li>fix: enable caching default behavior (#177) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/34663c15ee41abf4e03e345164bd489194a38ca8"><code>34663c1</code></a>)</li>
+</ul>
+<h2 id="043-2024-03-01">0.4.3 (2024-03-01)</h2>
+<h3 id="continuous-integration_3">Continuous integration</h3>
+<ul>
+<li>ci: fix deploy docs workflow trigger (#156) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/32351dbae8b7cc41393a166371fd9ff77a41a004"><code>32351db</code></a>)</li>
+</ul>
+<h3 id="fixes_3">Fixes</h3>
+<ul>
+<li>
+<p>fix: instanciate list only if not ixisting when paring errors (#161) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/16028a21c48a45794438a5af8fe997cd06b5351c"><code>16028a2</code></a>)</p>
+</li>
+<li>
+<p>fix: inspect value empty for defaults in check cmd (#159) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/5536f676968f88ef206d89f8418ec6d120d43ae8"><code>5536f67</code></a>)</p>
+</li>
+</ul>
+<h2 id="042-2024-02-26">0.4.2 (2024-02-26)</h2>
+<h3 id="continuous-integration_4">Continuous integration</h3>
+<ul>
+<li>
+<p>ci: update changelog template (#154) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/0f4e8c041a405bc63b0c98f10b7bd4a786f5261e"><code>0f4e8c0</code></a>)</p>
+</li>
+<li>
+<p>ci: deploy docs when push on main (#151) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/5a772495f4c0661e697ec78b79658f241561e9b9"><code>5a77249</code></a>)</p>
+</li>
+</ul>
+<h3 id="documentation_4">Documentation</h3>
+<ul>
+<li>docs: update cli reference (#150) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/89257297a52713135505c7e2cd8a00311bd2f306"><code>8925729</code></a>)</li>
+</ul>
+<h3 id="enhancements_4">Enhancements</h3>
+<ul>
+<li>
+<p>enh: deploy multiple pipelines at once (#149) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/64aa9cd2a7bb0121b902e6ebb914497e7f6aaf4b"><code>64aa9cd</code></a>)</p>
+</li>
+<li>
+<p>enh: handle default values (#148) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/032ef87da96496c51967ee9a85d27ff62aefa9a4"><code>032ef87</code></a>)</p>
+</li>
+</ul>
+<h3 id="fixes_4">Fixes</h3>
+<ul>
+<li>fix: init command failing (#147) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/df3fb3a1e96a8ea3be6b0bdbbad9005e18ba30ee"><code>df3fb3a</code></a>)</li>
+</ul>
+<h2 id="041-2024-02-14">0.4.1 (2024-02-14)</h2>
+<h3 id="build-system_3">Build system</h3>
+<ul>
+<li>
+<p>build(deps-dev): update black requirement from ^23.7 to ^24.1 (#138) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/ae8ee8c4fd7217970e35736ff26a75237a166948"><code>ae8ee8c</code></a>)</p>
+</li>
+<li>
+<p>build(deps): bump actions/cache from 3.3.2 to 4.0.0 (#135) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/358459899b2e6bad402eddc18af9c985244a0086"><code>3584598</code></a>)</p>
+</li>
+<li>
+<p>build(deps): bump vertex-deployer from 0.3.2 to 0.4.0 (#131) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/bd2c1b58dee9ac5d8f1087c711c4e0ae04af9606"><code>bd2c1b5</code></a>)</p>
+</li>
+<li>
+<p>build(deps-dev): update pytest requirement from ^7.4 to ^8.0 (#137) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9d5a148ffe21c16bdfa0e45f8d88e86d853f1d93"><code>9d5a148</code></a>)</p>
+</li>
+</ul>
+<h3 id="continuous-integration_5">Continuous integration</h3>
+<ul>
+<li>ci: use ruff for formatting (#144) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/ba554c3e88fdaeceaeb892966886a1ea80b229bd"><code>ba554c3</code></a>)</li>
+</ul>
+<h3 id="fixes_5">Fixes</h3>
+<ul>
+<li>
+<p>fix: print vertex settings and ask for validation (#141) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/668aaad4d5ab72bf026b8ae151508efc36e7795f"><code>668aaad</code></a>)</p>
+</li>
+<li>
+<p>fix: traceback enhancement (#139) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f71f443b0eda4ebacddb9caf8b2f75ff2176f8e5"><code>f71f443</code></a>)</p>
+</li>
+</ul>
+<h2 id="040-2024-01-05">0.4.0 (2024-01-05)</h2>
+<h3 id="build-system_4">Build system</h3>
+<ul>
+<li>build(release): fix release to gcp (#126) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9b4e61932260ceca12460dbb43d65e65ce1a0877"><code>9b4e619</code></a>)</li>
+</ul>
+<h3 id="chores_2">Chores</h3>
+<ul>
+<li>chore: switch to apache 2.0 licence (#128) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/ea3a67dacbce6fafb558896d7d8225dee414472d"><code>ea3a67d</code></a>)</li>
+</ul>
+<h3 id="features_1">Features</h3>
+<ul>
+<li>feat: add init command to configure deployer (#127) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/5ac702220255c5c9460eac474d7afdb822cae425"><code>5ac7022</code></a>)</li>
+</ul>
+<h3 id="performance-improvements">Performance improvements</h3>
+<ul>
+<li>perf: improve cli with context and callbacks (#129) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/d99c007451e70847636161b000477093433cdb08"><code>d99c007</code></a>)</li>
+</ul>
+<h2 id="033-2024-01-03">0.3.3 (2024-01-03)</h2>
+<h3 id="build-system_5">Build system</h3>
+<ul>
+<li>
+<p>build(deps): bump actions/setup-python from 4 to 5 (#118) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/3d48df38892a263a6a6e1e08a2132c0f63e0a6f2"><code>3d48df3</code></a>)</p>
+</li>
+<li>
+<p>build(deps): bump google-github-actions/auth from 1 to 2 (#114)</p>
+</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/d98a54e5e378f29f015849d04d0c160d58b7509d"><code>d98a54e</code></a>)</p>
+<ul>
+<li>build(deps): bump vertex-deployer from 0.3.1 to 0.3.2 (#107) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9af430b01e3baf990d69b2229a84f95251faf8de"><code>9af430b</code></a>)</li>
+</ul>
+<h3 id="chores_3">Chores</h3>
+<ul>
+<li>chore: update artifact registry url (#106) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/226f20085f1c6f19396abb6db79adc3b6e443003"><code>226f200</code></a>)</li>
+</ul>
+<h3 id="continuous-integration_6">Continuous integration</h3>
+<ul>
+<li>
+<p>ci: add pep-8 compliance and bandit ruff checks (#110) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/c87685b324b7c53046885a895cb1a7c128a5e5bf"><code>c87685b</code></a>)</p>
+</li>
+<li>
+<p>ci: upload to gar only if release (#109) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/38a8c7931d656e3bcb406c2d88118851956004fb"><code>38a8c79</code></a>)</p>
+</li>
+<li>
+<p>ci: update workflows names (#104) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/66ffd4d45cfc2e939d174514d133c5277c4f7e7e"><code>66ffd4d</code></a>)</p>
+</li>
+<li>
+<p>ci: add branch protection rules to main (#102) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/97f8a2e8e1e895c2107adb27f505022d2300f186"><code>97f8a2e</code></a>)</p>
+</li>
+</ul>
+<h3 id="documentation_5">Documentation</h3>
+<ul>
+<li>
+<p>docs: clean documentation (#124) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/cdf1db0b970f843f43f2c7046057e3f6579c0809"><code>cdf1db0</code></a>)</p>
+</li>
+<li>
+<p>docs: update catalog info (#111) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/53b9004293c0fe0f6a2f814f667d3a124383a5e7"><code>53b9004</code></a>)</p>
+</li>
+<li>
+<p>docs: fix hyperlinks and toc (#105) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/b229c283a9798f9836b30da2ea89c54e01d61ed3"><code>b229c28</code></a>)</p>
+</li>
+<li>
+<p>docs: update badges and doc index (#101) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/a17ec3c2e89a287c5969fd123facecbf5b78fbb8"><code>a17ec3c</code></a>)</p>
+</li>
+<li>
+<p>docs: update doc build trigger (#100) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9560b70a675ab582bd2e5c8183bf0bf6454fcd2a"><code>9560b70</code></a>)</p>
+</li>
+</ul>
+<h3 id="fixes_6">Fixes</h3>
+<ul>
+<li>
+<p>fix: toml config files cannot have sections (#122) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/013e2baa7b94477824a874bb735be903ab43e436"><code>013e2ba</code></a>)</p>
+</li>
+<li>
+<p>fix: multiple issues when using vertex deployer create (#123) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/b98b14e25b444f92ac4369573adf4a6b66784a37"><code>b98b14e</code></a>)</p>
+</li>
+</ul>
+<h3 id="testing">Testing</h3>
+<ul>
+<li>test: add integration test to ensure config and cli params are iso (#121) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/440b51e1e848cc63bec24515a6dc3ca2985d3852"><code>440b51e</code></a>)</li>
+</ul>
+<h2 id="032-2023-11-08">0.3.2 (2023-11-08)</h2>
+<h3 id="build-system_6">Build system</h3>
+<ul>
+<li>build(deps-dev): update ruff requirement from ^0.0 to ^0.1 (#95)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/cff19af4bd76b96b595f3cc653b4316f336b5988"><code>cff19af</code></a>)</p>
+<ul>
+<li>build(deps): bump actions/cache from 3.2.4 to 3.3.2 (#94)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/5d2dbf93360313d843ef7d1c8685367ef0adbf39"><code>5d2dbf9</code></a>)</p>
+<ul>
+<li>build(deps): bump actions/setup-python from 2 to 4 (#92)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9d25ad64f2442baba1cc1906817d0c66473bac07"><code>9d25ad6</code></a>)</p>
+<ul>
+<li>build(deps): bump actions/checkout from 2 to 4 (#93)</li>
+</ul>
+<p>Signed-off-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#64;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a>
+Co-authored-by: dependabot[bot] <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;">&#52;&#57;&#54;&#57;&#57;&#51;&#51;&#51;&#43;&#100;&#101;&#112;&#101;&#110;&#100;&#97;&#98;&#111;&#116;&#91;&#98;&#111;&#116;&#93;&#64;&#117;&#115;&#101;&#114;&#115;&#46;&#110;&#111;&#114;&#101;&#112;&#108;&#121;&#46;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#109;</a> (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/c97ec85383e0f8a391a24a74890e0d7639a034f0"><code>c97ec85</code></a>)</p>
+<ul>
+<li>build: update dependencies specifiers to be more flexible (#91) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/fddf1a97d5929095d03ae702c4b2c3a95001463e"><code>fddf1a9</code></a>)</li>
+</ul>
+<h3 id="continuous-integration_7">Continuous integration</h3>
+<ul>
+<li>ci: build and deploy docs when a release is published (#90) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/01ce99afed4bc4e791b86106d30ecc76f49bf6ff"><code>01ce99a</code></a>)</li>
+</ul>
+<h3 id="documentation_6">Documentation</h3>
+<ul>
+<li>
+<p>docs: add full example to repo (#72) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/42ccfc9b45dd2ad14a5228f8b4f387d84bec9534"><code>42ccfc9</code></a>)</p>
+</li>
+<li>
+<p>docs: update installation instructions (#98) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/6e51b8931eaa4a60b484759bc9acc8ff108897c7"><code>6e51b89</code></a>)</p>
+</li>
+</ul>
+<h3 id="fixes_7">Fixes</h3>
+<ul>
+<li>fix: warn when cannot associate run to experiment (#99) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/7ba89f3bc0d6b267b26920ecfd5b17a9f2801500"><code>7ba89f3</code></a>)</li>
+</ul>
+<h3 id="performance-improvements_1">Performance improvements</h3>
+<ul>
+<li>perf: rationalize kfp imports (#97) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/19da4298baa1ce549fa72b60fe4fcf4e1dcf1a92"><code>19da429</code></a>)</li>
+</ul>
+<h2 id="031-2023-11-06">0.3.1 (2023-11-06)</h2>
+<h3 id="fixes_8">Fixes</h3>
+<ul>
+<li>
+<p>fix: build doc after release (#89) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/e9b6b361cf07b6cfb5b9d1944b8a26ce9fa72053"><code>e9b6b36</code></a>)</p>
+</li>
+<li>
+<p>fix: run option fails when not uploading to gar (#87) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/6fb7c146683fc053e565fde29054389a9405ad4a"><code>6fb7c14</code></a>)</p>
+</li>
+</ul>
+<h2 id="030-2023-11-06">0.3.0 (2023-11-06)</h2>
+<h3 id="features_2">Features</h3>
+<ul>
+<li>feat: configure with pyproject (#82) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/56d69f418d40d0a30007e6b66af212409e2717fc"><code>56d69f4</code></a>)</li>
+</ul>
+<h2 id="022-2023-11-06">0.2.2 (2023-11-06)</h2>
+<h3 id="continuous-integration_8">Continuous integration</h3>
+<ul>
+<li>ci: update changelog parameters (#81) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/5cd8321b3e7ff2c99751fc81c705739c0c05a653"><code>5cd8321</code></a>)</li>
+</ul>
+<h3 id="documentation_7">Documentation</h3>
+<ul>
+<li>docs: add mkdocs documentation (#79) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/dd665943944335478613f346d30020a9febe03b5"><code>dd66594</code></a>)</li>
+</ul>
+<h3 id="fixes_9">Fixes</h3>
+<ul>
+<li>
+<p>fix: release to artifact registry (#85) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/395b2565c07f47aacd9b23c3d38f19cd10b1380a"><code>395b256</code></a>)</p>
+</li>
+<li>
+<p>fix: rm protected namespaces from pipeline model (#78) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/7ea8975002a31bca705f344ee9d5e5c2ffc542af"><code>7ea8975</code></a>)</p>
+</li>
+<li>
+<p>fix: base unsupported config file error msg on config types enum (#77) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/b3f3b46ae1bb90cf0132ebdb032b9349ccd41cd3"><code>b3f3b46</code></a>)</p>
+</li>
+</ul>
+<h2 id="021-2023-10-13">0.2.1 (2023-10-13)</h2>
+<h3 id="documentation_8">Documentation</h3>
+<ul>
+<li>docs: fix typos in readme (#74) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9cc7ad3b546b5d160468bf5ddda500b030e16dba"><code>9cc7ad3</code></a>)</li>
+</ul>
+<h3 id="fixes_10">Fixes</h3>
+<ul>
+<li>
+<p>fix: simplify check pipelines cmd (#73) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/c63a7fb3ec855c023f96f9d651608afc727f3df5"><code>c63a7fb</code></a>)</p>
+</li>
+<li>
+<p>fix: add pipeline root path check in create command (#75) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/65977a0f8d2708d2447bd4577eca8c8e464be166"><code>65977a0</code></a>)</p>
+</li>
+</ul>
+<h2 id="020-2023-10-06">0.2.0 (2023-10-06)</h2>
+<h3 id="documentation_9">Documentation</h3>
+<ul>
+<li>docs: update documentation (#68) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/e942adddccca85c28941cd986f7afcad986cffd3"><code>e942add</code></a>)</li>
+</ul>
+<h3 id="features_3">Features</h3>
+<ul>
+<li>feat: add support for toml config files (#70) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/b997e69b6838d35d4818d2db9f28ab0927131414"><code>b997e69</code></a>)</li>
+</ul>
+<h3 id="fixes_11">Fixes</h3>
+<ul>
+<li>
+<p>fix: pipelines objects can be named as <code>{pipeline_name}</code> instead of <code>pipeline</code> (#69) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f79d081cb81ea92f01cfd29bf46db3b1bfcb368c"><code>f79d081</code></a>)</p>
+</li>
+<li>
+<p>fix: bad config error at pipeline level in checks (#67) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/d8dab84b22c00ef449e9f6cec707421e0222850e"><code>d8dab84</code></a>)</p>
+</li>
+</ul>
+<h2 id="011-2023-10-05">0.1.1 (2023-10-05)</h2>
+<h3 id="documentation_10">Documentation</h3>
+<ul>
+<li>docs: update installation guidelines (#61) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/e284168af39a914ddf4b2883ccc6031cb322ada2"><code>e284168</code></a>)</li>
+</ul>
+<h3 id="fixes_12">Fixes</h3>
+<ul>
+<li>
+<p>fix: make imports in cli commands to reduce overhead (#63) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9c973f0fe51d6fd5a91fe7df190a363f57fc9944"><code>9c973f0</code></a>)</p>
+</li>
+<li>
+<p>fix: checks temp directory removal (#62) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f005f4418a011ed1dbb70edc3579c0735394c97b"><code>f005f44</code></a>)</p>
+</li>
+</ul>
+<h2 id="010-2023-10-05">0.1.0 (2023-10-05)</h2>
+<h3 id="chores_4">Chores</h3>
+<ul>
+<li>chore: update release version tag format and commit message (#50) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/b6352871a1b4dc8e53402b49bb4380322f3a4075"><code>b635287</code></a>)</li>
+</ul>
+<h3 id="continuous-integration_9">Continuous integration</h3>
+<ul>
+<li>
+<p>ci: upload release to gcs (#56)</p>
+</li>
+<li>
+<p>ci: update version_variables and changelog patterns for release</p>
+</li>
+<li>
+<p>ci: upload release to gcs bucket</p>
+</li>
+<li>
+<p>ci: update ci actions version (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/e7119db2f67c23c279c52db10b494ee903b2a3d9"><code>e7119db</code></a>)</p>
+</li>
+<li>
+<p>ci: update ci trigger policy (#45) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f1171d248ac329ee60f7d4100760f229105ac658"><code>f1171d2</code></a>)</p>
+</li>
+</ul>
+<h3 id="enhancements_5">Enhancements</h3>
+<ul>
+<li>enh: use pydantic settings to get deployment variables from env file instead of os.environ (#24) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/879c14a168510e5388489e55b34399c9efe0eb45"><code>879c14a</code></a>)</li>
+</ul>
+<h3 id="features_4">Features</h3>
+<ul>
+<li>
+<p>feat: add rich display in console (#54)</p>
+</li>
+<li>
+<p>feat: add console status for deploy command and console output for check</p>
+</li>
+<li>
+<p>enh: remove empty columns from rich table</p>
+</li>
+<li>
+<p>fix: rm time.sleep from code</p>
+</li>
+<li>
+<p>enh: use dataclass as row for pipeline checks and group errors by config path</p>
+</li>
+<li>
+<p>fix: make rich mandatory as dependency</p>
+</li>
+<li>
+<p>fix: typing error in python 3.8</p>
+</li>
+<li>
+<p>enh: rename config_path as config_file (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/675340220076aa19c0bc63539193403512ec721f"><code>6753402</code></a>)</p>
+</li>
+</ul>
+<h3 id="fixes_13">Fixes</h3>
+<ul>
+<li>
+<p>fix: scheduling tag retrieval (#59) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/11347baac2a40c36dafc607e3536a9c6b666f73d"><code>11347ba</code></a>)</p>
+</li>
+<li>
+<p>fix: misc code improvements (#58)</p>
+</li>
+<li>
+<p>enh: add version callback for app</p>
+</li>
+<li>
+<p>test: add integration test for root command in CI</p>
+</li>
+<li>
+<p>doc: update README with installation from gcs guidelines</p>
+</li>
+<li>
+<p>doc: fix typos in readme</p>
+</li>
+<li>
+<p>enh: add possibility to use either --config-filepath or --config-name</p>
+</li>
+<li>
+<p>fix: log the right experiment name</p>
+</li>
+<li>
+<p>fix: check that cron arg is not empty string</p>
+</li>
+<li>
+<p>doc: add doc about cron job format in cli</p>
+</li>
+<li>
+<p>feat: add rich display for pipeline list command</p>
+</li>
+<li>
+<p>chore: rename version_callback to display_version_and_exit</p>
+</li>
+<li>
+<p>fix: typer bad parameter raised immediatelty after cli call in deploy command (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/0226088da0177e1b162a3ed8d49c8631e0e0647e"><code>0226088</code></a>)</p>
+</li>
+<li>
+<p>fix: misc typing and logging typos (#52)</p>
+</li>
+<li>
+<p>fix: logging disable in checks</p>
+</li>
+<li>
+<p>fix: VertexPipelineDeployer type hints and paths construction (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/c80aeb1795b022dcd9712cd62d62dc225d4eed29"><code>c80aeb1</code></a>)</p>
+</li>
+<li>
+<p>fix: rm unused files (#5) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/e220dc88d243e5c484e34b19edb10f639ae401ba"><code>e220dc8</code></a>)</p>
+</li>
+<li>
+<p>fix: readme typos (#4) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/3ebcf4af0ddd318160c677b4ce38852796aa61b0"><code>3ebcf4a</code></a>)</p>
+</li>
+</ul>
+<h3 id="unknown_1">Unknown</h3>
+<ul>
+<li>0.0.1</li>
+</ul>
+<p>Automatically generated by python-semantic-release (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/0809df7156fbbd5b5497021fe0bafb283b5cba64"><code>0809df7</code></a>)</p>
+<ul>
+<li>
+<p>Release v0.1.0 (#48) (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/a3c18df36af02d64f64a493abbdfca18d5413def"><code>a3c18df</code></a>)</p>
+</li>
+<li>
+<p>Ci: Update Continuous Deployment (CD) Trigger Policy and Documentation (#47)</p>
+</li>
+<li>
+<p>ci: update cd trigger policy</p>
+</li>
+<li>
+<p>ci: update cd doc</p>
+</li>
+<li>
+<p>ci: test reusable ci</p>
+</li>
+<li>
+<p>ci: fix reusable ci ref</p>
+</li>
+<li>
+<p>ci: fix reusable ci</p>
+</li>
+<li>
+<p>ci: add need for CI to be completed</p>
+</li>
+<li>
+<p>ci: fix cd on main to be triggered only when pushing to main</p>
+</li>
+<li>
+<p>ci: update doc for cd (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/a08b581f112e0a62b824e2a58248dfcdf313c7ac"><code>a08b581</code></a>)</p>
+</li>
+<li>
+<p>Chore: prepare for release (#38)</p>
+</li>
+<li>
+<p>chore: add release drafter</p>
+</li>
+<li>
+<p>chore: add release drafter</p>
+</li>
+<li>
+<p>chore: add <strong>init</strong> with <strong>version</strong></p>
+</li>
+<li>
+<p>ci: update release action</p>
+</li>
+<li>
+<p>ci: update release action linting</p>
+</li>
+<li>
+<p>ci: add semantic release configuration</p>
+</li>
+<li>
+<p>doc: update CONTRIBUTING.md for release management (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f59b79583eb873422e8a754a581d33e009fa0fd3"><code>f59b795</code></a>)</p>
+</li>
+<li>
+<p>Feat: make it python 38 39 compatible (#41)</p>
+</li>
+<li>
+<p>feat: typing back to 3.8</p>
+</li>
+<li>
+<p>doc: update readme with new python versions</p>
+</li>
+<li>
+<p>fix: update ci with new python versions (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/4e50c99481e819bf17fdb6c18fd79006db6732f7"><code>4e50c99</code></a>)</p>
+</li>
+<li>
+<p>Feat: add cli checks to ci (#40)</p>
+</li>
+<li>
+<p>feat: add cli integration tets to ci</p>
+</li>
+<li>
+<p>fix: use poetry to run commands in ci</p>
+</li>
+<li>
+<p>fix: fix paths before launching cli commands (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9500a036d63721e902a7ef34a300aef73e6e525c"><code>9500a03</code></a>)</p>
+</li>
+<li>
+<p>Feat/add create and list commands (#39)</p>
+</li>
+<li>
+<p>feat: add comand list to list pipelines</p>
+</li>
+<li>
+<p>feat: add command create to cli and folder structure reorg</p>
+</li>
+<li>
+<p>enh: renamed pipelines_deployer.py -&gt; pipeline_deployer.py</p>
+</li>
+<li>
+<p>test: update tests</p>
+</li>
+<li>
+<p>doc: update readme</p>
+</li>
+<li>
+<p>enh: factorize get config paths (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9b973bf7c5d5ff9d87b58bff14932dce38f25a43"><code>9b973bf</code></a>)</p>
+</li>
+<li>
+<p>Test: add unit tests (#31)</p>
+</li>
+<li>
+<p>test: add tests for make_enum_from_python_package</p>
+</li>
+<li>
+<p>test: make them work</p>
+</li>
+<li>
+<p>test: add pytest cov</p>
+</li>
+<li>
+<p>fix: make file command name to run tests</p>
+</li>
+<li>
+<p>tests: add tests create_model_from_pipeline (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/d01d60c89d2e136045fa64688d05a2c24085d159"><code>d01d60c</code></a>)</p>
+</li>
+<li>
+<p>Feat: pass artifacts as inputs (#28)</p>
+</li>
+<li>
+<p>feat: add argument input_artifacts_filepath to cli</p>
+</li>
+<li>
+<p>feat: add possibility to have python or json config files</p>
+</li>
+<li>
+<p>fix: update check command to support python files as config</p>
+</li>
+<li>
+<p>feat: allow to specify config path to check only one config file</p>
+</li>
+<li>
+<p>fix: change artifact type in pipeline dynamic model to allow valiation</p>
+</li>
+<li>
+<p>test: add tests to convert_artifact_type_to_str</p>
+</li>
+<li>
+<p>doc: update readme</p>
+</li>
+<li>
+<p>fix: change config file path option name</p>
+</li>
+<li>
+<p>enh: add and remove temp dir when checking pipelines (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/4d163bd5f68a27bbbc1f98c361bdf61c6a8083d1"><code>4d163bd</code></a>)</p>
+</li>
+<li>
+<p>Fix/deploy command (#36)</p>
+</li>
+<li>
+<p>fix: iam rights for service account</p>
+</li>
+<li>
+<p>fix: multiple formatting issues when uploading pipeline template</p>
+</li>
+<li>
+<p>fix: typo in readme instruction for gcs bucket iam binding (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/ead427fb6628358393e658789a48a3078a4606b2"><code>ead427f</code></a>)</p>
+</li>
+<li>
+<p>Feat/misc code improvements (#32)</p>
+</li>
+<li>
+<p>enh: use urljoin to make urls</p>
+</li>
+<li>
+<p>enh: add TagNotFoundError</p>
+</li>
+<li>
+<p>fix: vertex settings loading and errors</p>
+</li>
+<li>
+<p>enh: use decortor to check garhost in deployer</p>
+</li>
+<li>
+<p>enh: check experiment anme and check gar host</p>
+</li>
+<li>
+<p>feat: add missing gar host error</p>
+</li>
+<li>
+<p>feat: add message in no configs were checked for pipeline</p>
+</li>
+<li>
+<p>fix: path for pipeline should be relative not absolute</p>
+</li>
+<li>
+<p>fix: temp fix for vertex artifacts validation; arbitrary types allowed</p>
+</li>
+<li>
+<p>fix: upload does not work if lpp is not . (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/94c8061241709be01b3bb54f672e5a3ad383babf"><code>94c8061</code></a>)</p>
+</li>
+<li>
+<p>Feat: add command to check pipelines (#19)</p>
+</li>
+<li>
+<p>feat: add comment to check pipelines (import, compile, config files)</p>
+</li>
+<li>
+<p>enh: creation of pipeline model only once</p>
+</li>
+<li>
+<p>feat: use pydantic to validate configs and get all validation errors in one exception</p>
+</li>
+<li>
+<p>feat: add error if no pipelines found in check and log of pipelines / config checked</p>
+</li>
+<li>
+<p>feat: add specific validator for import pipeline computed field (works as a property)</p>
+</li>
+<li>
+<p>doc: update docstring for  command</p>
+</li>
+<li>
+<p>doc: update readme and add --all flag</p>
+</li>
+<li>
+<p>doc: update README table of contents links</p>
+</li>
+<li>
+<p>feat: add context manager to disable loguru logger temporarily (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/9f41c8e1f5d96b7acbb8355da85e85c7a7c5ef51"><code>9f41c8e</code></a>)</p>
+</li>
+<li>
+<p>Feat: add pr_agent (#29)</p>
+</li>
+<li>
+<p>feat: add pr_agent</p>
+</li>
+<li>
+<p>feat: update pr agent action name (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/92e1acb63e0a2eabc126e0f9d23f6b4e54a29da9"><code>92e1acb</code></a>)</p>
+</li>
+<li>
+<p>Fix: multiple issues raised in alpha testing (#27)</p>
+</li>
+<li>
+<p>fix: typos in code to make upload and run work</p>
+</li>
+<li>
+<p>doc: update readme</p>
+</li>
+<li>
+<p>doc: fix ruff and license badge</p>
+</li>
+<li>
+<p>doc: add why this tool in readme</p>
+</li>
+<li>
+<p>doc: add table of content</p>
+</li>
+<li>
+<p>enh: use --parameter-values-filepath instead of --config-name for clarity for user</p>
+</li>
+<li>
+<p>enh: put the vertex repository in example/</p>
+</li>
+<li>
+<p>doc: fix typo</p>
+</li>
+<li>
+<p>doc: update repo structure</p>
+</li>
+<li>
+<p>doc: update CONTRIBUTE.md (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/05deb15d9ed8e881d771f1a607bcfa7ceccdbaf5"><code>05deb15</code></a>)</p>
+</li>
+<li>
+<p>Feat/switch logging to loguru (#20)</p>
+</li>
+<li>
+<p>enh: use loguru instead of python logging</p>
+</li>
+<li>
+<p>feat: add typer callback to set logging level (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/6c65c09ba1fa89bb0af99010744e79dbb161b485"><code>6c65c09</code></a>)</p>
+</li>
+<li>
+<p>Fix/inconsistencies in pipeline names (#18)</p>
+</li>
+<li>
+<p>fix: use pipelines names with underscore instead of hyphen</p>
+</li>
+<li>
+<p>fix: rename module different from package</p>
+</li>
+<li>
+<p>doc: update readme accordingly (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/7194c70b59e42ec96de06a87c5e28098991cc239"><code>7194c70</code></a>)</p>
+</li>
+<li>
+<p>Feat: switch cli to typer (#8)</p>
+</li>
+<li>
+<p>feat: switch cli to typer</p>
+</li>
+<li>
+<p>fix: add options short names + use enum value (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/267d1695891d4de10d4d27fff01560643b64e294"><code>267d169</code></a>)</p>
+</li>
+<li>
+<p>Feat: add constants file (#7)</p>
+</li>
+<li>
+<p>feat: add constants file</p>
+</li>
+<li>
+<p>fix: package name in pyproject.toml</p>
+</li>
+<li>
+<p>fix: pr template contributing link (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/54f59f7bd42c15ae1313753a78d97b06cdacf6c3"><code>54f59f7</code></a>)</p>
+</li>
+<li>
+<p>Chore: add issue and pr templates (#6)</p>
+</li>
+<li>
+<p>chore: add pr template</p>
+</li>
+<li>
+<p>chore: add issue templates</p>
+</li>
+<li>
+<p>chore: add CONTRIBUTING.md (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/b736c3ac93c715e3e57f55fae7a6d36429ddd5cd"><code>b736c3a</code></a>)</p>
+</li>
+<li>
+<p>Feat: vertex deployer (#3)</p>
+</li>
+<li>
+<p>feat/add vertex deployer and cli</p>
+</li>
+<li>
+<p>feat: add entrypoint for deployer</p>
+</li>
+<li>
+<p>fix: paths to pipeline folder and root path</p>
+</li>
+<li>
+<p>feat: add vertex foledr with dummy pipelines and example.env</p>
+</li>
+<li>
+<p>doc: update doc with how-to section (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f00c2314ae9b54b7226f58968fb9cf6d4f391707"><code>f00c231</code></a>)</p>
+</li>
+<li>
+<p>Chore/update readme and add gitignore (#2)</p>
+</li>
+<li>
+<p>doc: update readme</p>
+</li>
+<li>
+<p>chore: add .gitignore (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/30708733d249770268a72ef3ba17f365a6121ad1"><code>3070873</code></a>)</p>
+</li>
+<li>
+<p>Chore: setup repo (#1)</p>
+</li>
+<li>
+<p>chore: setup repo</p>
+</li>
+<li>
+<p>fix: deployer is not a package error</p>
+</li>
+<li>
+<p>fix: rm pytest from prepush hooks</p>
+</li>
+<li>
+<p>chore: add to do list on the readme</p>
+</li>
+<li>
+<p>fix: add dummy test for the ci to pass (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/f154389359d10d143537fa0337bbcbb63727a480"><code>f154389</code></a>)</p>
+</li>
+<li>
+<p>Initial commit (<a href="https://github.com/artefactory/vertex-pipelines-deployer/commit/cab9963c573a4f56fba249722124c926deebdcd4"><code>cab9963</code></a>)</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  <form class="md-feedback" name="feedback" hidden>
+    <fieldset>
+      <legend class="md-feedback__title">
+        Was this page helpful?
+      </legend>
+      <div class="md-feedback__inner">
+        <div class="md-feedback__list">
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page was helpful" data-md-value="1@">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 9v12H1V9zm4 12a2 2 0 0 1-2-2V9c0-.55.22-1.05.59-1.41L14.17 1l1.06 1.06c.27.27.44.64.44 1.05l-.03.32L14.69 8H21a2 2 0 0 1 2 2v2c0 .26-.05.5-.14.73l-3.02 7.05C19.54 20.5 18.83 21 18 21zm0-2h9.03L21 12v-2h-8.79l1.13-5.32L9 9.03z"/></svg>
+            </button>
+          
+            <button class="md-feedback__icon md-icon" type="submit" title="This page could be improved" data-md-value="0">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 15V3h4v12zM15 3a2 2 0 0 1 2 2v10c0 .55-.22 1.05-.59 1.41L9.83 23l-1.06-1.06c-.27-.27-.44-.64-.44-1.06l.03-.31.95-4.57H3a2 2 0 0 1-2-2v-2c0-.26.05-.5.14-.73l3.02-7.05C4.46 3.5 5.17 3 6 3zm0 2H5.97L3 12v2h8.78l-1.13 5.32L15 14.97z"/></svg>
+            </button>
+          
+        </div>
+        <div class="md-feedback__note">
+          
+            <div data-md-value="1@" hidden>
+              
+              
+                
+              
+              Thanks for your feedback!
+            </div>
+          
+            <div data-md-value="0" hidden>
+              
+              
+                
+              
+              Thanks for your feedback! Help us improve this page by <a href="https://github.com/artefactory-skaff/skaff-repo-template/issues/new/?title=[Feedback]+Changelog+-+/changelog/" target="_blank" rel="noopener">opening an issue</a>.
+            </div>
+          
+        </div>
+      </div>
+    </fieldset>
+  </form>
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["search.suggest", "search.highlight", "content.code.annotate", "content.code.copy", "content.code.select", "navigation.indexes", "navigation.path", "navigation.instant", "navigation.instant.preview", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.60a45f97.min.js"></script>
+      
+    
+  </body>
+</html>
