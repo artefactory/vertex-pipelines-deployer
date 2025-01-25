@@ -50,6 +50,7 @@ codespell = "^2.2"
 mkdocs = "^1.5"
 mkdocs-material = {extras = ["pygments"], version = "^9.5.17"}
 mkdocstrings = "^0.26"
+mkdocstrings-python = {markers = "python_version >= \"3.9\"", version = "^1.13.0"}
 
 [tool.poetry.extras]
 profiling = ["pyinstrument"]
