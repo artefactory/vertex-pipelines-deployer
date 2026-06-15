@@ -12,12 +12,6 @@ repos:
     - id: check-added-large-files
   - repo: local
     hooks:
-    - id: ruff-isort
-      name: ruff isort
-      entry: uv run ruff check --fix --select I --config pyproject.toml --show-fixes
-      types: [python]
-      language: system
-      stages: [commit, push]
     - id: ruff-format
       name: ruff format
       entry: uv run ruff format --config pyproject.toml
@@ -26,7 +20,7 @@ repos:
       stages: [commit, push]
     - id: ruff-check
       name: ruff check
-      entry: uv run ruff check --config pyproject.toml --output-format concise
+      entry: uv run ruff check --fix --config pyproject.toml --output-format concise
       types: [python]
       language: system
       stages: [commit, push]
