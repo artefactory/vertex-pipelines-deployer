@@ -37,6 +37,7 @@ Homepage = "https://github.com/artefactory/vertex-pipelines-deployer"
 Documentation = "https://artefactory.github.io/vertex-pipelines-deployer/"
 Repository = "https://github.com/artefactory/vertex-pipelines-deployer"
 
+
 [dependency-groups]
 dev = [
     "pytest>=8.0,<9.0",
