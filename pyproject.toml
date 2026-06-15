@@ -41,7 +41,7 @@ numpy = [  # numpy is not a direct dependency but is required by some of the gen
 pytest = "^8.0"
 pre-commit = "^3.3"
 ipykernel = "^6.9"
-nbstripout = "^0.7"
+nbstripout = ">=0.7,<0.9"
 ruff = ">=0.6"
 pytest-cov = "^5.0"
 codespell = "^2.2"
