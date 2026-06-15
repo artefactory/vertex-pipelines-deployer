@@ -1,0 +1,73 @@
+/* https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#custom-colors */
+:root {
+    --md-primary-fg-color: #142146;
+    --md-accent-fg-color: #fc2c7f;
+}
+
+  /* Revert hue value to that of pre mkdocs-material v9.4.0 */
+  [data-md-color-scheme="slate"] {
+    /* Hue taken from hsl of #142146, used for bg on website*/
+    --md-hue: 227;
+    /* Increase the lightness by 5%, opacity by 0.2 */
+    --md-default-fg-color: hsla(var(--md-hue),15%,95%,1.0);
+    --md-default-fg-color--light: hsla(var(--md-hue),15%,95%,0.76);
+    --md-default-fg-color--lighter: hsla(var(--md-hue),15%,95%,0.52);
+    --md-default-fg-color--lightest: hsla(var(--md-hue),15%,95%,0.32);
+    /* Change the saturation and lightness to match #142146 */
+    --md-default-bg-color: hsla(var(--md-hue),87%,6%,1);
+    --md-default-bg-color--light: hsla(var(--md-hue),87%,6%,0.54);
+    --md-default-bg-color--lighter: hsla(var(--md-hue),87%,6%,0.26);
+    --md-default-bg-color--lightest: hsla(var(--md-hue),87%,6%,0.07);
+    /* Increase the opacity of code to 1.0 */
+    --md-code-fg-color: hsla(var(--md-hue),18%,86%,1.0);
+    --md-code-hl-comment-color:          #666666;
+    --md-typeset-a-color: #65cccc;
+  }
+
+  [data-md-color-scheme="default"] {
+    --md-hue: 227;
+    --md-default-bg-color: hsla(var(--md-hue),100%,96%,1);
+    --md-typeset-a-color: #65cccc;
+
+    --md-code-fg-color: hsla(var(--md-hue),18%,86%,1.0);
+    --md-code-bg-color: #262a32;
+    --md-code-hl-name-color:             var(--md-code-fg-color);
+    --md-code-hl-operator-color:         var(--md-code-fg-color);
+    --md-code-hl-punctuation-color:      var(--md-code-fg-color);
+    --md-code-hl-comment-color:          #666666;
+    --md-code-hl-variable-color:         var(--md-code-fg-color);
+  }
+
+  .custom-source-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  @media screen and (min-width: 60em) {
+      .md-header__source {
+          box-sizing: content-box;
+          max-width: 11.7rem;
+          width: 11.7rem;
+      }
+  }
+
+  .custom-login-button {
+    font-size: 0.8rem;
+    font-weight: 700;
+    float: right;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    transition: opacity .25s;
+  }
+
+  .custom-login-button:hover {
+    opacity: 0.7
+  }
+
+  /* Hide all ToC entries for parameters. */
+  li.md-nav__item>a[href*="("] {
+    display: none;
+  }
