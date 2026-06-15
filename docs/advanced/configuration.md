@@ -205,6 +205,6 @@ No default value for `--env-file` is provided, so you must explicitly pass it â€
 !!! tip "Multiple environments"
     Use separate env files for each environment: `dev.env`, `stg.env`, `prd.env`. Then deploy with:
     ```bash
-    vertex-deployer deploy my_pipeline --env-file dev.env --run
-    vertex-deployer deploy my_pipeline --env-file prd.env --schedule --cron "0_9_*_*_1-5"
+    vertex-deployer deploy my_pipeline --env-file dev.env --run --config-name config_dev.json
+    vertex-deployer deploy my_pipeline --env-file prd.env --schedule --cron "0_9_*_*_1-5" --config-name config_prd.json
     ```

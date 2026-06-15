@@ -13,6 +13,7 @@ vertex-deployer deploy my_pipeline \
     --schedule \
     --cron "0_9_*_*_1-5" \
     --env-file .env \
+    --config-name config.json \
     --tags latest
 ```
 
@@ -39,6 +40,7 @@ vertex-deployer deploy my_pipeline \
     --schedule \
     --cron "0_9_*_*_*" \
     --scheduler-timezone "US/Eastern" \
+    --config-name config.json \
     --env-file .env
 ```
 
@@ -60,6 +62,7 @@ vertex-deployer deploy my_pipeline \
     --schedule \
     --cron "0_9_*_*_*" \
     --delete-last-schedule \
+    --config-name config.json \
     --env-file .env
 ```
 
@@ -79,6 +82,7 @@ Scheduling requires:
 You can also schedule pipelines using the Python API:
 
 ```python
+from pathlib import Path
 from deployer.pipeline_deployer import VertexPipelineDeployer
 
 deployer = VertexPipelineDeployer(
@@ -90,6 +94,7 @@ deployer = VertexPipelineDeployer(
     service_account="my-sa@my-project.iam.gserviceaccount.com",
     gar_location="europe-west1",
     gar_repo_id="my-pipelines-repo",
+    local_package_path=Path("."),
 )
 
 deployer.compile().upload_to_registry(tags=["latest"]).schedule(

@@ -5,6 +5,7 @@ While `vertex-deployer` is primarily a CLI tool, you can also use the `VertexPip
 ## Basic example
 
 ```python
+from pathlib import Path
 from deployer.pipeline_deployer import VertexPipelineDeployer
 from my_project.vertex.pipelines.my_pipeline import my_pipeline
 
@@ -17,6 +18,7 @@ deployer = VertexPipelineDeployer(
     service_account="my-sa@my-gcp-project.iam.gserviceaccount.com",
     gar_location="europe-west1",
     gar_repo_id="my-pipelines-repo",
+    local_package_path=Path("."),
 )
 
 # Compile, upload, and run in one call
@@ -97,6 +99,8 @@ Creates a recurring schedule for the pipeline on Vertex AI. See [Scheduling Pipe
 If you don't need Artifact Registry, omit `gar_location` and `gar_repo_id`. The deployer will use the locally compiled YAML file instead:
 
 ```python
+from pathlib import Path
+
 deployer = VertexPipelineDeployer(
     pipeline_name="my_pipeline",
     pipeline_func=my_pipeline,
@@ -104,6 +108,7 @@ deployer = VertexPipelineDeployer(
     region="europe-west1",
     staging_bucket_name="my-staging-bucket",
     service_account="my-sa@my-gcp-project.iam.gserviceaccount.com",
+    local_package_path=Path("."),
 )
 
 deployer.compile().run(parameter_values={"learning_rate": 0.01})
