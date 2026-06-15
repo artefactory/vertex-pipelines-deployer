@@ -19,29 +19,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install poetry
-        run: make download-poetry
-
-      - name: Set up pip cache
-        uses: actions/cache@v4.1.1
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
-
-      - name: Set Poetry Path
-        run: |
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
-
+        run: uv python install ${{ matrix.python-version }}
 
       - name: Install requirements
-        run: |
-          poetry run pip install --upgrade pip
-          poetry install
+        run: uv sync
 
       - name: Run Pre commit hooks
         run: make format-code
@@ -58,58 +43,43 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install poetry
-        run: make download-poetry
-
-      - name: Set up pip cache
-        uses: actions/cache@v4.1.1
-        with:
-          path: ~/.cache/pypoetry/virtualenvs
-          key: venv-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}-${{ hashFiles('poetry.lock') }}
-
-      - name: Set Poetry Path
-        run: |
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
-
+        run: uv python install ${{ matrix.python-version }}
 
       - name: Install requirements
-        run: |
-          poetry run pip install --upgrade pip
-          poetry install
+        run: uv sync
 
       - name: Test root command
         run: |
           cd example
-          poetry run -C .. vertex-deployer --version
+          uv run -C .. vertex-deployer --version
 
       - name: Test config command
         run: |
           cd example
-          poetry run -C .. vertex-deployer config --all
+          uv run -C .. vertex-deployer config --all
 
       - name: Test list command
         run: |
           cd example
-          poetry run -C .. vertex-deployer list --with-configs
+          uv run -C .. vertex-deployer list --with-configs
 
       - name: Test check command
         run: |
           cd example
-          poetry run -C .. vertex-deployer check --all
+          uv run -C .. vertex-deployer check --all
 
       - name: Test deploy command
       # Cannot check more than compile action here, need GCP environment for upload, run, schedule
         run: |
           cd example
-          poetry run -C .. vertex-deployer -log DEBUG deploy dummy_pipeline broken_pipeline --compile --env-file example.env --skip-validation
+          uv run -C .. vertex-deployer -log DEBUG deploy dummy_pipeline broken_pipeline --compile --env-file example.env --skip-validation
 
       - name: Test create command
         run: |
           cd example
-          poetry run -C .. vertex-deployer create test_pipeline --config-type py
+          uv run -C .. vertex-deployer create test_pipeline --config-type py
           [ -e example/vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0

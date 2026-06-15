@@ -10,54 +10,46 @@ PYTHON_VERSION = 3.10
 #################################################################################
 
 
-.PHONY: download-poetry
-## Download poetry
-download-poetry:
-	curl -sSL https://install.python-poetry.org | python3 - --version 1.8.4
-
-
 .PHONY: install
-## Install Python Dependencies using poetry
+## Install Python Dependencies using uv
 install:
-	@poetry env use $(PYTHON_VERSION)
-	@poetry lock -n
-	@poetry install -n
-	@poetry run pre-commit install -t pre-commit -t pre-push
+	@uv sync
+	@uv run pre-commit install -t pre-commit -t pre-push
 
 
 .PHONY: install-requirements
 ## Install Python Dependencies
 install-requirements:
-	@poetry install -n
+	@uv sync --no-group dev --no-group docs
 
 
 .PHONY: install-dev-requirements
 ## Install Python Dependencies for development
 install-dev-requirements:
-	@poetry install -n --with dev
+	@uv sync --group dev
 
 
 .PHONY: update-requirements
-## Update Python Dependencies (requirements.txt and requirements-dev.txt)
+## Update Python Dependencies (uv.lock)
 update-requirements:
-	@poetry lock -n
+	@uv lock
 
 
 .PHONY: format-code
 ## Format/lint all-files using pre-commit hooks (black, flake8, isort, ...)
 format-code:
-	@poetry run pre-commit run -a --hook-stage pre-push
+	@uv run pre-commit run -a --hook-stage pre-push
 
 
 .PHONY: run-unit-tests
 ## Run unit tests
 run-unit-tests:
-	@poetry run pytest tests/unit_tests --cov=deployer --cov-report=term-missing -s -vv -W ignore:::pkg_resources
+	@uv run pytest tests/unit_tests --cov=deployer --cov-report=term-missing -s -vv -W ignore:::pkg_resources
 
 .PHONY: run-integration-tests
 ## Run integration tests
 run-integration-tests:
-	@poetry run pytest tests/integration_tests -s -vv -W ignore:::pkg_resources
+	@uv run pytest tests/integration_tests -s -vv -W ignore:::pkg_resources
 
 
 .PHONY: run-tests
@@ -68,8 +60,8 @@ run-tests: run-unit-tests run-integration-tests
 .PHONY: profile-cli
 ## Profile CLI using pyinstrument (https://pyinstrument.readthedocs.io/en/latest/index.html)
 profile-cli:
-	@echo "Check that you have pyinstrument installed: poetry install -E profiling"
-	@poetry run pyinstrument -r html -o pyinstrument.html --from-path vertex-deployer --version
+	@echo "Check that you have pyinstrument installed: uv sync --extra profiling"
+	@uv run pyinstrument -r html -o pyinstrument.html --from-path vertex-deployer --version
 	@open pyinstrument.html
 
 
