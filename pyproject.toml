@@ -1,6 +1,6 @@
 [project]
 name = "vertex-deployer"
-version = "0.5.5"
+version = "0.6.1"
 description = "Check, compile, upload, run, and schedule Kubeflow Pipelines on GCP Vertex AI in a standardized manner."
 authors = [
     {name = "artefactory", email = "jules.bertrand@artefact.com"},
@@ -109,6 +109,7 @@ known-first-party = ["vertex", "tests", "deployer"]
 "tests/*" = ["D", "S101"]
 
 [tool.semantic_release]
+major_on_zero = false
 version_variables = ["deployer/__init__.py:__version__"]
 version_toml = ["pyproject.toml:project.version"]
 upload_to_pypi = false
