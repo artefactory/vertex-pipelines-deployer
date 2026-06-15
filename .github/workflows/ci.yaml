@@ -55,31 +55,31 @@ jobs:
       - name: Test root command
         run: |
           cd example
-          uv run --directory .. vertex-deployer --version
+          uv run --project .. vertex-deployer --version
 
       - name: Test config command
         run: |
           cd example
-          uv run --directory .. vertex-deployer config --all
+          uv run --project .. vertex-deployer config --all
 
       - name: Test list command
         run: |
           cd example
-          uv run --directory .. vertex-deployer list --with-configs
+          uv run --project .. vertex-deployer list --with-configs
 
       - name: Test check command
         run: |
           cd example
-          uv run --directory .. vertex-deployer check --all
+          uv run --project .. vertex-deployer check --all
 
       - name: Test deploy command
       # Cannot check more than compile action here, need GCP environment for upload, run, schedule
         run: |
           cd example
-          uv run --directory .. vertex-deployer -log DEBUG deploy dummy_pipeline broken_pipeline --compile --env-file example.env --skip-validation
+          uv run --project .. vertex-deployer -log DEBUG deploy dummy_pipeline broken_pipeline --compile --env-file example.env --skip-validation
 
       - name: Test create command
         run: |
           cd example
-          uv run --directory .. vertex-deployer create test_pipeline --config-type py
+          uv run --project .. vertex-deployer create test_pipeline --config-type py
           [ -e example/vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0
