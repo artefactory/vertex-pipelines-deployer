@@ -2,15 +2,16 @@ from pathlib import Path
 
 import jinja2
 from jinja2 import Environment, FileSystemLoader, meta
+from rich.prompt import Prompt
 from rich.tree import Tree
 
 from deployer.__init__ import __version__ as deployer_version
 from deployer.constants import (
-    CI_CD_OUTPUT_PATHS,
     INSTRUCTIONS,
     TEMPLATES_CI_CD,
     TEMPLATES_DEFAULT_STRUCTURE,
     TEMPLATES_PATH,
+    CICDProvider,
 )
 from deployer.settings import (
     DeployerSettings,
@@ -176,17 +177,37 @@ def generate_tree(vertex_folder_path: Path):
     return root
 
 
-def create_ci_cd_template(provider: str, vertex_folder_path: Path):
+def _create_ci_cd_template(provider: str, mapping_variables: dict):
     """Create a CI/CD template file for the given provider."""
-    template_path = TEMPLATES_CI_CD[provider]
-    output_path = CI_CD_OUTPUT_PATHS[provider]
+    ci_cd_config = TEMPLATES_CI_CD[provider]
+    template_path = ci_cd_config["template"]
+    output_path = ci_cd_config["output"]
+
+    env = Environment(loader=FileSystemLoader(str(TEMPLATES_PATH)), autoescape=True)
+    template_name = str(template_path.relative_to(TEMPLATES_PATH))
+    template_source = env.loader.get_source(env, template_name)[0]
+    parsed_content = env.parse(template_source)
+    variables = meta.find_undeclared_variables(parsed_content)
+    template_variables = {var: mapping_variables[var] for var in variables}
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    _create_file_from_template(
-        output_path,
-        template_path,
-        vertex_folder_path=vertex_folder_path,
-    )
+    _create_file_from_template(output_path, template_path, **template_variables)
     console.print(f" CI/CD template created at '{output_path}' :sparkles:", style="bold blue")
+
+
+def prompt_ci_cd(deployer_settings: DeployerSettings):
+    """Prompt the user to select a CI/CD platform and create the template."""
+    ci_cd_choices = set(CICDProvider.__members__.values())
+    ci_cd_provider = Prompt.ask(
+        "Which CI/CD platform do you want to use?",
+        choices=ci_cd_choices,
+        default=CICDProvider.skip,
+    )
+    if ci_cd_provider != CICDProvider.skip:
+        mapping_variables = {
+            "vertex_folder_path": deployer_settings.vertex_folder_path,
+        }
+        _create_ci_cd_template(ci_cd_provider, mapping_variables)
 
 
 def show_commands(deployer_settings: DeployerSettings):

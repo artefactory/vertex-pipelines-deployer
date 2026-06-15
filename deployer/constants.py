@@ -33,6 +33,17 @@ TEMPLATES_DEFAULT_STRUCTURE = {
     "build_base_image": Path(TEMPLATES_PATH / "deployment/build_base_image.sh.jinja"),
 }
 
+TEMPLATES_CI_CD = {
+    "github": {
+        "template": Path(TEMPLATES_PATH / "github-cd.yml.jinja"),
+        "output": Path(".github/workflows/cd.yml"),
+    },
+    "gitlab": {
+        "template": Path(TEMPLATES_PATH / "gitlab-ci.yml.jinja"),
+        "output": Path(".gitlab-ci.yml"),
+    },
+}
+
 INSTRUCTIONS = (
     "\n"
     "Now that your deployer is configured, make sure that you're also done with the setup!\n"
@@ -60,21 +71,10 @@ INSTRUCTIONS = (
 VALID_RUN_NAME_PATTERN = re.compile("^[a-z][-a-z0-9]{0,127}$", re.IGNORECASE)
 
 
-TEMPLATES_CI_CD = {
-    "github": Path(TEMPLATES_PATH / "github-cd.yml.jinja"),
-    "gitlab": Path(TEMPLATES_PATH / "gitlab-ci.yml.jinja"),
-}
-
-CI_CD_OUTPUT_PATHS = {
-    "github": Path(".github/workflows/cd.yml"),
-    "gitlab": Path(".gitlab-ci.yml"),
-}
-
-
 class CICDProvider(str, Enum):  # noqa: D101
     github = "github"
     gitlab = "gitlab"
-    none = "none"
+    skip = "none"
 
 
 class ConfigType(str, Enum):  # noqa: D101
