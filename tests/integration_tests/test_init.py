@@ -68,6 +68,7 @@ def test_init_command_with_user_input(tmp_path):
                 "y",
                 "pipe",
                 "json",
+                "none",
                 "n",
             ]
         )
@@ -99,3 +100,43 @@ def test_init_command_with_user_input(tmp_path):
         assert (Path("custom_value") / "lib").is_dir()
         assert (Path("custom_value") / "components").is_dir()
         assert (Path("custom_value") / "components" / "dummy_component.py").is_file()
+
+
+def test_init_with_github_ci_cd(tmp_path):
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        result = runner.invoke(app, ["init"], input="y\ngithub\n", catch_exceptions=False)
+
+        assert result.exit_code == 0
+        assert Path(".github/workflows/cd.yml").is_file()
+        content = Path(".github/workflows/cd.yml").read_text()
+        assert "Vertex Pipelines CD" in content
+        assert "build-base-image" in content
+        assert "deploy-dev" in content
+        assert "deploy-stg" in content
+        assert "deploy-prd" in content
+        assert "vertex/deployment/Dockerfile" in content
+        assert "{{ vertex_folder_path }}" not in content
+
+
+def test_init_with_gitlab_ci_cd(tmp_path):
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        result = runner.invoke(app, ["init"], input="y\ngitlab\n", catch_exceptions=False)
+
+        assert result.exit_code == 0
+        assert Path(".gitlab-ci.yml").is_file()
+        content = Path(".gitlab-ci.yml").read_text()
+        assert "build-base-image" in content
+        assert "deploy-dev" in content
+        assert "deploy-stg" in content
+        assert "deploy-prd" in content
+        assert "vertex/deployment/Dockerfile" in content
+        assert "{{ vertex_folder_path }}" not in content
+
+
+def test_init_with_no_ci_cd(tmp_path):
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        result = runner.invoke(app, ["init"], input="y\nnone\n", catch_exceptions=False)
+
+        assert result.exit_code == 0
+        assert not Path(".github/workflows/cd.yml").exists()
+        assert not Path(".gitlab-ci.yml").exists()
