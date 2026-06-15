@@ -1,3 +1,6 @@
+# uv lockfile (library, not application)
+uv.lock
+
 # secrets and credentials
 secrets/
 credentials/
