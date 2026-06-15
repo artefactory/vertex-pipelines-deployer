@@ -12,40 +12,34 @@ repos:
     - id: check-added-large-files
   - repo: local
     hooks:
-    - id: ruff-isort
-      name: ruff isort
-      entry: poetry run ruff check --fix --select I --config pyproject.toml --show-fixes
-      types: [python]
-      language: system
-      stages: [commit, push]
     - id: ruff-format
       name: ruff format
-      entry: poetry run ruff format --config pyproject.toml
+      entry: uv run ruff format --config pyproject.toml
       types: [python]
       language: system
       stages: [commit, push]
     - id: ruff-check
       name: ruff check
-      entry: poetry run ruff check --config pyproject.toml --output-format concise
+      entry: uv run ruff check --fix --config pyproject.toml --output-format concise
       types: [python]
       language: system
       stages: [commit, push]
     - id: nbstripout
       name: Strip Jupyter notebook output (nbstripout)
-      entry: poetry run nbstripout
+      entry: uv run nbstripout
       types: [file]
       files: (.ipynb)$
       language: system
       stages: [commit, push]
     - id: codespell
       name: codespell markdown
-      entry: poetry run codespell -S CHANGELOG.md
+      entry: uv run codespell -S CHANGELOG.md
       types: [markdown]
       language: system
       stages: [commit, push]
     - id: check-cli-documentation-updated
       name: check cli documentation updated
-      entry: poetry run typer deployer/cli.py utils docs --output docs/CLI_REFERENCE.md --name vertex-deployer
+      entry: uv run typer deployer/cli.py utils docs --output docs/CLI_REFERENCE.md --name vertex-deployer
       pass_filenames: false
       language: system
       stages: [push]

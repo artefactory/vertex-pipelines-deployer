@@ -16,12 +16,45 @@ $ vertex-deployer [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `check`: Check that pipelines are valid.
-* `config`: Display the configuration from...
-* `create`: Create files structure for a new pipeline.
 * `deploy`: Compile, upload, run and schedule pipelines.
-* `init`: Initialize the deployer.
+* `check`: Check that pipelines are valid.
 * `list`: List all pipelines.
+* `create`: Create files structure for a new pipeline.
+* `init`: Initialize the deployer.
+* `config`: Display the configuration from...
+
+## `vertex-deployer deploy`
+
+Compile, upload, run and schedule pipelines.
+
+**Usage**:
+
+```console
+$ vertex-deployer deploy [OPTIONS] PIPELINE_NAMES...
+```
+
+**Arguments**:
+
+* `PIPELINE_NAMES...`: The names of the pipeline to run.  [required]
+
+**Options**:
+
+* `--env-file FILE`: The environment file to use.
+* `-c, --compile / -nc, --no-compile`: Whether to compile the pipeline.  [default: compile]
+* `-u, --upload / -nu, --no-upload`: Whether to upload the pipeline to Google Artifact Registry.  [default: no-upload]
+* `-r, --run / -nr, --no-run`: Whether to run the pipeline.  [default: no-run]
+* `-s, --schedule / -ns, --no-schedule`: Whether to create a schedule for the pipeline.  [default: no-schedule]
+* `--cron TEXT`: Cron expression for scheduling the pipeline. To pass it to the CLI, use underscore e.g. &#x27;0_10_*_*_*&#x27;.
+* `-dls, --delete-last-schedule`: Whether to delete the previous schedule before creating a new one.
+* `--scheduler-timezone TEXT`: Timezone for scheduling the pipeline. Must be a valid string from IANA time zone database  [default: Europe/Paris]
+* `--tags TEXT`: The tags to use when uploading the pipeline.
+* `-cfp, --config-filepath FILE`: Path to the json/py file with parameter values and input artifacts to use when running the pipeline.
+* `-cn, --config-name TEXT`: Name of the json/py file with parameter values and input artifacts to use when running the pipeline. It must be in the pipeline config dir. e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.
+* `-ec, --enable-caching / -nec, --no-cache`: Whether to turn on caching for the run.If this is not set, defaults to the compile time settings, which are True for alltasks by default, while users may specify different caching options for individualtasks. If this is set, the setting applies to all tasks in the pipeline.Overrides the compile time settings. Defaults to None.
+* `-en, --experiment-name TEXT`: The name of the experiment to run the pipeline in.Defaults to &#x27;{pipeline_name}-experiment&#x27;.
+* `-rn, --run-name TEXT`: The pipeline&#x27;s run name. Displayed in the UI.Defaults to &#x27;{pipeline_name}-{tags}-%Y%m%d%H%M%S&#x27;.
+* `-y, --skip-validation / -n, --no-skip`: Whether to continue without user validation of the settings.  [default: skip-validation]
+* `--help`: Show this message and exit.
 
 ## `vertex-deployer check`
 
@@ -60,19 +93,19 @@ $ vertex-deployer check [OPTIONS] [PIPELINE_NAMES]...
 * `-rfd, --raise-for-defaults / -nrfd, --no-raise-for-defaults`: Whether to raise an validation error when a default value is used.and not overwritten in config file.  [default: no-raise-for-defaults]
 * `--help`: Show this message and exit.
 
-## `vertex-deployer config`
+## `vertex-deployer list`
 
-Display the configuration from pyproject.toml.
+List all pipelines.
 
 **Usage**:
 
 ```console
-$ vertex-deployer config [OPTIONS]
+$ vertex-deployer list [OPTIONS]
 ```
 
 **Options**:
 
-* `-a, --all`: Whether to display all configuration values.
+* `-wc, --with-configs / -nc , --no-configs`: Whether to list config files.  [default: no-configs]
 * `--help`: Show this message and exit.
 
 ## `vertex-deployer create`
@@ -94,39 +127,6 @@ $ vertex-deployer create [OPTIONS] PIPELINE_NAMES...
 * `-ct, --config-type [json|py|toml|yaml]`: The type of the config to create.  [default: yaml]
 * `--help`: Show this message and exit.
 
-## `vertex-deployer deploy`
-
-Compile, upload, run and schedule pipelines.
-
-**Usage**:
-
-```console
-$ vertex-deployer deploy [OPTIONS] PIPELINE_NAMES...
-```
-
-**Arguments**:
-
-* `PIPELINE_NAMES...`: The names of the pipeline to run.  [required]
-
-**Options**:
-
-* `--env-file FILE`: The environment file to use.
-* `-c, --compile / -nc, --no-compile`: Whether to compile the pipeline.  [default: compile]
-* `-u, --upload / -nu, --no-upload`: Whether to upload the pipeline to Google Artifact Registry.  [default: no-upload]
-* `-r, --run / -nr, --no-run`: Whether to run the pipeline.  [default: no-run]
-* `-s, --schedule / -ns, --no-schedule`: Whether to create a schedule for the pipeline.  [default: no-schedule]
-* `--cron TEXT`: Cron expression for scheduling the pipeline. To pass it to the CLI, use underscore e.g. '0_10_*_*_*'.
-* `-dls, --delete-last-schedule`: Whether to delete the previous schedule before creating a new one.
-* `--scheduler-timezone TEXT`: Timezone for scheduling the pipeline. Must be a valid string from IANA time zone database  [default: Europe/Paris]
-* `--tags TEXT`: The tags to use when uploading the pipeline.
-* `-cfp, --config-filepath FILE`: Path to the json/py file with parameter values and input artifacts to use when running the pipeline.
-* `-cn, --config-name TEXT`: Name of the json/py file with parameter values and input artifacts to use when running the pipeline. It must be in the pipeline config dir. e.g. `config_dev.json` for `./vertex/configs/{pipeline-name}/config_dev.json`.
-* `-ec, --enable-caching / -nec, --no-cache`: Whether to turn on caching for the run.If this is not set, defaults to the compile time settings, which are True for alltasks by default, while users may specify different caching options for individualtasks. If this is set, the setting applies to all tasks in the pipeline.Overrides the compile time settings. Defaults to None.
-* `-en, --experiment-name TEXT`: The name of the experiment to run the pipeline in.Defaults to '{pipeline_name}-experiment'.
-* `-rn, --run-name TEXT`: The pipeline's run name. Displayed in the UI.Defaults to '{pipeline_name}-{tags}-%Y%m%d%H%M%S'.
-* `-y, --skip-validation / -n, --no-skip`: Whether to continue without user validation of the settings.  [default: skip-validation]
-* `--help`: Show this message and exit.
-
 ## `vertex-deployer init`
 
 Initialize the deployer.
@@ -142,17 +142,17 @@ $ vertex-deployer init [OPTIONS]
 * `-d, --default`: Instantly creates the full vertex structure and files without configuration prompts
 * `--help`: Show this message and exit.
 
-## `vertex-deployer list`
+## `vertex-deployer config`
 
-List all pipelines.
+Display the configuration from pyproject.toml.
 
 **Usage**:
 
 ```console
-$ vertex-deployer list [OPTIONS]
+$ vertex-deployer config [OPTIONS]
 ```
 
 **Options**:
 
-* `-wc, --with-configs / -nc , --no-configs`: Whether to list config files.  [default: no-configs]
+* `-a, --all`: Whether to display all configuration values.
 * `--help`: Show this message and exit.

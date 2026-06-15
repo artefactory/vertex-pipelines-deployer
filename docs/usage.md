@@ -6,7 +6,6 @@
         --upload \
         --run \
         --env-file example.env \
-        --local-package-path . \
         --tags my-tag \
         --config-filepath vertex/configs/dummy_pipeline/config_test.json \
         --experiment-name my-experiment \

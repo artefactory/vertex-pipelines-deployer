@@ -17,6 +17,7 @@ from deployer.init_deployer import (
     build_default_folder_structure,
     configure_deployer,
     ensure_pyproject_toml,
+    prompt_ci_cd,
     show_commands,
 )
 from deployer.settings import (
@@ -542,6 +543,29 @@ def create_pipeline(
         )
 
 
+def _prompt_create_pipeline(ctx: typer.Context):
+    """Prompt the user to create a pipeline interactively."""
+    wrong_name = True
+    while wrong_name:
+        pipeline_name = Prompt.ask("What is the name of the pipeline?")
+
+        try:
+            config_type = Prompt.ask(
+                "What is the type of the config file?",
+                choices=set(ConfigType.__members__.values()),
+            )
+            create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
+        except typer.BadParameter as e:
+            console.print(e, style="red")
+        except FileExistsError:
+            console.print(
+                f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
+                style="yellow",
+            )
+        else:
+            wrong_name = False
+
+
 @app.command(name="init")
 def init_deployer(
     ctx: typer.Context,
@@ -566,6 +590,9 @@ def init_deployer(
         build_default_folder_structure(deployer_settings)
         create_pipeline(ctx, pipeline_names=["dummy_pipeline"])
 
+        if not default:
+            prompt_ci_cd(deployer_settings)
+
         console.print("Default initialization done :sparkles:\n", style="bold blue")
         console.print("Here are some commands on how to use the deployer:", style="blue")
         show_commands(deployer_settings)
@@ -580,30 +607,14 @@ def init_deployer(
             build_default_folder_structure(deployer_settings)
 
         if Confirm.ask("Do you want to create a pipeline?"):
-            wrong_name = True
-            while wrong_name:
-                pipeline_name = Prompt.ask("What is the name of the pipeline?")
+            _prompt_create_pipeline(ctx)
 
-                try:
-                    config_type = Prompt.ask(
-                        "What is the type of the config file?",
-                        choices=set(ConfigType.__members__.values()),
-                    )
-                    create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
-                except typer.BadParameter as e:
-                    console.print(e, style="red")
-                except FileExistsError:
-                    console.print(
-                        f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
-                        style="yellow",
-                    )
-                else:
-                    wrong_name = False
+        prompt_ci_cd(deployer_settings)
 
-            console.print("All done :sparkles:\n", style="bold blue")
+        console.print("All done :sparkles:\n", style="bold blue")
 
-            if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
-                show_commands(deployer_settings)
+        if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
+            show_commands(deployer_settings)
 
 
 @app.command(name="config")

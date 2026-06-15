@@ -1,4 +1,4 @@
-# 🧑‍💻 Contributing to Vertex Pipelines Deployer
+# Contributing to Vertex Pipelines Deployer
 
 ## How to contribute
 
@@ -13,15 +13,11 @@ We try to rebase as much as possible and use squash and merge to keep a linear a
 
 ### Getting started
 
-This project uses [Poetry](https://python-poetry.org/) for dependency management. Poetry's doc is really good, so you should check it out if you have any questions.
+This project uses [uv](https://docs.astral.sh/uv/) for dependency management.
 
-To install poetry:
+To install uv, follow the [official installation instructions](https://docs.astral.sh/uv/getting-started/installation/).
 
-```bash
-make download-poetry
-```
-
-You can start by creating a virtual environment (conda or other) or use poetry venv(please check the Makefile first if so, as poetry venv is deactivated there). Then, to install the project dependencies, run the following command:
+Then, to install the project dependencies, run the following command:
 
 ```bash
 make install
@@ -32,12 +28,12 @@ To develop, you will need dev requirements too. Run:
 make install-dev-requirements
 ```
 
-!!! note "About poetry.lock"
-    `poetry.lock` is not committed deliberately, as recommended by Poetry's doc. You can read more about it [here](https://python-poetry.org/docs/basic-usage/#as-a-library-developer).
+!!! note "About uv.lock"
+    `uv.lock` is not committed to the repository, as this is a library. You can read more about it [here](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile).
 
 ### Codestyle
 
-This projects uses [Black](https://black.readthedocs.io/en/stable/), isort, ruff for codestyle. You can run the following command to format your code. It uses Pre-commit hooks to run the formatters and linters.
+This project uses [ruff](https://docs.astral.sh/ruff/) for code formatting, linting, and import sorting. You can run the following command to format your code. It uses pre-commit hooks to run the formatters and linters.
 
 ```bash
 make format-code
@@ -53,7 +49,7 @@ A full example is available in [here](https://sphinxcontrib-napoleon.readthedocs
 ## How to release
 
 This project uses [Python Semantic Versioning](https://python-semantic-release.readthedocs.io/en/latest/automatic-releases/github-actions.html)
-and [Poetry](https://python-poetry.org/docs/cli/#build) to create releases and tags.
+and [uv](https://docs.astral.sh/uv/guides/publish/) to create releases and tags.
 
 The release process is automated through GitHub Actions. Here is the process:
 
@@ -76,4 +72,4 @@ The action is triggered by any push to main.
 
 When it's done, rebase develop to keep it up to date with main.
 
-And you're done ! 🎉
+And you're done !

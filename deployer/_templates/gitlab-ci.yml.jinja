@@ -1,0 +1,86 @@
+stages:
+  - build
+  - check
+  - deploy-dev
+  - deploy-stg
+  - deploy-prd
+
+variables:
+  GAR_IMAGE_PATH: "${GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${GAR_DOCKER_REPO_ID}/${GAR_VERTEX_BASE_IMAGE_NAME}:${CI_COMMIT_SHA}"
+
+build-base-image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - echo ${GCP_SA_KEY} | docker login -u _json_key --password-stdin https://${GAR_LOCATION}-docker.pkg.dev
+  script:
+    - >
+      docker build
+      -t ${GAR_IMAGE_PATH}
+      -f {{ vertex_folder_path }}/deployment/Dockerfile
+      --build-arg PROJECT_ID=${PROJECT_ID}
+      --build-arg GCP_REGION=${GCP_REGION}
+      --build-arg GAR_LOCATION=${GAR_LOCATION}
+      --build-arg GAR_PIPELINES_REPO_ID=${GAR_PIPELINES_REPO_ID}
+      --build-arg VERTEX_STAGING_BUCKET_NAME=${VERTEX_STAGING_BUCKET_NAME}
+      --build-arg VERTEX_SERVICE_ACCOUNT=${VERTEX_SERVICE_ACCOUNT}
+      .
+    - docker push ${GAR_IMAGE_PATH}
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+check-pipelines:
+  stage: check
+  image: python:3.10-slim
+  needs:
+    - build-base-image
+  script:
+    - pip install vertex-deployer
+    - vertex-deployer check --all
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+deploy-dev:
+  stage: deploy-dev
+  image: python:3.10-slim
+  needs:
+    - check-pipelines
+  before_script:
+    - pip install vertex-deployer
+  script:
+    - vertex-deployer deploy --all --env-file deployer.env --tags dev
+  environment:
+    name: dev
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+deploy-stg:
+  stage: deploy-stg
+  image: python:3.10-slim
+  needs:
+    - deploy-dev
+  before_script:
+    - pip install vertex-deployer
+  script:
+    - vertex-deployer deploy --all --env-file deployer.env --tags stg
+  environment:
+    name: stg
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+deploy-prd:
+  stage: deploy-prd
+  image: python:3.10-slim
+  needs:
+    - deploy-stg
+  before_script:
+    - pip install vertex-deployer
+  script:
+    - vertex-deployer deploy --all --env-file deployer.env --tags prd
+  environment:
+    name: prd
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  when: manual

@@ -7,7 +7,7 @@ name: Vertex Pipelines Deployer
 owner: jules.bertrand@artefact.com
 description: >
   Check, compile, upload, run and schedule Vertex Pipelines in a standardized manner.
-documentation_url: https://supreme-funicular-mzylwj5.pages.github.io/
+documentation_url: https://artefactory.github.io/vertex-pipelines-deployer/
 
 type: deployable   # deployable, knowldege pack
 lifecycle: production  # prototype, production
