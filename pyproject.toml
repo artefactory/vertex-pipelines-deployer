@@ -1,6 +1,6 @@
 [project]
 name = "vertex-deployer"
-version = "0.5.5"
+version = "1.0.0"
 description = "Check, compile, upload, run, and schedule Kubeflow Pipelines on GCP Vertex AI in a standardized manner."
 authors = [
     {name = "artefactory", email = "jules.bertrand@artefact.com"},
@@ -36,6 +36,7 @@ vertex-deployer = "deployer.cli:app"
 Homepage = "https://github.com/artefactory/vertex-pipelines-deployer"
 Documentation = "https://artefactory.github.io/vertex-pipelines-deployer/"
 Repository = "https://github.com/artefactory/vertex-pipelines-deployer"
+
 
 [dependency-groups]
 dev = [
