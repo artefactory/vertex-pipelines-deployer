@@ -46,6 +46,8 @@ make format-code           # Run all pre-commit hooks (ruff, codespell, nbstripo
 - PR titles also follow conventional commits format
 - `feat` → minor bump, `build`/`enh`/`fix`/`perf` → patch bump
 - Releases: merge `develop` → `main`, which triggers semantic-release via GitHub Actions
+- Issues and PRs must use the provided templates (`.github/PULL_REQUEST_TEMPLATE.md`, `.github/ISSUE_TEMPLATE/`)
+- PR template requires: description, related issue link, type of change checklist, and a contributor checklist (code formatted, tests written, docstrings in Google format, docs updated if needed)
 
 ## Testing
 
