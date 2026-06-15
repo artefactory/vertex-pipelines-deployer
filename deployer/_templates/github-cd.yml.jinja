@@ -1,0 +1,146 @@
+name: Vertex Pipelines CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ "{{" }} vars.GCP_PROJECT_ID {{ "}}" }}
+  GCP_REGION: ${{ "{{" }} vars.GCP_REGION {{ "}}" }}
+  GAR_LOCATION: ${{ "{{" }} vars.GAR_LOCATION {{ "}}" }}
+  GAR_DOCKER_REPO_ID: ${{ "{{" }} vars.GAR_DOCKER_REPO_ID {{ "}}" }}
+  GAR_PIPELINES_REPO_ID: ${{ "{{" }} vars.GAR_PIPELINES_REPO_ID {{ "}}" }}
+  GAR_VERTEX_BASE_IMAGE_NAME: ${{ "{{" }} vars.GAR_VERTEX_BASE_IMAGE_NAME {{ "}}" }}
+  VERTEX_STAGING_BUCKET_NAME: ${{ "{{" }} vars.VERTEX_STAGING_BUCKET_NAME {{ "}}" }}
+  VERTEX_SERVICE_ACCOUNT: ${{ "{{" }} vars.VERTEX_SERVICE_ACCOUNT {{ "}}" }}
+  TAG: ${{ "{{" }} github.sha {{ "}}" }}
+
+jobs:
+  build-base-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ "{{" }} vars.WIF_PROVIDER {{ "}}" }}
+          service_account: ${{ "{{" }} vars.WIF_SERVICE_ACCOUNT {{ "}}" }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GAR
+        run: gcloud auth configure-docker ${GAR_LOCATION}-docker.pkg.dev --quiet
+
+      - name: Build and push base image
+        run: |
+          IMAGE=${GAR_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${GAR_DOCKER_REPO_ID}/${GAR_VERTEX_BASE_IMAGE_NAME}:${TAG}
+          docker build \
+            -t ${IMAGE} \
+            -f {{ vertex_folder_path }}/deployment/Dockerfile \
+            --build-arg PROJECT_ID=${PROJECT_ID} \
+            --build-arg GCP_REGION=${GCP_REGION} \
+            --build-arg GAR_LOCATION=${GAR_LOCATION} \
+            --build-arg GAR_PIPELINES_REPO_ID=${GAR_PIPELINES_REPO_ID} \
+            --build-arg VERTEX_STAGING_BUCKET_NAME=${VERTEX_STAGING_BUCKET_NAME} \
+            --build-arg VERTEX_SERVICE_ACCOUNT=${VERTEX_SERVICE_ACCOUNT} \
+            .
+          docker push ${IMAGE}
+
+  check-pipelines:
+    runs-on: ubuntu-latest
+    needs: build-base-image
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install vertex-deployer
+
+      - name: Check all pipelines
+        run: vertex-deployer check --all
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: check-pipelines
+    environment: dev
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ "{{" }} vars.WIF_PROVIDER {{ "}}" }}
+          service_account: ${{ "{{" }} vars.WIF_SERVICE_ACCOUNT {{ "}}" }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install vertex-deployer
+
+      - name: Deploy pipelines to dev
+        run: vertex-deployer deploy --all --env-file deployer.env --tags dev
+
+  deploy-stg:
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+    environment: stg
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ "{{" }} vars.WIF_PROVIDER {{ "}}" }}
+          service_account: ${{ "{{" }} vars.WIF_SERVICE_ACCOUNT {{ "}}" }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install vertex-deployer
+
+      - name: Deploy pipelines to stg
+        run: vertex-deployer deploy --all --env-file deployer.env --tags stg
+
+  deploy-prd:
+    runs-on: ubuntu-latest
+    needs: deploy-stg
+    environment: prd
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ "{{" }} vars.WIF_PROVIDER {{ "}}" }}
+          service_account: ${{ "{{" }} vars.WIF_SERVICE_ACCOUNT {{ "}}" }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install vertex-deployer
+
+      - name: Deploy pipelines to prd
+        run: vertex-deployer deploy --all --env-file deployer.env --tags prd

@@ -60,6 +60,23 @@ INSTRUCTIONS = (
 VALID_RUN_NAME_PATTERN = re.compile("^[a-z][-a-z0-9]{0,127}$", re.IGNORECASE)
 
 
+TEMPLATES_CI_CD = {
+    "github": Path(TEMPLATES_PATH / "github-cd.yml.jinja"),
+    "gitlab": Path(TEMPLATES_PATH / "gitlab-ci.yml.jinja"),
+}
+
+CI_CD_OUTPUT_PATHS = {
+    "github": Path(".github/workflows/cd.yml"),
+    "gitlab": Path(".gitlab-ci.yml"),
+}
+
+
+class CICDProvider(str, Enum):  # noqa: D101
+    github = "github"
+    gitlab = "gitlab"
+    none = "none"
+
+
 class ConfigType(str, Enum):  # noqa: D101
     json = "json"
     py = "py"

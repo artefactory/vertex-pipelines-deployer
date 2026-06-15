@@ -16,6 +16,7 @@ from deployer.init_deployer import (
     _create_file_from_template,
     build_default_folder_structure,
     configure_deployer,
+    create_ci_cd_template,
     ensure_pyproject_toml,
     show_commands,
 )
@@ -542,6 +543,41 @@ def create_pipeline(
         )
 
 
+def _prompt_create_pipeline(ctx: typer.Context):
+    """Prompt the user to create a pipeline interactively."""
+    wrong_name = True
+    while wrong_name:
+        pipeline_name = Prompt.ask("What is the name of the pipeline?")
+
+        try:
+            config_type = Prompt.ask(
+                "What is the type of the config file?",
+                choices=set(ConfigType.__members__.values()),
+            )
+            create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
+        except typer.BadParameter as e:
+            console.print(e, style="red")
+        except FileExistsError:
+            console.print(
+                f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
+                style="yellow",
+            )
+        else:
+            wrong_name = False
+
+
+def _prompt_ci_cd(vertex_folder_path: Path):
+    """Prompt the user to select a CI/CD platform and create the template."""
+    ci_cd_choices = set(constants.CICDProvider.__members__.values())
+    ci_cd_provider = Prompt.ask(
+        "Which CI/CD platform do you want to use?",
+        choices=ci_cd_choices,
+        default=constants.CICDProvider.none,
+    )
+    if ci_cd_provider != constants.CICDProvider.none:
+        create_ci_cd_template(ci_cd_provider, vertex_folder_path)
+
+
 @app.command(name="init")
 def init_deployer(
     ctx: typer.Context,
@@ -566,6 +602,9 @@ def init_deployer(
         build_default_folder_structure(deployer_settings)
         create_pipeline(ctx, pipeline_names=["dummy_pipeline"])
 
+        if not default:
+            _prompt_ci_cd(deployer_settings.vertex_folder_path)
+
         console.print("Default initialization done :sparkles:\n", style="bold blue")
         console.print("Here are some commands on how to use the deployer:", style="blue")
         show_commands(deployer_settings)
@@ -580,30 +619,14 @@ def init_deployer(
             build_default_folder_structure(deployer_settings)
 
         if Confirm.ask("Do you want to create a pipeline?"):
-            wrong_name = True
-            while wrong_name:
-                pipeline_name = Prompt.ask("What is the name of the pipeline?")
+            _prompt_create_pipeline(ctx)
 
-                try:
-                    config_type = Prompt.ask(
-                        "What is the type of the config file?",
-                        choices=set(ConfigType.__members__.values()),
-                    )
-                    create_pipeline(ctx, pipeline_names=[pipeline_name], config_type=config_type)
-                except typer.BadParameter as e:
-                    console.print(e, style="red")
-                except FileExistsError:
-                    console.print(
-                        f"Pipeline '{pipeline_name}' already exists. Skipping creation.",
-                        style="yellow",
-                    )
-                else:
-                    wrong_name = False
+        _prompt_ci_cd(deployer_settings.vertex_folder_path)
 
-            console.print("All done :sparkles:\n", style="bold blue")
+        console.print("All done :sparkles:\n", style="bold blue")
 
-            if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
-                show_commands(deployer_settings)
+        if Confirm.ask("Do you want to see some instructions on how to use the deployer"):
+            show_commands(deployer_settings)
 
 
 @app.command(name="config")

@@ -5,7 +5,13 @@ from jinja2 import Environment, FileSystemLoader, meta
 from rich.tree import Tree
 
 from deployer.__init__ import __version__ as deployer_version
-from deployer.constants import INSTRUCTIONS, TEMPLATES_DEFAULT_STRUCTURE, TEMPLATES_PATH
+from deployer.constants import (
+    CI_CD_OUTPUT_PATHS,
+    INSTRUCTIONS,
+    TEMPLATES_CI_CD,
+    TEMPLATES_DEFAULT_STRUCTURE,
+    TEMPLATES_PATH,
+)
 from deployer.settings import (
     DeployerSettings,
     find_pyproject_toml,
@@ -168,6 +174,19 @@ def generate_tree(vertex_folder_path: Path):
     root.add("requirements-vertex.txt")
     root.add("pyproject.toml")
     return root
+
+
+def create_ci_cd_template(provider: str, vertex_folder_path: Path):
+    """Create a CI/CD template file for the given provider."""
+    template_path = TEMPLATES_CI_CD[provider]
+    output_path = CI_CD_OUTPUT_PATHS[provider]
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    _create_file_from_template(
+        output_path,
+        template_path,
+        vertex_folder_path=vertex_folder_path,
+    )
+    console.print(f" CI/CD template created at '{output_path}' :sparkles:", style="bold blue")
 
 
 def show_commands(deployer_settings: DeployerSettings):
