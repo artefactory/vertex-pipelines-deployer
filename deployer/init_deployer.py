@@ -197,13 +197,13 @@ def _create_ci_cd_template(provider: str, mapping_variables: dict):
 
 def prompt_ci_cd(deployer_settings: DeployerSettings):
     """Prompt the user to select a CI/CD platform and create the template."""
-    ci_cd_choices = set(CICDProvider.__members__.values())
+    ci_cd_choices = [p.value for p in CICDProvider]
     ci_cd_provider = Prompt.ask(
         "Which CI/CD platform do you want to use?",
         choices=ci_cd_choices,
-        default=CICDProvider.skip,
+        default=CICDProvider.skip.value,
     )
-    if ci_cd_provider != CICDProvider.skip:
+    if ci_cd_provider != CICDProvider.skip.value:
         mapping_variables = {
             "vertex_folder_path": deployer_settings.vertex_folder_path,
         }
