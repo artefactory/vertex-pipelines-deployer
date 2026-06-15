@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@38f3f104447c67c051c4a08e39b64a148898af3a # v4
 
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@38f3f104447c67c051c4a08e39b64a148898af3a # v4
 
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
@@ -55,31 +55,31 @@ jobs:
       - name: Test root command
         run: |
           cd example
-          uv run -C .. vertex-deployer --version
+          uv run --directory .. vertex-deployer --version
 
       - name: Test config command
         run: |
           cd example
-          uv run -C .. vertex-deployer config --all
+          uv run --directory .. vertex-deployer config --all
 
       - name: Test list command
         run: |
           cd example
-          uv run -C .. vertex-deployer list --with-configs
+          uv run --directory .. vertex-deployer list --with-configs
 
       - name: Test check command
         run: |
           cd example
-          uv run -C .. vertex-deployer check --all
+          uv run --directory .. vertex-deployer check --all
 
       - name: Test deploy command
       # Cannot check more than compile action here, need GCP environment for upload, run, schedule
         run: |
           cd example
-          uv run -C .. vertex-deployer -log DEBUG deploy dummy_pipeline broken_pipeline --compile --env-file example.env --skip-validation
+          uv run --directory .. vertex-deployer -log DEBUG deploy dummy_pipeline broken_pipeline --compile --env-file example.env --skip-validation
 
       - name: Test create command
         run: |
           cd example
-          uv run -C .. vertex-deployer create test_pipeline --config-type py
+          uv run --directory .. vertex-deployer create test_pipeline --config-type py
           [ -e example/vertex/pipelines/test_pipeline.py ] && echo 1 || echo 0

@@ -13,7 +13,7 @@ PYTHON_VERSION = 3.10
 .PHONY: install
 ## Install Python Dependencies using uv
 install:
-	@uv venv --clear  # TODO: use the .python-version file to create the virtual environment
+	@uv venv --python $(PYTHON_VERSION) --clear
 	@uv sync --all-groups
 	@uv run pre-commit install -t pre-commit
 	@uv run pre-commit install -t pre-push
