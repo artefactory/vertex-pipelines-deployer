@@ -96,7 +96,9 @@ nav:
     - Basic Usage: usage.md
   - Advanced User Guide:
     - Vertex DevOps: advanced/advanced_user_guide.md
-    - Understand settings and configurations: advanced/configuration.md
+    - Scheduling Pipelines: advanced/scheduling.md
+    - Python API: advanced/python_api.md
+    - Settings & Configuration: advanced/configuration.md
   - CLI Reference: CLI_REFERENCE.md
   - API Documentation:
     - VertexPipelineDeployer: api/vertex_deployer.md

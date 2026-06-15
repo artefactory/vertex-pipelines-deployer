@@ -14,20 +14,62 @@ You can also override global deployer options such as logging level, or pipeline
 ```toml title="pyproject.toml"
 [tool.vertex_deployer]
 log-level = "INFO"
-pipelines-root-path = "./vertex/pipelines"
-config-root-path = "./configs"
+vertex-folder-path = "vertex"
 
 [tool.vertex_deployer.deploy]
-enable-cache = true
+enable-caching = true
 env-file = "example.env"
 compile = true
 upload = true
 run = true
 tags = ["my-tag"]
 experiment-name = "my-experiment"
-local-package-path = "."
 config-filepath = "vertex/configs/dummy_pipeline/config_test.json"
+scheduler-timezone = "Europe/Paris"
+
+[tool.vertex_deployer.check]
+all = false
+raise-error = false
+warn-defaults = true
+raise-for-defaults = false
+
+[tool.vertex_deployer.list]
+with-configs = false
+
+[tool.vertex_deployer.create]
+config-type = "yaml"
 ```
+
+### All configurable fields
+
+Below is the full reference of settings you can override in `pyproject.toml`:
+
+| Section | Field | Default | Description |
+|---|---|---|---|
+| *(root)* | `vertex-folder-path` | `"vertex"` | Root path for pipelines and configs |
+| *(root)* | `log-level` | `"INFO"` | Log level (`TRACE`, `DEBUG`, `INFO`, `SUCCESS`, `WARNING`, `ERROR`, `CRITICAL`) |
+| `deploy` | `env-file` | `None` | Path to the `.env` file |
+| `deploy` | `compile` | `true` | Compile the pipeline before deploying |
+| `deploy` | `upload` | `false` | Upload compiled pipeline to Artifact Registry |
+| `deploy` | `run` | `false` | Submit a pipeline run |
+| `deploy` | `schedule` | `false` | Create a pipeline schedule |
+| `deploy` | `cron` | `None` | Cron expression for scheduling |
+| `deploy` | `delete-last-schedule` | `false` | Delete previous schedule before creating new one |
+| `deploy` | `scheduler-timezone` | `"Europe/Paris"` | IANA timezone for scheduling |
+| `deploy` | `tags` | `None` | Tags for Artifact Registry upload |
+| `deploy` | `config-filepath` | `None` | Path to a specific config file |
+| `deploy` | `config-name` | `None` | Config filename (resolved from pipeline config dir) |
+| `deploy` | `enable-caching` | `None` | Enable/disable pipeline caching |
+| `deploy` | `experiment-name` | `None` | Vertex Experiment name |
+| `deploy` | `run-name` | `None` | Custom run display name |
+| `deploy` | `skip-validation` | `true` | Skip interactive settings confirmation |
+| `check` | `all` | `false` | Check all pipelines |
+| `check` | `config-filepath` | `None` | Path to a specific config file to check |
+| `check` | `raise-error` | `false` | Raise error if pipeline is invalid |
+| `check` | `warn-defaults` | `true` | Warn when default parameter values are used |
+| `check` | `raise-for-defaults` | `false` | Raise error when default values are used |
+| `list` | `with-configs` | `false` | Also list config files for each pipeline |
+| `create` | `config-type` | `"yaml"` | Default config file format (`json`, `py`, `toml`, `yaml`) |
 
 ## Pipelines config files
 
@@ -130,10 +172,11 @@ For example, you have here the same config file in the three formats:
 ## Vertex deployment settings
 
 The deployment settings are environment variables that configure the deployment environment for Vertex Pipelines.
-These variables include the GCP project ID, region, and other settings related to the Google Cloud resources used by Vertex Pipelines.
+These are loaded by the `deploy` command when it needs to interact with GCP resources.
 
-These settings can be specified in an `.env` file or exported as environment variables. An example `.env` file might look like this:
-```bash
+These settings can be specified in an `.env` file (passed via `--env-file`) or exported as shell environment variables. All variables are **required** — the deploy command will fail with a validation error if any are missing.
+
+```bash title="example.env"
 PROJECT_ID=your-gcp-project-id
 GCP_REGION=europe-west1
 GAR_LOCATION=europe-west1
@@ -142,4 +185,26 @@ VERTEX_STAGING_BUCKET_NAME=your-vertex-staging-bucket-name
 VERTEX_SERVICE_ACCOUNT=your-vertex-service-account
 ```
 
-It is important to ensure that these settings are correctly configured before deploying a pipeline, as they will affect where and how the pipeline is executed.
+### Environment variables reference
+
+| Variable | Example | Description |
+|---|---|---|
+| `PROJECT_ID` | `my-gcp-project` | GCP project ID where pipelines will run |
+| `GCP_REGION` | `europe-west1` | GCP region for Vertex AI pipeline execution |
+| `GAR_LOCATION` | `europe-west1` | Google Artifact Registry location (usually the same as `GCP_REGION`) |
+| `GAR_PIPELINES_REPO_ID` | `vertex-pipelines` | Artifact Registry repository ID (must be KFP format) |
+| `VERTEX_STAGING_BUCKET_NAME` | `my-staging-bucket` | GCS bucket name for pipeline staging, **without** the `gs://` prefix |
+| `VERTEX_SERVICE_ACCOUNT` | `my-sa@project.iam.gserviceaccount.com` | Full email of the service account used for pipeline execution |
+
+### How `.env` loading works
+
+The `--env-file` flag uses [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) to load variables from the file.
+Variables defined in the `.env` file **override** existing environment variables.
+No default value for `--env-file` is provided, so you must explicitly pass it — this prevents accidentally deploying to the wrong project.
+
+!!! tip "Multiple environments"
+    Use separate env files for each environment: `dev.env`, `stg.env`, `prd.env`. Then deploy with:
+    ```bash
+    vertex-deployer deploy my_pipeline --env-file dev.env --run --config-name config_dev.json
+    vertex-deployer deploy my_pipeline --env-file prd.env --schedule --cron "0_9_*_*_1-5" --config-name config_prd.json
+    ```

@@ -89,6 +89,27 @@ You can add a pre-commit hook checking your pipelines integrity using a local ho
 
 Once you have a valid pipeline, you want to deploy it on Vertex. To automate deployment when merging to `develop` or `main`, you have multiple options.
 
+### Quick start with `init`
+
+The fastest way to set up CI/CD is with the `init` command:
+
+```bash
+vertex-deployer init
+```
+
+When prompted, select **github** or **gitlab** as your CI/CD platform. This generates a ready-to-use workflow with multi-environment deployment stages (dev → stg → prd).
+
+- **GitHub Actions**: creates `.github/workflows/cd.yml` with Workload Identity Federation authentication
+- **GitLab CI**: creates `.gitlab-ci.yml` with Docker-in-Docker image builds and manual production deployment gate
+
+The generated templates include: base image build, pipeline validation, and deployment to three environments. You'll need to configure the required CI/CD variables in your platform (see the environment variables section in the generated file).
+
+For GitHub Actions, you'll need to set up [Workload Identity Federation](https://cloud.google.com/iam/docs/workload-identity-federation) and configure the following GitHub repository variables: `GCP_PROJECT_ID`, `GCP_REGION`, `GAR_LOCATION`, `GAR_DOCKER_REPO_ID`, `GAR_PIPELINES_REPO_ID`, `GAR_VERTEX_BASE_IMAGE_NAME`, `VERTEX_STAGING_BUCKET_NAME`, `VERTEX_SERVICE_ACCOUNT`, `WIF_PROVIDER`, `WIF_SERVICE_ACCOUNT`.
+
+### Manual setup options
+
+If you prefer to set up CI/CD manually, you have multiple options:
+
 - [use CloudBuild and CloudBuild triggers](#use-cloudbuild-trigger-preferred-option)
 - [use Github Action to trigger CloudBuild job](#github-action-cloudbuild)
 - [🚧 use Github Action only](#github-action-only)
