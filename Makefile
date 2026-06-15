@@ -13,8 +13,11 @@ PYTHON_VERSION = 3.10
 .PHONY: install
 ## Install Python Dependencies using uv
 install:
-	@uv sync
-	@uv run pre-commit install -t pre-commit -t pre-push
+	@uv venv --clear  # TODO: use the .python-version file to create the virtual environment
+	@uv sync --all-groups
+	@uv run pre-commit install -t pre-commit
+	@uv run pre-commit install -t pre-push
+	@uv run python -m ipykernel install --user --name $(PROJECT_NAME) --display-name "Python ($(PROJECT_NAME))"
 
 
 .PHONY: install-requirements

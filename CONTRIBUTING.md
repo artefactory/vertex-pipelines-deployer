@@ -29,7 +29,7 @@ make install-dev-requirements
 ```
 
 !!! note "About uv.lock"
-    `uv.lock` is committed to the repository, as recommended by uv's documentation. You can read more about it [here](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile).
+    `uv.lock` is not committed to the repository, as this is a library. You can read more about it [here](https://docs.astral.sh/uv/concepts/projects/layout/#the-lockfile).
 
 ### Codestyle
 
