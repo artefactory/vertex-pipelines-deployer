@@ -39,7 +39,7 @@ update-requirements:
 
 
 .PHONY: format-code
-## Format/lint all-files using pre-commit hooks (black, flake8, isort, ...)
+## Format/lint all-files using pre-commit hooks (ruff, codespell, ...)
 format-code:
 	@uv run pre-commit run -a --hook-stage pre-push
 

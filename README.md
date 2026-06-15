@@ -24,9 +24,8 @@
 [![CI](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/ci.yaml)
 [![Release](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml/badge.svg?branch=main&event=push)](https://github.com/artefactory/vertex-pipelines-deployer/actions/workflows/release.yaml)
 
-[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-informational?logo=pre-commit&logoColor=white)](https://github.com/ornikar/vertex-eduscore/blob/develop/.pre-commit-config.yaml)
+[![Pre-commit](https://img.shields.io/badge/pre--commit-enabled-informational?logo=pre-commit&logoColor=white)](https://github.com/artefactory/vertex-pipelines-deployer/blob/develop/.pre-commit-config.yaml)
 [![Linting: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat)](https://pycqa.github.io/isort/)
 
 </div>
 
@@ -86,7 +85,7 @@ Two main commands:
 <!-- --8<-- [start:prerequisites] -->
 
 - Unix-like environment (Linux, macOS, WSL, etc.)
-- Python 3.8 to 3.10
+- Python 3.10 to 3.13
 - Google Cloud SDK
 - A GCP project with Vertex Pipelines enabled
 <!-- --8<-- [end:prerequisites] -->
@@ -368,19 +367,32 @@ This will create a `my_new_pipeline.py` file in the `vertex/pipelines` folder an
 
 #### `init`
 
-To initialize the deployer with default settings and folder structure, use the `init` command:
+To initialize the deployer with default settings, folder structure, and CI/CD templates, use the `init` command:
 ```bash
 vertex-deployer init
 ```
+
+The interactive wizard walks you through:
+
+1. **Configure the deployer** — set `vertex_folder_path`, log level, and default command options in `pyproject.toml`
+2. **Build default folder structure** — scaffold `vertex/` with `pipelines/`, `configs/`, `components/`, `deployment/`, and `lib/`
+3. **Create a pipeline** — generate a starter pipeline file and config
+4. **Set up CI/CD** — generate a GitHub Actions (`.github/workflows/cd.yml`) or GitLab CI (`.gitlab-ci.yml`) workflow with multi-environment deployment (dev → stg → prd)
 
 ```bash
 $ vertex-deployer init
 Welcome to Vertex Deployer!
 This command will help you getting fired up.
 Do you want to configure the deployer? [y/n]: n
-Do you want to build default folder structure [y/n]: n
+Do you want to build default folder structure [y/n]: y
 Do you want to create a pipeline? [y/n]: n
+Which CI/CD platform do you want to use? (github/gitlab/none) [none]: github
 All done ✨
+```
+
+Use `--default` to skip all prompts and create the full structure instantly (without CI/CD templates):
+```bash
+vertex-deployer init --default
 ```
 
 #### `list`

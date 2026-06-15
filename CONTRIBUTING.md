@@ -33,7 +33,7 @@ make install-dev-requirements
 
 ### Codestyle
 
-This projects uses [Black](https://black.readthedocs.io/en/stable/), isort, ruff for codestyle. You can run the following command to format your code. It uses Pre-commit hooks to run the formatters and linters.
+This project uses [ruff](https://docs.astral.sh/ruff/) for code formatting, linting, and import sorting. You can run the following command to format your code. It uses pre-commit hooks to run the formatters and linters.
 
 ```bash
 make format-code
